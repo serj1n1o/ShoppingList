@@ -6,11 +6,10 @@
     <color name="lightIcon">#FEDDBD</color>
     <color name="secondLightIcon">#EEE0D5</color>
     <color name="lightBottomSheet">#FFF1E7</color>
-    <color name="text">#211A14</color>
-    <color name="secondText">#1D1B20</color>
+    <color name="lightText">#211A14</color>
     <color name="lightTextOnBottomSheet">#50453A</color>
-    <color name="darkTextOnButton">#281805</color>
-    <color name="lightButtonText">#FFFFFF</color>
+    <color name="cancelLightTextOnButton">#281805</color>
+    <color name="positiveLightButtonText">#FFFFFF</color>
     <color name="lightToolBar">#F4E6DA</color>
     <color name="lightList">#FAEBE0</color>
     <color name="accentText">#34C759</color>

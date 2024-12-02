@@ -7,19 +7,16 @@
         <item name="colorSecondary">@color/lightIcon</item>
         <item name="colorSecondaryVariant">@color/secondLightIcon</item>
         <item name="colorSurface">@color/lightBottomSheet</item>
-        <item name="colorOnPrimary">@color/text</item>
-        <item name="colorOnSecondary">@color/secondText</item>
+        <item name="colorOnPrimary">@color/lightText</item>
         <item name="colorOnSurface">@color/lightTextOnBottomSheet</item>
-        <item name="colorOnBackground">@color/darkTextOnButton</item>
-        <item name="colorButtonText">@color/lightButtonText</item>
+        <item name="colorOnBackground">@color/cancelLightTextOnButton</item>
+        <item name="colorButtonText">@color/positiveLightButtonText</item>
         <item name="colorToolBar">@color/lightToolBar</item>
         <item name="colorList">@color/lightList</item>
         <item name="colorAccentText">@color/accentText</item>
 
-
     </style>
 
     <style name="Theme.ShoppingList" parent="Base.Theme.ShoppingList" />
-
 
 </resources>
