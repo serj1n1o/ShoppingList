@@ -1,9 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.ShoppingList" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorBackground">@color/lightBackground</item>
+        <item name="colorPrimary">@color/lightButton</item>
+        <item name="colorPrimaryVariant">@color/darkAccent</item>
+        <item name="colorSecondary">@color/lightIcon</item>
+        <item name="colorSecondaryVariant">@color/secondLightIcon</item>
+        <item name="colorSurface">@color/lightBottomSheet</item>
+        <item name="colorOnPrimary">@color/text</item>
+        <item name="colorOnSecondary">@color/secondText</item>
+        <item name="colorOnSurface">@color/lightTextOnBottomSheet</item>
+        <item name="colorOnBackground">@color/darkTextOnButton</item>
+        <item name="colorButtonText">@color/lightButtonText</item>
+        <item name="colorToolBar">@color/lightToolBar</item>
+
+
     </style>
 
     <style name="Theme.ShoppingList" parent="Base.Theme.ShoppingList" />
+
+
 </resources>
