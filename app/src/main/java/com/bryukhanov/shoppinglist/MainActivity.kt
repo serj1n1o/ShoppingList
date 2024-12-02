@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.splash_screen)
 
         CoroutineScope(Dispatchers.Main).launch {
-            delay(1500)
+            delay(DELAY_SPLASH_SCREEN)
             setContentView(R.layout.activity_main)
 
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -26,5 +26,9 @@ class MainActivity : AppCompatActivity() {
                 insets
             }
         }
+    }
+
+    companion object {
+        private const val DELAY_SPLASH_SCREEN = 1500L
     }
 }
