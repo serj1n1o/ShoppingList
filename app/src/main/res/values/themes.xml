@@ -13,6 +13,8 @@
         <item name="colorOnBackground">@color/darkTextOnButton</item>
         <item name="colorButtonText">@color/lightButtonText</item>
         <item name="colorToolBar">@color/lightToolBar</item>
+        <item name="colorList">@color/lightList</item>
+        <item name="colorAccentText">@color/accentText</item>
 
 
     </style>

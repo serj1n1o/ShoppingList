@@ -12,4 +12,6 @@
     <color name="darkTextOnButton">#281805</color>
     <color name="lightButtonText">#FFFFFF</color>
     <color name="lightToolBar">#F4E6DA</color>
+    <color name="lightList">#FAEBE0</color>
+    <color name="accentText">#34C759</color>
 </resources>
