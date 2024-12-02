@@ -14,9 +14,9 @@
         <item name="colorToolBar">@color/lightToolBar</item>
         <item name="colorList">@color/lightList</item>
         <item name="colorAccentText">@color/accentText</item>
+        <item name="colorHintUpText">@color/lightTintUpText</item>
 
     </style>
 
     <style name="Theme.ShoppingList" parent="Base.Theme.ShoppingList" />
-
 </resources>

@@ -13,4 +13,5 @@
     <color name="darkToolBar">#302921</color>
     <color name="DarkList">#251E17</color>
     <color name="accentText">#34C759</color>
+    <color name="darkTintUpText">#E5C5A7</color>
 </resources>

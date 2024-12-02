@@ -13,4 +13,5 @@
     <attr name="colorToolBar" format="color" />
     <attr name="colorList" format="color" />
     <attr name="colorAccentText" format="color" />
+    <attr name="colorHintUpText" format="color" />
 </resources>
