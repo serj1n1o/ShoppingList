@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/myListsFragment">
+
+    <fragment
+        android:id="@+id/myListsFragment"
+        android:name="com.bryukhanov.shoppinglist.mylists.presentation.view.MyListsFragment"
+        android:label="fragment_my_lists"
+        tools:layout="@layout/fragment_my_lists">
+        <action
+            android:id="@+id/action_myListsFragment_to_productsListFragment"
+            app:destination="@id/productsListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productsListFragment"
+        android:name="com.bryukhanov.shoppinglist.productslist.presentation.view.ProductsListFragment"
+        android:label="fragment_products_list"
+        tools:layout="@layout/fragment_products_list" />
+</navigation>
