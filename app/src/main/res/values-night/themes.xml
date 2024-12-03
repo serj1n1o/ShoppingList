@@ -1,7 +1,20 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.ShoppingList" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorBackground">@color/darkBackground</item>
+        <item name="colorPrimary">@color/darkButton</item>
+        <item name="colorPrimaryVariant">@color/lightAccent</item>
+        <item name="colorSecondary">@color/darkIcon</item>
+        <item name="colorSecondaryVariant">@color/secondDarkIcon</item>
+        <item name="colorSurface">@color/darkBottomSheet</item>
+        <item name="colorOnPrimary">@color/darkText</item>
+        <item name="colorOnSurface">@color/darkTextOnBottomSheet</item>
+        <item name="colorOnBackground">@color/cancelDarkTextOnButton</item>
+        <item name="colorButtonText">@color/positiveDarkButtonText</item>
+        <item name="colorToolBar">@color/darkToolBar</item>
+        <item name="colorList">@color/DarkList</item>
+        <item name="colorAccentText">@color/accentText</item>
+        <item name="colorHintUpText">@color/darkTintUpText</item>
     </style>
+
 </resources>
