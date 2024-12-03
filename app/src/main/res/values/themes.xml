@@ -15,8 +15,10 @@
         <item name="colorList">@color/lightList</item>
         <item name="colorAccentText">@color/accentText</item>
         <item name="colorHintUpText">@color/lightTintUpText</item>
+        <item name="colorPlus">@color/lightColorPlus</item>
 
     </style>
 
     <style name="Theme.ShoppingList" parent="Base.Theme.ShoppingList" />
+
 </resources>
