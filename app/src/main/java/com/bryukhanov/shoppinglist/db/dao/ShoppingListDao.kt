@@ -10,7 +10,7 @@ import com.bryukhanov.shoppinglist.db.entity.ShoppingListItemDbo
 
 @Dao
 interface ShoppingListDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.NONE)
     suspend fun addShoppingList(shoppingListItemDbo: ShoppingListItemDbo)
 
     @Query("SELECT * FROM shopping_list")

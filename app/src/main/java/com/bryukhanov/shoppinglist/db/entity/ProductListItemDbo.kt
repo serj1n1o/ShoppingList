@@ -17,7 +17,7 @@ data class ProductListItemDbo(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val shoppingListId: Int,
     val name: String,
-    val amount: Float,
+    val amount: Int,
     val unit: String,
     val position: Int,
 )
