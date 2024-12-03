@@ -8,6 +8,7 @@
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:fontFamily">Roboto</item>
         <item name="android:textSize">@dimen/sixteen_size_text</item>
+        <item name="android:textStyle">bold</item>
         <item name="fontWeight">500</item>
     </style>
 
