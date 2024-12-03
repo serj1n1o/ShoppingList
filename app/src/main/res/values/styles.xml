@@ -4,7 +4,6 @@
     <style name="FirstTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">@dimen/eleven_space</item>
         <item name="android:layout_marginTop">@dimen/twelve_space</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:fontFamily">Roboto</item>
@@ -15,7 +14,6 @@
     <style name="RegularText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">@dimen/eleven_space</item>
         <item name="android:layout_marginTop">@dimen/two_space</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:fontFamily">Roboto</item>
@@ -27,7 +25,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/four_space</item>
-        <item name="android:layout_marginTop">@dimen/four_space</item>
+        <item name="android:layout_marginTop">@dimen/four_and_half_space</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:fontFamily">Roboto</item>
         <item name="android:textSize">@dimen/twenty_two_size_text</item>
