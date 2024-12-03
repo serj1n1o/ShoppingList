@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">ShoppingList</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- splash_screen -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="splash_screen_text_welcome">Добро пожаловать в Список покупок!</string>
     <string name="splash_screen_text_tasks">Создавайте списки, добавляйте товары,\nотмечайте, что уже куплено</string>
+
+    <!-- myLists_screen -->
+    <string name="myLists_screen_text">Мои списки</string>
+    <string name="myLists_screen_no_lists">У вас пока нет списков</string>
+    <string name="myLists_screen_create_first_list">Нажмите на кнопку + ниже, чтобы создать\n свой первый список</string>
 </resources>
