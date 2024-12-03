@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_graph"
-    app:startDestination="@id/myListsFragment">
+    app:startDestination="@id/splashScreenFragment">
 
     <fragment
         android:id="@+id/myListsFragment"
@@ -19,4 +19,15 @@
         android:name="com.bryukhanov.shoppinglist.productslist.presentation.view.ProductsListFragment"
         android:label="fragment_products_list"
         tools:layout="@layout/fragment_products_list" />
+    <fragment
+        android:id="@+id/splashScreenFragment"
+        android:name="com.bryukhanov.shoppinglist.core.ui.SplashScreenFragment"
+        android:label="fragment_splash_screen"
+        tools:layout="@layout/fragment_splash_screen">
+        <action
+            android:id="@+id/action_splashScreenFragment_to_myListsFragment"
+            app:destination="@id/myListsFragment"
+            app:popUpTo="@id/splashScreenFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>
