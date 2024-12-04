@@ -59,6 +59,7 @@
         android:layout_marginHorizontal="@dimen/eleven_space"
         android:layout_marginTop="@dimen/sixteen_space"
         android:src="@drawable/placeholder_my_lists"
+        android:visibility="visible"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

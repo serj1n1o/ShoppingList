@@ -9,16 +9,17 @@
 
     <ImageView
         android:id="@+id/title"
-        android:layout_width="0dp"
+        android:layout_width="@dimen/zero_space"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginHorizontal="36dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginHorizontal="@dimen/nine_space"
+        android:layout_marginTop="@dimen/twelve_space"
         android:src="@drawable/title_splash"
         app:layout_constraintBottom_toTopOf="@id/cover"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/colorOnPrimary" />
 
     <ImageView
         android:id="@+id/cover"
@@ -35,11 +36,9 @@
 
     <TextView
         android:id="@+id/welcomeTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/FirstTitle"
         android:layout_gravity="center"
         android:layout_marginHorizontal="44dp"
-        android:layout_marginTop="48dp"
         android:gravity="center"
         android:text="@string/splash_screen_text_welcome"
         android:textSize="16sp"
@@ -49,13 +48,10 @@
         app:layout_constraintTop_toBottomOf="@id/cover" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/RegularText"
         android:layout_gravity="center"
-        android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="@string/splash_screen_text_tasks"
-        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
