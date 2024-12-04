@@ -20,4 +20,5 @@ data class ProductListItemDbo(
     val amount: Int,
     val unit: String,
     val position: Int,
+    val isBought: Boolean,
 )

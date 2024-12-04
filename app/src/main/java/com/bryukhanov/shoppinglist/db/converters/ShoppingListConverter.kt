@@ -5,7 +5,7 @@ import com.bryukhanov.shoppinglist.db.entity.ShoppingListItemDbo
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
 
-class ShoppingListConverter {
+object ShoppingListConverter {
 
     fun ShoppingListItem.toDbo(): ShoppingListItemDbo {
         return ShoppingListItemDbo(
@@ -41,7 +41,8 @@ class ShoppingListConverter {
             name = name,
             amount = amount,
             unit = unit,
-            position = position
+            position = position,
+            isBought = isBought,
         )
     }
 
