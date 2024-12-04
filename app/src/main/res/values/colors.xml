@@ -11,7 +11,7 @@
     <color name="cancelLightTextOnButton">#281805</color>
     <color name="positiveLightButtonText">#FFFFFF</color>
     <color name="lightToolBar">#F4E6DA</color>
-    <color name="lightList">#FAEBE0</color>
+    <color name="lightList">#FFF8F4</color>
     <color name="accentText">#34C759</color>
     <color name="lightTintUpText">#49454F</color>
     <color name="lightColorPlus">#2B1700</color>
@@ -27,7 +27,7 @@
     <color name="cancelDarkTextOnButton">#000000</color>
     <color name="positiveDarkButtonText">#241200</color>
     <color name="darkToolBar">#302921</color>
-    <color name="DarkList">#251E17</color>
+    <color name="darkList">#302921</color>
     <color name="darkTintUpText">#E5C5A7</color>
     <color name="darkColorPlus">#000000</color>
 </resources>

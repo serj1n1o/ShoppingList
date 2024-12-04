@@ -1,31 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/colorBackground"
-    android:paddingStart="@dimen/zero_space"
-    android:paddingTop="@dimen/four_space"
-    android:paddingEnd="@dimen/four_space"
-    android:paddingBottom="@dimen/four_space">
+    android:layout_margin="@dimen/two_space"
+    app:cardBackgroundColor="?attr/colorList"
+    app:cardCornerRadius="@dimen/four_space"
+    app:cardElevation="@dimen/two_space">
 
-    <ImageView
-        android:id="@+id/ivIconList"
-        android:layout_width="@dimen/ten_space"
-        android:layout_height="@dimen/ten_space"
-        android:src="@drawable/ic_list"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/two_space">
 
-    <TextView
-        android:id="@+id/tvListName"
-        style="@style/NameList"
-        android:text="List Name"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/ivIconList"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/ivIconList"
+            android:layout_width="@dimen/ten_space"
+            android:layout_height="@dimen/ten_space"
+            android:src="@drawable/ic_list"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tvListName"
+            style="@style/NameList"
+            android:text="List Name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivIconList"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
