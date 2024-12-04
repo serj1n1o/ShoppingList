@@ -54,9 +54,9 @@ class ProductListRepositoryImpl(
         }
     }
 
-    override suspend fun getProductById(productId: Int): ProductListItem {
+    override suspend fun getProductById(productId: Int): ProductListItem? {
         return withContext(Dispatchers.IO) {
-            dataBase.productListDao().getProductById(productId).toUi()
+            dataBase.productListDao().getProductById(productId)?.toUi()
         }
     }
 }

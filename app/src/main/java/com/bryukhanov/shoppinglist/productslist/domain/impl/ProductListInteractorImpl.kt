@@ -7,31 +7,32 @@ import kotlinx.coroutines.flow.Flow
 
 class ProductListInteractorImpl(private val productListRepository: ProductListRepository) :
     ProductListInteractor {
+
     override fun getAllProducts(shoppingListId: Int): Flow<List<ProductListItem>> {
-        TODO("Not yet implemented")
+        return productListRepository.getAllProducts(shoppingListId)
     }
 
     override suspend fun deleteAllProducts(shoppingListId: Int) {
-        TODO("Not yet implemented")
+        productListRepository.deleteAllProducts(shoppingListId)
     }
 
     override suspend fun deleteBoughtProducts(shoppingListId: Int) {
-        TODO("Not yet implemented")
+        productListRepository.deleteBoughtProducts(shoppingListId)
     }
 
     override suspend fun deleteProduct(productListItem: ProductListItem) {
-        TODO("Not yet implemented")
+        productListRepository.deleteProduct(productListItem)
     }
 
     override suspend fun addProduct(productListItem: ProductListItem) {
-        TODO("Not yet implemented")
+        productListRepository.addProduct(productListItem)
     }
 
     override suspend fun updateProduct(productListItem: ProductListItem) {
-        TODO("Not yet implemented")
+        productListRepository.updateProduct(productListItem)
     }
 
-    override suspend fun getProductById(productId: Int): ProductListItem {
-        TODO("Not yet implemented")
+    override suspend fun getProductById(productId: Int): ProductListItem? {
+        return productListRepository.getProductById(productId)
     }
 }

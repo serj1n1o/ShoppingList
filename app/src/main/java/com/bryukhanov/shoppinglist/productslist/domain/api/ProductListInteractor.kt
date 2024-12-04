@@ -17,5 +17,5 @@ interface ProductListInteractor {
 
     suspend fun updateProduct(productListItem: ProductListItem)
 
-    suspend fun getProductById(productId: Int): ProductListItem
+    suspend fun getProductById(productId: Int): ProductListItem?
 }

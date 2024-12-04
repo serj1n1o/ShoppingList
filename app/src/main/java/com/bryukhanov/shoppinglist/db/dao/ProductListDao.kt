@@ -36,5 +36,5 @@ interface ProductListDao {
     suspend fun deleteBoughtProducts(shoppingListId: Int)
 
     @Query("SELECT * FROM product_list WHERE id = :productId")
-    suspend fun getProductById(productId: Int): ProductListItemDbo
+    suspend fun getProductById(productId: Int): ProductListItemDbo?
 }

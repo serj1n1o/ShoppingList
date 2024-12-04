@@ -7,23 +7,24 @@ import kotlinx.coroutines.flow.Flow
 
 class ShoppingListInteractorImpl(private val shoppingListRepository: ShoppingListRepository) :
     ShoppingListInteractor {
+
     override fun getAllShoppingLists(): Flow<List<ShoppingListItem>> {
-        TODO("Not yet implemented")
+        return shoppingListRepository.getAllShoppingLists()
     }
 
     override suspend fun addShoppingList(shoppingListItem: ShoppingListItem) {
-        TODO("Not yet implemented")
+        shoppingListRepository.addShoppingList(shoppingListItem)
     }
 
     override suspend fun updateShoppingList(shoppingListItem: ShoppingListItem) {
-        TODO("Not yet implemented")
+        shoppingListRepository.updateShoppingList(shoppingListItem)
     }
 
     override suspend fun deleteShoppingList(shoppingListItem: ShoppingListItem) {
-        TODO("Not yet implemented")
+        shoppingListRepository.deleteShoppingList(shoppingListItem)
     }
 
     override suspend fun deleteAllLists() {
-        TODO("Not yet implemented")
+        shoppingListRepository.deleteAllLists()
     }
 }
