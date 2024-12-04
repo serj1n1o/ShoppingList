@@ -15,8 +15,8 @@ import org.koin.dsl.module
 
 val dataModule = module {
 
-    factory {
-        ShoppingListConverter()
+    single {
+        ShoppingListConverter
     }
 
     single {
