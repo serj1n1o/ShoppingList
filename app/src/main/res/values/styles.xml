@@ -45,10 +45,9 @@
     </style>
 
     <style name="NameList">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">@dimen/zero_space</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">@dimen/fourteen_space</item>
-        <item name="android:layout_marginTop">@dimen/two_space</item>
+        <item name="android:layout_marginStart">@dimen/two_space</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:fontFamily">Roboto</item>
         <item name="android:textSize">@dimen/sixteen_size_text</item>

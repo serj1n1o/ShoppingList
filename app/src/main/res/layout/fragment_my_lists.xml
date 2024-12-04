@@ -59,7 +59,7 @@
         android:layout_marginHorizontal="@dimen/eleven_space"
         android:layout_marginTop="@dimen/sixteen_space"
         android:src="@drawable/placeholder_my_lists"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -72,6 +72,7 @@
         android:layout_marginHorizontal="@dimen/eleven_space"
         android:gravity="center"
         android:text="@string/myLists_screen_no_lists"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/placeholderMyLists" />
@@ -83,11 +84,25 @@
         android:layout_marginHorizontal="@dimen/eleven_space"
         android:gravity="center"
         android:text="@string/myLists_screen_create_first_list"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvNoLists"
         app:layout_constraintVertical_bias="0" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMyLists"
+        android:layout_width="@dimen/zero_space"
+        android:layout_height="@dimen/zero_space"
+        android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/four_space"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/fabAdd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:listitem="@layout/item_my_list" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAdd"
