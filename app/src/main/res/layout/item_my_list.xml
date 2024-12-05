@@ -12,7 +12,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/two_space">
+        android:padding="@dimen/two_space"
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/ivIconList"
@@ -34,4 +35,46 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:orientation="horizontal"
+        android:padding="@dimen/one_space"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnEdit"
+            android:layout_width="@dimen/twelve_space"
+            android:layout_height="@dimen/twelve_space"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/edit"
+            android:src="@drawable/ic_edit_list"
+            android:visibility="visible" />
+
+        <ImageButton
+            android:id="@+id/btnCopy"
+            android:layout_width="@dimen/twelve_space"
+            android:layout_height="@dimen/twelve_space"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/copy"
+            android:src="@drawable/ic_copy_list"
+            android:visibility="visible" />
+
+        <ImageButton
+            android:id="@+id/btnDelete"
+            android:layout_width="@dimen/twelve_space"
+            android:layout_height="@dimen/twelve_space"
+            android:layout_gravity="end"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/delete"
+            android:src="@drawable/ic_delete_list"
+            android:visibility="visible" />
+    </LinearLayout>
+
 </androidx.cardview.widget.CardView>

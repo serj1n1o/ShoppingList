@@ -15,6 +15,7 @@
     <color name="accentText">#34C759</color>
     <color name="lightTintUpText">#49454F</color>
     <color name="lightColorPlus">#2B1700</color>
+    <color name="lightIconList">#EEE0D5</color>
 
     <color name="darkBackground">#130D07</color>
     <color name="darkButton">#BE8543</color>
@@ -30,4 +31,5 @@
     <color name="darkList">#302921</color>
     <color name="darkTintUpText">#E5C5A7</color>
     <color name="darkColorPlus">#000000</color>
+    <color name="darkIconList">#302921</color>
 </resources>

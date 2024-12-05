@@ -16,6 +16,7 @@
         <item name="colorAccentText">@color/accentText</item>
         <item name="colorHintUpText">@color/darkTintUpText</item>
         <item name="colorPlus">@color/darkColorPlus</item>
+        <item name="colorIconList">@color/darkIconList</item>
     </style>
 
 </resources>

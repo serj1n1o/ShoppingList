@@ -16,6 +16,8 @@
         <item name="colorAccentText">@color/accentText</item>
         <item name="colorHintUpText">@color/lightTintUpText</item>
         <item name="colorPlus">@color/lightColorPlus</item>
+        <item name="colorIconList">@color/lightIconList</item>
+
 
     </style>
 
