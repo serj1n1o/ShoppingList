@@ -15,4 +15,6 @@ interface ShoppingListRepository {
 
     suspend fun deleteAllLists()
 
+    suspend fun copyShoppingList(shoppingListId: Int)
+
 }
