@@ -5,20 +5,47 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
+import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
+import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
+import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
 
 
 class MyListsFragment : Fragment() {
+    private var _binding: FragmentMyListsBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var adapter: ShoppingListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        return inflater.inflate(R.layout.fragment_my_lists, container, false)
+    ): View {
+        _binding = FragmentMyListsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) = MyListsFragment()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Инициализация адаптера. Фейковые данные для тестирования
+        adapter = ShoppingListAdapter(
+            listOf(
+                ShoppingListItem(id = 1, name = "Продукты", cover = R.drawable.ic_list),
+                ShoppingListItem(id = 2, name = "Для дома", cover = R.drawable.ic_list),
+                ShoppingListItem(id = 3, name = "Подарки к Новому году", cover = R.drawable.ic_list)
+            )
+        )
+
+        binding.rvMyLists.apply {
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            adapter = this@MyListsFragment.adapter
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
