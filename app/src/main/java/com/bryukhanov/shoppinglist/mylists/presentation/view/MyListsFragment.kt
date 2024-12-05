@@ -34,12 +34,12 @@ class MyListsFragment : Fragment() {
                 ShoppingListItem(id = 1, name = "Продукты", cover = R.drawable.ic_list),
                 ShoppingListItem(
                     id = 2,
-                    name = "Для дома хотелось бы что нибудь купить",
+                    name = "Для дома",
                     cover = R.drawable.ic_list
                 ),
                 ShoppingListItem(
                     id = 3,
-                    name = "Подарки к Новому году и кое что еще, а может сразу и на старый новый год купим",
+                    name = "Подарки к Новому году",
                     cover = R.drawable.ic_list
                 )
             )
