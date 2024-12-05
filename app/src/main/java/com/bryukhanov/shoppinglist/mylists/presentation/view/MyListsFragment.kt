@@ -32,16 +32,8 @@ class MyListsFragment : Fragment() {
         adapter = ShoppingListAdapter(
             listOf(
                 ShoppingListItem(id = 1, name = "Продукты", cover = R.drawable.ic_list),
-                ShoppingListItem(
-                    id = 2,
-                    name = "Для дома",
-                    cover = R.drawable.ic_list
-                ),
-                ShoppingListItem(
-                    id = 3,
-                    name = "Подарки к Новому году",
-                    cover = R.drawable.ic_list
-                )
+                ShoppingListItem(id = 2, name = "Для дома", cover = R.drawable.ic_list),
+                ShoppingListItem(id = 3, name = "Подарки к Новому году", cover = R.drawable.ic_list)
             )
         )
 
