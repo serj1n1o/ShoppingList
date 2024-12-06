@@ -1,6 +1,7 @@
 package com.bryukhanov.shoppinglist.di
 
 import androidx.room.Room
+import com.bryukhanov.shoppinglist.core.util.NameShoppingListGenerator
 import com.bryukhanov.shoppinglist.db.DataBase
 import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter
 import com.bryukhanov.shoppinglist.mylists.data.ShoppingListRepositoryImpl
@@ -20,6 +21,10 @@ val dataModule = module {
     }
 
     single {
+        NameShoppingListGenerator
+    }
+
+    single {
         Room.databaseBuilder(
             context = get(),
             klass = DataBase::class.java,
@@ -28,7 +33,11 @@ val dataModule = module {
     }
 
     factory<ShoppingListRepository> {
-        ShoppingListRepositoryImpl(dataBase = get(), shoppingListConverter = get())
+        ShoppingListRepositoryImpl(
+            dataBase = get(),
+            shoppingListConverter = get(),
+            nameShoppingListGenerator = get()
+        )
     }
 
     factory<ShoppingListInteractor> {

@@ -7,14 +7,19 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.bryukhanov.shoppinglist.db.entity.ShoppingListItemDbo
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ShoppingListDao {
+
     @Insert(onConflict = OnConflictStrategy.NONE)
-    suspend fun addShoppingList(shoppingListItemDbo: ShoppingListItemDbo)
+    suspend fun addShoppingList(shoppingListItemDbo: ShoppingListItemDbo): Long
 
     @Query("SELECT * FROM shopping_list")
-    suspend fun getAllShoppingList(): List<ShoppingListItemDbo>
+    fun getAllShoppingList(): Flow<List<ShoppingListItemDbo>>
+
+    @Query("SELECT * FROM shopping_list WHERE id = :id")
+    suspend fun getShoppingListById(id: Int): ShoppingListItemDbo?
 
     @Update
     suspend fun updateShoppingList(shoppingListItemDbo: ShoppingListItemDbo)

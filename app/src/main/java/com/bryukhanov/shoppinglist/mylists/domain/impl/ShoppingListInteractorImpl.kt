@@ -27,4 +27,8 @@ class ShoppingListInteractorImpl(private val shoppingListRepository: ShoppingLis
     override suspend fun deleteAllLists() {
         shoppingListRepository.deleteAllLists()
     }
+
+    override suspend fun copyShoppingList(shoppingListId: Int) {
+        shoppingListRepository.copyShoppingList(shoppingListId)
+    }
 }
