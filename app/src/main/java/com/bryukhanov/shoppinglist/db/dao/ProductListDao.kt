@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.bryukhanov.shoppinglist.db.entity.ProductListItemDbo
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ProductListDao {
@@ -24,13 +25,13 @@ interface ProductListDao {
     suspend fun deleteProduct(productListItemDbo: ProductListItemDbo)
 
     @Query("SELECT * FROM product_list WHERE shoppingListId = :shoppingListId ORDER BY position")
-    suspend fun getAllProductsForShoppingListByUserSort(shoppingListId: Int): List<ProductListItemDbo>
+    fun getAllProductsForShoppingListByUserSort(shoppingListId: Int): Flow<List<ProductListItemDbo>>
 
     @Query("SELECT * FROM product_list WHERE shoppingListId = :shoppingListId")
-    suspend fun getAllProductsForShoppingList(shoppingListId: Int): List<ProductListItemDbo>
+    fun getAllProductsForShoppingList(shoppingListId: Int): Flow<List<ProductListItemDbo>>
 
     @Query("SELECT * FROM product_list WHERE shoppingListId = :shoppingListId ORDER BY name")
-    suspend fun getAllProductsForShoppingListByAlphabetSort(shoppingListId: Int): List<ProductListItemDbo>
+    fun getAllProductsForShoppingListByAlphabetSort(shoppingListId: Int): Flow<List<ProductListItemDbo>>
 
     @Query("DELETE FROM product_list WHERE shoppingListId = :shoppingListId")
     suspend fun deleteAllProductLists(shoppingListId: Int)

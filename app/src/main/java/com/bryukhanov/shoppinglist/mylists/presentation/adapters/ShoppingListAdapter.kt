@@ -13,7 +13,9 @@ class ShoppingListAdapter(private val shoppingLists: List<ShoppingListItem>) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ShoppingListItem) {
-            binding.ivIconList.setImageResource(item.cover)
+            if (item.cover != null) {
+                binding.ivIconList.setImageResource(item.cover)
+            }
             binding.tvListName.text = item.name
         }
     }

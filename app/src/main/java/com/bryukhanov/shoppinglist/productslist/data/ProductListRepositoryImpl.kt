@@ -8,7 +8,8 @@ import com.bryukhanov.shoppinglist.productslist.domain.api.ProductListRepository
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class ProductListRepositoryImpl(
@@ -16,12 +17,12 @@ class ProductListRepositoryImpl(
     private val shoppingListConverter: ShoppingListConverter,
 ) : ProductListRepository {
 
-    override fun getAllProducts(shoppingListId: Int): Flow<List<ProductListItem>> = flow {
+    override fun getAllProducts(shoppingListId: Int): Flow<List<ProductListItem>> {
         // доработать метод, в завиимости от выбранной сортировки просить нужный метод в DAO
-        val products = withContext(Dispatchers.IO) {
-            dataBase.productListDao().getAllProductsForShoppingList(shoppingListId)
-        }
-        emit(shoppingListConverter.productListDboToProductList(products))
+        return dataBase.productListDao().getAllProductsForShoppingList(shoppingListId)
+            .map { listDbo ->
+                shoppingListConverter.productListDboToProductList(listDbo)
+            }.flowOn(Dispatchers.IO)
     }
 
     override suspend fun deleteAllProducts(shoppingListId: Int) {

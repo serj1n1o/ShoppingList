@@ -53,22 +53,26 @@ class ShoppingListRepositoryImpl(
     override suspend fun copyShoppingList(shoppingListId: Int) {
         withContext(Dispatchers.IO) {
             val originalList = dataBase.shoppingListDao().getShoppingListById(shoppingListId)
-            val products = dataBase.productListDao().getAllProductsForShoppingList(shoppingListId)
+            val products =
+                dataBase.productListDao().getAllProductsForShoppingList(shoppingListId).first()
             val existingNames = dataBase.shoppingListDao().getAllShoppingList().map { listDbo ->
                 listDbo.map { it.name }
             }.first()
+            if (originalList != null) {
+                val newName = nameShoppingListGenerator.generateUniqueName(
+                    baseName = originalList.name,
+                    existingNames = existingNames
+                )
 
-            val newName = nameShoppingListGenerator.generateUniqueName(
-                baseName = originalList.name,
-                existingNames = existingNames
-            )
+                val newShoppingList =
+                    ShoppingListItemDbo(name = newName, cover = originalList.cover)
+                val newShoppingListId =
+                    dataBase.shoppingListDao().addShoppingList(newShoppingList).toInt()
 
-            val newShoppingList = ShoppingListItemDbo(name = newName, cover = originalList.cover)
-            val newShoppingListId =
-                dataBase.shoppingListDao().addShoppingList(newShoppingList).toInt()
-
-            val newProducts = products.map { it.copy(id = 0, shoppingListId = newShoppingListId) }
-            dataBase.productListDao().addProducts(newProducts)
+                val newProducts =
+                    products.map { it.copy(id = 0, shoppingListId = newShoppingListId) }
+                dataBase.productListDao().addProducts(newProducts)
+            }
         }
     }
 

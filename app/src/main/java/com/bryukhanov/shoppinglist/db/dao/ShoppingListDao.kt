@@ -19,7 +19,7 @@ interface ShoppingListDao {
     fun getAllShoppingList(): Flow<List<ShoppingListItemDbo>>
 
     @Query("SELECT * FROM shopping_list WHERE id = :id")
-    suspend fun getShoppingListById(id: Int): ShoppingListItemDbo
+    suspend fun getShoppingListById(id: Int): ShoppingListItemDbo?
 
     @Update
     suspend fun updateShoppingList(shoppingListItemDbo: ShoppingListItemDbo)
