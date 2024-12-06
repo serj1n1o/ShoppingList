@@ -9,7 +9,9 @@ import com.bryukhanov.shoppinglist.mylists.domain.api.ShoppingListRepository
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class ShoppingListRepositoryImpl(
@@ -17,11 +19,11 @@ class ShoppingListRepositoryImpl(
     private val shoppingListConverter: ShoppingListConverter,
     private val nameShoppingListGenerator: NameShoppingListGenerator,
 ) : ShoppingListRepository {
-    override fun getAllShoppingLists(): Flow<List<ShoppingListItem>> = flow {
-        val shoppingLists = withContext(Dispatchers.IO) {
-            dataBase.shoppingListDao().getAllShoppingList()
-        }
-        emit(shoppingListConverter.shoppingListDboToShoppingList(shoppingLists))
+
+    override fun getAllShoppingLists(): Flow<List<ShoppingListItem>> {
+        return dataBase.shoppingListDao().getAllShoppingList().map { listDbo ->
+            shoppingListConverter.shoppingListDboToShoppingList(listDbo)
+        }.flowOn(Dispatchers.IO)
     }
 
     override suspend fun addShoppingList(shoppingListItem: ShoppingListItem) {
@@ -52,7 +54,9 @@ class ShoppingListRepositoryImpl(
         withContext(Dispatchers.IO) {
             val originalList = dataBase.shoppingListDao().getShoppingListById(shoppingListId)
             val products = dataBase.productListDao().getAllProductsForShoppingList(shoppingListId)
-            val existingNames = dataBase.shoppingListDao().getAllShoppingList().map { it.name }
+            val existingNames = dataBase.shoppingListDao().getAllShoppingList().map { listDbo ->
+                listDbo.map { it.name }
+            }.first()
 
             val newName = nameShoppingListGenerator.generateUniqueName(
                 baseName = originalList.name,
