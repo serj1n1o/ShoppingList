@@ -15,4 +15,5 @@
     <attr name="colorAccentText" format="color" />
     <attr name="colorHintUpText" format="color" />
     <attr name="colorPlus" format="color" />
+    <attr name="colorIconList" format="color" />
 </resources>

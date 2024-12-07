@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
@@ -17,6 +19,12 @@ class MyListsFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var adapter: ShoppingListAdapter
 
+    private val fakeData = mutableListOf(
+        ShoppingListItem(id = 1, name = "Продукты", cover = R.drawable.ic_list),
+        ShoppingListItem(id = 2, name = "Для дома", cover = R.drawable.ic_list),
+        ShoppingListItem(id = 3, name = "Подарки к Новому году", cover = R.drawable.ic_list)
+    )
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -28,20 +36,34 @@ class MyListsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Инициализация адаптера. Фейковые данные для тестирования
-        adapter = ShoppingListAdapter(
-            listOf(
-                ShoppingListItem(id = 1, name = "Продукты", cover = R.drawable.ic_list),
-                ShoppingListItem(id = 2, name = "Для дома", cover = R.drawable.ic_list),
-                ShoppingListItem(id = 3, name = "Подарки к Новому году", cover = R.drawable.ic_list)
-            )
-        )
+        adapter = ShoppingListAdapter(fakeData, object : ShoppingListAdapter.ActionListener {
+            override fun onEdit(position: Int) {
+                val item = fakeData[position]
+                Toast.makeText(context, "Редактирование: ${item.name}", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onCopy(position: Int) {
+                val item = fakeData[position]
+                Toast.makeText(context, "Копирование: ${item.name}", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onDelete(position: Int) {
+                fakeData.removeAt(position)
+                adapter.notifyItemRemoved(position)
+                Toast.makeText(context, "Удалено", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        adapter.notifyDataSetChanged()
 
         binding.rvMyLists.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             adapter = this@MyListsFragment.adapter
         }
+
+        val itemTouchHelper = ItemTouchHelper(SwipeCallback(adapter))
+        itemTouchHelper.attachToRecyclerView(binding.rvMyLists)
     }
 
     override fun onDestroyView() {
@@ -49,3 +71,5 @@ class MyListsFragment : Fragment() {
         _binding = null
     }
 }
+
+
