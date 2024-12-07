@@ -3,6 +3,7 @@
     <dimen name="zero_space">0dp</dimen>
     <dimen name="one_space">4dp</dimen>
     <dimen name="two_space">8dp</dimen>
+    <dimen name="two_and_half_space">10dp</dimen>
     <dimen name="four_space">16dp</dimen>
     <dimen name="four_and_half_space">18dp</dimen>
     <dimen name="six_space">24dp</dimen>

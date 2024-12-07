@@ -9,4 +9,7 @@
     <string name="myLists_screen_text">Мои списки</string>
     <string name="myLists_screen_no_lists">У вас пока нет списков</string>
     <string name="myLists_screen_create_first_list">Нажмите на кнопку + ниже, чтобы создать\n свой первый список</string>
+
+    <!-- custom_dialog -->
+    <string name="dialog_message">Удалить все списки?</string>
 </resources>
