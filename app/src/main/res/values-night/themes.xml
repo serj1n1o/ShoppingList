@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.ShoppingList" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorBackground">@color/darkBackground</item>
@@ -16,6 +16,10 @@
         <item name="colorAccentText">@color/accentText</item>
         <item name="colorHintUpText">@color/darkTintUpText</item>
         <item name="colorPlus">@color/darkColorPlus</item>
+        <item name="colorTopLineBottomSheet">@color/bottomSheetTopLineNight</item>
+        <item name="colorToolbarText">@color/textToolbarNight</item>
+        <item name="colorBoxStrokeEditTextNameProduct">@color/darkTintUpText</item>
+        <item name="colorTintBtnMinus">@color/colorTintBtnMinusDark</item>
     </style>
 
 </resources>
