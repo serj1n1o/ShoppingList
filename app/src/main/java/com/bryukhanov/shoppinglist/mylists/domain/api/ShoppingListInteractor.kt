@@ -14,4 +14,6 @@ interface ShoppingListInteractor {
     suspend fun deleteShoppingList(shoppingListItem: ShoppingListItem)
 
     suspend fun deleteAllLists()
+
+    suspend fun copyShoppingList(shoppingListId: Int)
 }
