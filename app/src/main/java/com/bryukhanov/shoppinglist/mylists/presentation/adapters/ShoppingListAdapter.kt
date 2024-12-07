@@ -44,8 +44,8 @@ class ShoppingListAdapter(
         val previousPosition = swipedPosition
         swipedPosition = position
 
-        // Обновляем видимость кнопок для предыдущего и текущего элемента
-        notifyItemChanged(previousPosition)
+        // Обновляем только измененные элементы
+        if (previousPosition != -1) notifyItemChanged(previousPosition)
         notifyItemChanged(swipedPosition)
     }
 
@@ -56,7 +56,7 @@ class ShoppingListAdapter(
             binding.tvListName.text = item.name
             binding.ivIconList.setImageResource(item.cover)
 
-            // Управляем видимостью кнопок и сдвигом основного контейнера
+            // Управляем видимостью кнопок и смещением контейнера
             if (isSwiped) {
                 binding.buttonContainer.visibility = View.VISIBLE
                 binding.mainContainer.translationX = -binding.buttonContainer.width.toFloat()
@@ -64,8 +64,16 @@ class ShoppingListAdapter(
                 binding.buttonContainer.visibility = View.GONE
                 binding.mainContainer.translationX = 0f
             }
+
+            // Принудительное обновление размеров кнопок
+            binding.buttonContainer.post {
+                if (isSwiped) {
+                    binding.mainContainer.translationX = -binding.buttonContainer.width.toFloat()
+                }
+            }
         }
     }
 }
+
 
 
