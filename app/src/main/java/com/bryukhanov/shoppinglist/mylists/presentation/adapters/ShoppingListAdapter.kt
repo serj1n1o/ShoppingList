@@ -53,8 +53,10 @@ class ShoppingListAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ShoppingListItem, isSwiped: Boolean) {
+            if (item.cover != null) {
+                binding.ivIconList.setImageResource(item.cover)
+            }
             binding.tvListName.text = item.name
-            binding.ivIconList.setImageResource(item.cover)
 
             // Управляем видимостью кнопок и смещением контейнера
             if (isSwiped) {

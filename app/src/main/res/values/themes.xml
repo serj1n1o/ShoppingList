@@ -17,6 +17,7 @@
         <item name="colorHintUpText">@color/lightTintUpText</item>
         <item name="colorPlus">@color/lightColorPlus</item>
         <item name="colorIconList">@color/lightIconList</item>
+        <item name="android:statusBarColor">@color/lightBackground</item>
 
 
     </style>

@@ -17,6 +17,7 @@
         <item name="colorHintUpText">@color/darkTintUpText</item>
         <item name="colorPlus">@color/darkColorPlus</item>
         <item name="colorIconList">@color/darkIconList</item>
+        <item name="android:statusBarColor">@color/darkBackground</item>
     </style>
 
 </resources>
