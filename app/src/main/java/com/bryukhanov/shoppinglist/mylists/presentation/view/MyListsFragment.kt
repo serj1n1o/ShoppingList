@@ -4,6 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
@@ -42,6 +46,38 @@ class MyListsFragment : Fragment() {
             setHasFixedSize(true)
             adapter = this@MyListsFragment.adapter
         }
+
+        binding.ivDelete.setOnClickListener {
+            showCustomDialog()
+        }
+    }
+
+    private fun showCustomDialog() {
+        val dialogView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.layout_custom_dialog, null)
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        val messageTextView = dialogView.findViewById<TextView>(R.id.tvDialogMessage)
+        val btnCancel = dialogView.findViewById<Button>(R.id.btnNo)
+        val btnConfirm = dialogView.findViewById<Button>(R.id.btnYes)
+
+        messageTextView.text = getString(R.string.dialog_message)
+        btnCancel.text = getString(R.string.dialog_cancel)
+        btnConfirm.text = getString(R.string.dialog_positive_answer)
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnConfirm.setOnClickListener {
+            Toast.makeText(requireContext(), "Все списки удалены", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     override fun onDestroyView() {
