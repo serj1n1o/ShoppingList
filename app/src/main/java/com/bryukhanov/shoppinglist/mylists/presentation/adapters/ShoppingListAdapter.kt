@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bryukhanov.shoppinglist.databinding.ItemMyListBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 
-class ShoppingListAdapter(private val shoppingLists: List<ShoppingListItem>) :
+class ShoppingListAdapter(private val shoppingLists: MutableList<ShoppingListItem>) :
     RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder>() {
 
     inner class ShoppingListViewHolder(private val binding: ItemMyListBinding) :
@@ -34,4 +34,9 @@ class ShoppingListAdapter(private val shoppingLists: List<ShoppingListItem>) :
     }
 
     override fun getItemCount(): Int = shoppingLists.size
+
+    fun clearShoppingLists() {
+        shoppingLists.clear()
+        notifyDataSetChanged()
+    }
 }

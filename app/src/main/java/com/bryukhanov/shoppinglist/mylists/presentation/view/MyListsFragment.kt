@@ -33,7 +33,7 @@ class MyListsFragment : Fragment() {
 
         // Инициализация адаптера. Фейковые данные для тестирования
         adapter = ShoppingListAdapter(
-            listOf(
+            mutableListOf(
                 ShoppingListItem(id = 1, name = "Продукты", cover = R.drawable.ic_list),
                 ShoppingListItem(id = 2, name = "Для дома", cover = R.drawable.ic_list),
                 ShoppingListItem(id = 3, name = "Подарки к Новому году", cover = R.drawable.ic_list)
@@ -66,7 +66,7 @@ class MyListsFragment : Fragment() {
         }
 
         dialogBinding.btnYes.setOnClickListener {
-            Toast.makeText(requireContext(), "Все списки удалены", Toast.LENGTH_SHORT).show()
+            adapter.clearShoppingLists()
             dialog.dismiss()
         }
 
