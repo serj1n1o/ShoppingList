@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/dialog_background"
     android:orientation="vertical">
 
     <ImageView
@@ -35,7 +36,6 @@
         <Button
             android:id="@+id/btnNo"
             style="@style/DialogNoButton"
-            android:layout_marginBottom="@dimen/six_space"
             android:layout_weight="1"
             android:backgroundTint="?attr/colorSecondary"
             android:text="@string/dialog_no"
@@ -45,7 +45,6 @@
             android:id="@+id/btnYes"
             style="@style/DialogYesButton"
             android:layout_marginStart="@dimen/two_space"
-            android:layout_marginBottom="@dimen/six_space"
             android:layout_weight="1"
             android:backgroundTint="?attr/colorPrimaryVariant"
             android:text="@string/dialog_yes"

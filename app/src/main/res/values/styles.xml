@@ -56,10 +56,10 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/six_space</item>
-        <item name="android:layout_marginTop">@dimen/two_and_half_space</item>
         <item name="android:textColor">?attr/colorButtonText</item>
         <item name="android:fontFamily">Roboto</item>
         <item name="android:textSize">@dimen/fourteen_size_text</item>
+        <item name="android:textStyle">bold</item>
         <item name="fontWeight">500</item>
     </style>
 
@@ -67,10 +67,15 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/six_space</item>
-        <item name="android:layout_marginTop">@dimen/two_and_half_space</item>
         <item name="android:textColor">?attr/colorOnBackground</item>
         <item name="android:fontFamily">Roboto</item>
         <item name="android:textSize">@dimen/fourteen_size_text</item>
+        <item name="android:textStyle">bold</item>
         <item name="fontWeight">500</item>
+    </style>
+
+    <style name="CustomDialogTheme" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
     </style>
 </resources>

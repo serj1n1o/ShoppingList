@@ -1,17 +1,16 @@
 package com.bryukhanov.shoppinglist.mylists.presentation.view
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
+import com.bryukhanov.shoppinglist.databinding.LayoutCustomDialogBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
 
@@ -53,26 +52,20 @@ class MyListsFragment : Fragment() {
     }
 
     private fun showCustomDialog() {
-        val dialogView = LayoutInflater.from(requireContext())
-            .inflate(R.layout.layout_custom_dialog, null)
+        val dialog = Dialog(requireContext(), R.style.CustomDialogTheme)
+        val dialogBinding =
+            LayoutCustomDialogBinding.inflate(layoutInflater) // Используйте ViewBinding для layout_custom_dialog
+        dialog.setContentView(dialogBinding.root)
 
-        val dialog = AlertDialog.Builder(requireContext())
-            .setView(dialogView)
-            .create()
+        dialogBinding.tvDialogMessage.text = getString(R.string.dialog_message)
+        dialogBinding.btnNo.text = getString(R.string.dialog_cancel)
+        dialogBinding.btnYes.text = getString(R.string.dialog_positive_answer)
 
-        val messageTextView = dialogView.findViewById<TextView>(R.id.tvDialogMessage)
-        val btnCancel = dialogView.findViewById<Button>(R.id.btnNo)
-        val btnConfirm = dialogView.findViewById<Button>(R.id.btnYes)
-
-        messageTextView.text = getString(R.string.dialog_message)
-        btnCancel.text = getString(R.string.dialog_cancel)
-        btnConfirm.text = getString(R.string.dialog_positive_answer)
-
-        btnCancel.setOnClickListener {
+        dialogBinding.btnNo.setOnClickListener {
             dialog.dismiss()
         }
 
-        btnConfirm.setOnClickListener {
+        dialogBinding.btnYes.setOnClickListener {
             Toast.makeText(requireContext(), "Все списки удалены", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }
