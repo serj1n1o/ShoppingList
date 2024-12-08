@@ -16,16 +16,14 @@
     <dimen name="fourteen_space">56dp</dimen>
     <dimen name="sixteen_space">64dp</dimen>
     <dimen name="eighteen_space">72dp</dimen>
+    <dimen name="twenty_five_space">100dp</dimen>
     <dimen name="thirty_space">120dp</dimen>
+    <dimen name="fifty_one_space">204dp</dimen>
 
     <dimen name="fourteen_size_text">14sp</dimen>
     <dimen name="sixteen_size_text">16sp</dimen>
     <dimen name="twenty_two_size_text">22sp</dimen>
     <dimen name="twenty_four_size_text">24sp</dimen>
 
-
-    <dimen name="corner_radius_bottom_sheet">28dp</dimen>
-    <dimen name="corner_radius_100dp">100dp</dimen>
-    <dimen name="peek_height_bottomsheet">204dp</dimen>
     <dimen name="one_dp">1dp</dimen>
 </resources>
