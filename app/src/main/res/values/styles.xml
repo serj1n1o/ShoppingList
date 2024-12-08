@@ -98,4 +98,18 @@
         <item name="boxCornerRadiusTopEnd">4dp</item>
     </style>
 
+    <style name="textHintStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sixteen_size_text</item>
+        <item name="android:textColor">@color/hint_text_color</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="fontWeight">400</item>
+    </style>
+
+    <style name="productRegularText">
+        <item name="android:textColor">?attr/colorToolbarText</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">@dimen/sixteen_size_text</item>
+        <item name="fontWeight">400</item>
+    </style>
+
 </resources>
