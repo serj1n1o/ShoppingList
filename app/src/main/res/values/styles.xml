@@ -112,4 +112,11 @@
         <item name="fontWeight">400</item>
     </style>
 
+    <style name="productUnitAmountText">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">@dimen/fourteen_size_text</item>
+        <item name="fontWeight">400</item>
+    </style>
+
 </resources>
