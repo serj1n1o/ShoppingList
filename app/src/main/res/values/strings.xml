@@ -9,4 +9,17 @@
     <string name="myLists_screen_text">Мои списки</string>
     <string name="myLists_screen_no_lists">У вас пока нет списков</string>
     <string name="myLists_screen_create_first_list">Нажмите на кнопку + ниже, чтобы создать\n свой первый список</string>
+
+    <!-- products_screen -->
+    <string name="products_screen_text">Продукты</string>
+    <string name="products_screen_no_products_text">В списке покупок пока пусто</string>
+    <string name="products_screen_create_first_product_text">Нажмите на кнопку + ниже,\nчтобы добавить товары</string>
+    <string name="product_text">Товар</string>
+    <string name="add_new_product_text">Добавить новый товар</string>
+    <string name="units">Единицы</string>
+    <string name="amount_txt">Количество</string>
+    <string name="sorting_text">Сортировка</string>
+    <string name="sort_alphabet_text">По алфавиту</string>
+    <string name="delete_all_text">Удалить все</string>
+    <string name="clear_bought_products_text">Очистить купленные</string>
 </resources>

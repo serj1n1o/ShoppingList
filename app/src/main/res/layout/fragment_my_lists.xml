@@ -23,7 +23,7 @@
             android:text="@string/myLists_screen_text" />
 
         <ImageView
-            android:id="@+id/ivTheme"
+            android:id="@+id/ivMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -38,7 +38,7 @@
             android:layout_gravity="end"
             android:layout_marginEnd="@dimen/zero_space"
             android:src="@drawable/ic_icon_delete"
-            app:layout_constraintStart_toEndOf="@id/ivTheme" />
+            app:layout_constraintStart_toEndOf="@id/ivMenu" />
 
         <ImageView
             android:id="@+id/ivSearch"
