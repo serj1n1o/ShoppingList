@@ -1,0 +1,13 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/width_dialog"
+    android:height="@dimen/height_card"
+    android:viewportWidth="312"
+    android:viewportHeight="264">
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M28,0L284,0A28,28 0,0 1,312 28L312,236A28,28 0,0 1,284 264L28,264A28,28 0,0 1,0 236L0,28A28,28 0,0 1,28 0z"/>
+    <path
+        android:pathData="M28,0L284,0A28,28 0,0 1,312 28L312,236A28,28 0,0 1,284 264L28,264A28,28 0,0 1,0 236L0,28A28,28 0,0 1,28 0z"
+        android:fillColor="?attr/colorToolBar"/>
+
+</vector>
