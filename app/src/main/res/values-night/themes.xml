@@ -21,7 +21,7 @@
         <item name="colorBoxStrokeEditTextNameProduct">@color/darkTintUpText</item>
         <item name="colorTintBtnMinus">@color/colorTintBtnMinusDark</item>
         <item name="colorTextCard">@color/darkTextCard</item>
-        <color name="colorIconCardAdd">@color/darkIconCardAdd</color>
+        <item name="colorIconCardAdd">@color/darkIconCardAdd</item>
     </style>
 
 </resources>
