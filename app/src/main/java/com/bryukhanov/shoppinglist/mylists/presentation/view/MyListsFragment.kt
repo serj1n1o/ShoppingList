@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
+import com.bryukhanov.shoppinglist.databinding.LayoutCustomCardBinding
 import com.bryukhanov.shoppinglist.databinding.LayoutCustomDialogBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
@@ -50,6 +51,10 @@ class MyListsFragment : Fragment() {
         binding.ivDelete.setOnClickListener {
             showCustomDialog()
         }
+
+        binding.fabAdd.setOnClickListener {
+            showCustomCard()
+        }
     }
 
     private fun showCustomDialog() {
@@ -72,6 +77,45 @@ class MyListsFragment : Fragment() {
         }
 
         dialog.show()
+    }
+
+    private fun showCustomCard() {
+        val dialog = Dialog(requireContext(), R.style.CustomDialogTheme)
+        val dialogBinding = LayoutCustomCardBinding.inflate(layoutInflater)
+        dialog.setContentView(dialogBinding.root)
+
+        dialogBinding.etCreateList.requestFocus()
+
+        dialogBinding.btnNoCard.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogBinding.btnYesCard.setOnClickListener {
+            val listName = dialogBinding.etCreateList.text.toString().trim()
+
+            if (listName.isEmpty()) {
+                dialogBinding.textInputLayout.error = "Название не может быть пустым"
+            } else {
+                dialogBinding.textInputLayout.error = null
+
+                // Создаем новый элемент списка
+                val newShoppingList = ShoppingListItem(
+                    id = generateId(),
+                    name = listName,
+                    cover = R.drawable.ic_list
+                )
+
+                adapter.setShoppingLists(adapter.getShoppingLists() + newShoppingList)
+
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun generateId(): Int {
+        return adapter.itemCount + 1
     }
 
     override fun onDestroyView() {
