@@ -22,6 +22,8 @@
         <item name="colorTintBtnMinus">@color/colorTintBtnMinusLight</item>
         <item name="colorTextCard">@color/lightTextCard</item>
         <item name="colorIconCardAdd">@color/lightIconCardAdd</item>
+        <item name="colorBackgroundHint">@color/lightBackgroundHint</item>
+
 
     </style>
 
