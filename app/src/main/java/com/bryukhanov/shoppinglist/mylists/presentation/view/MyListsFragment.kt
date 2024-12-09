@@ -30,20 +30,22 @@ class MyListsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Инициализация адаптера. Фейковые данные для тестирования
-        adapter = ShoppingListAdapter(
-            mutableListOf(
-                ShoppingListItem(id = 1, name = "Продукты", cover = R.drawable.ic_list),
-                ShoppingListItem(id = 2, name = "Для дома", cover = R.drawable.ic_list),
-                ShoppingListItem(id = 3, name = "Подарки к Новому году", cover = R.drawable.ic_list)
-            )
-        )
+        adapter = ShoppingListAdapter()
 
         binding.rvMyLists.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             adapter = this@MyListsFragment.adapter
         }
+
+        //  Фейковые данные для тестирования
+        adapter.setShoppingLists(
+            listOf(
+                ShoppingListItem(id = 1, name = "Продукты", cover = R.drawable.ic_list),
+                ShoppingListItem(id = 2, name = "Для дома", cover = R.drawable.ic_list),
+                ShoppingListItem(id = 3, name = "Подарки к Новому году", cover = R.drawable.ic_list)
+            )
+        )
 
         binding.ivDelete.setOnClickListener {
             showCustomDialog()
