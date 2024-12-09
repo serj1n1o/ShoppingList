@@ -22,4 +22,11 @@
     <string name="sort_alphabet_text">По алфавиту</string>
     <string name="delete_all_text">Удалить все</string>
     <string name="clear_bought_products_text">Очистить купленные</string>
+
+    <!-- custom_dialog -->
+    <string name="dialog_message">Удалить все списки?</string>
+    <string name="dialog_no">Нет</string>
+    <string name="dialog_yes">Да</string>
+    <string name="dialog_cancel">Отмена</string>
+    <string name="dialog_positive_answer">Удалить</string>
 </resources>
