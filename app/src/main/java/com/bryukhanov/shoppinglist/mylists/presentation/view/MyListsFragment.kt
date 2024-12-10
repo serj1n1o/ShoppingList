@@ -5,21 +5,37 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
 import com.bryukhanov.shoppinglist.databinding.LayoutCustomCardBinding
 import com.bryukhanov.shoppinglist.databinding.LayoutCustomDialogBinding
+import com.bryukhanov.shoppinglist.db.DataBase
+import com.bryukhanov.shoppinglist.mylists.data.ShoppingListRepositoryImpl
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
+import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsViewModel
+import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsViewModelFactory
 
 
 class MyListsFragment : Fragment() {
     private var _binding: FragmentMyListsBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: ShoppingListAdapter
+
+    private val viewModel: MyListsViewModel by lazy {
+
+        // У меня проблема при создании репозитория. Я должна передать реальный репозиторий,
+        // но я не понимаю какие параметры я должна передать.
+        val repository = ShoppingListRepositoryImpl(database, converter, generator)
+        // val repository = ShoppingListRepositoryImpl(????????)
+
+        val factory = MyListsViewModelFactory(repository)
+
+        ViewModelProvider(this, factory)[MyListsViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,13 +57,17 @@ class MyListsFragment : Fragment() {
         }
 
         //  Фейковые данные для тестирования
-        adapter.setShoppingLists(
-            listOf(
-                ShoppingListItem(id = 1, name = "Продукты", cover = R.drawable.ic_list),
-                ShoppingListItem(id = 2, name = "Для дома", cover = R.drawable.ic_list),
-                ShoppingListItem(id = 3, name = "Подарки к Новому году", cover = R.drawable.ic_list)
-            )
-        )
+//        adapter.setShoppingLists(
+//            listOf(
+//                ShoppingListItem(id = 1, name = "Продукты", cover = R.drawable.ic_list),
+//                ShoppingListItem(id = 2, name = "Для дома", cover = R.drawable.ic_list),
+//                ShoppingListItem(id = 3, name = "Подарки к Новому году", cover = R.drawable.ic_list)
+//            )
+//        )
+
+        viewModel.shoppingLists.observe(viewLifecycleOwner) { shoppingLists ->
+            adapter.setShoppingLists(shoppingLists)
+        }
 
         binding.ivDelete.setOnClickListener {
             showCustomDialog()
@@ -100,14 +120,13 @@ class MyListsFragment : Fragment() {
             } else {
                 dialogBinding.textInputLayout.error = null
 
-                // Создаем новый элемент списка
-                val newShoppingList = ShoppingListItem(
-                    id = generateId(),
-                    name = listName,
-                    cover = R.drawable.ic_list
+                viewModel.addShoppingList(
+                    ShoppingListItem(
+                        id = generateId(),
+                        name = listName,
+                        cover = R.drawable.ic_list
+                    )
                 )
-
-                adapter.setShoppingLists(adapter.getShoppingLists() + newShoppingList)
 
                 dialog.dismiss()
             }
@@ -115,6 +134,7 @@ class MyListsFragment : Fragment() {
 
         dialog.show()
     }
+
 
     private fun generateId(): Int {
         return adapter.itemCount + 1
