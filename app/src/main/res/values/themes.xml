@@ -23,6 +23,7 @@
         <item name="colorTextCard">@color/lightTextCard</item>
         <item name="colorIconCardAdd">@color/lightIconCardAdd</item>
         <item name="colorBackgroundHint">@color/lightBackgroundHint</item>
+        <item name="colorCardText">@color/lightCardText</item>
 
 
     </style>

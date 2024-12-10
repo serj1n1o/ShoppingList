@@ -21,6 +21,7 @@
     <color name="lightTextCard">#845416</color>
     <color name="lightIconCardAdd">#50453A</color>
     <color name="lightBackgroundHint">#FFF8F4</color>
+    <color name="lightCardText">#211A14</color>
 
 
     <color name="darkBackground">#130D07</color>
@@ -44,4 +45,5 @@
     <color name="darkTextCard">#E5C5A7</color>
     <color name="darkIconCardAdd">#D4C4B5</color>
     <color name="darkBackgroundHint">#19120C</color>
+    <color name="darkCardText">#FFFAF8</color>
 </resources>
