@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:src="@drawable/back_arrow" />
+                android:src="@drawable/ic_back_arrow" />
 
             <TextView
                 android:id="@+id/txtProducts"
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginEnd="@dimen/one_space"
-                android:src="@drawable/menu_icon" />
+                android:src="@drawable/ic_menu" />
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -48,6 +48,7 @@
             android:layout_width="@dimen/zero_space"
             android:layout_height="@dimen/zero_space"
             android:visibility="visible"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_product"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -189,7 +190,7 @@
             android:layout_height="@dimen/twelve_space"
             android:layout_marginStart="@dimen/four_space"
             android:backgroundTint="@android:color/transparent"
-            android:src="@drawable/icon_minus_not_select"
+            android:src="@drawable/ic_minus_not_select"
             app:layout_constraintBottom_toBottomOf="@id/inputLayoutUnitProduct"
             app:layout_constraintEnd_toStartOf="@id/plusUnit"
             app:layout_constraintTop_toTopOf="@id/inputLayoutUnitProduct" />
@@ -200,7 +201,7 @@
             android:layout_height="@dimen/twelve_space"
             android:layout_marginEnd="@dimen/four_space"
             android:backgroundTint="@android:color/transparent"
-            android:src="@drawable/icon_plus"
+            android:src="@drawable/ic_plus"
             app:layout_constraintBottom_toBottomOf="@id/minusUnit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/minusUnit" />
@@ -237,7 +238,7 @@
             android:id="@+id/imgSort"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/swap_icon_prod"
+            android:src="@drawable/ic_swap_prod"
             app:layout_constraintBottom_toBottomOf="@id/textInputLayoutSortMenu"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/textInputLayoutSortMenu" />
@@ -279,7 +280,7 @@
             android:drawablePadding="@dimen/three_space"
             android:gravity="center_vertical"
             android:text="@string/delete_all_text"
-            app:drawableStartCompat="@drawable/delete_icon_prod"
+            app:drawableStartCompat="@drawable/ic_delete_prod"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textInputLayoutSortMenu" />
@@ -292,7 +293,7 @@
             android:drawablePadding="@dimen/three_space"
             android:gravity="center_vertical"
             android:text="@string/clear_bought_products_text"
-            app:drawableStartCompat="@drawable/clear_icon_prod"
+            app:drawableStartCompat="@drawable/ic_clear_prod"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/deleteAllProductsMenu" />
