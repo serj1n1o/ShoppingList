@@ -34,10 +34,6 @@ class ShoppingListAdapter : RecyclerView.Adapter<ShoppingListAdapter.ShoppingLis
 
     override fun getItemCount(): Int = shoppingLists.size
 
-    fun getShoppingLists(): List<ShoppingListItem> {
-        return shoppingLists
-    }
-
     fun setShoppingLists(newShoppingLists: List<ShoppingListItem>) {
         shoppingLists.clear()
         shoppingLists.addAll(newShoppingLists)

@@ -1,10 +1,12 @@
 package com.bryukhanov.shoppinglist.mylists.presentation.view
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
@@ -87,7 +89,7 @@ class MyListsFragment : Fragment() {
         }
 
         dialogBinding.btnYes.setOnClickListener {
-            adapter.clearShoppingLists()
+            viewModel.deleteAllShoppingLists()
             dialog.dismiss()
         }
 
@@ -121,6 +123,14 @@ class MyListsFragment : Fragment() {
                 )
 
                 viewModel.addShoppingList(newShoppingList)
+
+                val inputMethodManager =
+                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(
+                    dialogBinding.etCreateList.windowToken,
+                    0
+                )
+
                 dialog.dismiss()
             }
         }
