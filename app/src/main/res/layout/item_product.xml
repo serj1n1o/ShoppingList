@@ -10,7 +10,7 @@
         android:layout_width="@dimen/six_space"
         android:layout_height="@dimen/six_space"
         android:layout_marginStart="@dimen/four_space"
-        style="@style/CheckBoxCustom"
+        android:button="@drawable/ic_checkbox_unchecked"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

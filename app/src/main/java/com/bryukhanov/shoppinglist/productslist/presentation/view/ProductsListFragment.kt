@@ -11,6 +11,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.core.util.Animates
 import com.bryukhanov.shoppinglist.databinding.FragmentProductsListBinding
@@ -30,6 +31,10 @@ class ProductsListFragment : Fragment() {
 
     private var bottomSheetAddProduct: BottomSheetBehavior<ConstraintLayout>? = null
     private var bottomSheetMenu: BottomSheetBehavior<ConstraintLayout>? = null
+
+    private lateinit var nameProduct: String
+    private var amountProduct: Int? = null
+    private var unitProduct: String? = null
 
     private val productsAdapter by lazy {
         ProductsAdapter(object : ProductsAdapter.ProductsActionListener {
@@ -89,10 +94,10 @@ class ProductsListFragment : Fragment() {
                             viewModel.addProduct(
                                 ProductListItem(
                                     shoppingListId = shoppingListId,
-                                    name = "Test name",
-                                    position = 1,
-                                    amount = null,
-                                    unit = null
+                                    name = nameProduct,
+                                    position = productsAdapter.itemCount,
+                                    amount = amountProduct,
+                                    unit = unitProduct,
                                 )
                             )
                             bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_HIDDEN
@@ -120,7 +125,20 @@ class ProductsListFragment : Fragment() {
         })
 
         binding.editTextNameProduct.doOnTextChanged { text, start, before, count ->
+            if (!text.isNullOrEmpty()) {
+                nameProduct = text.toString()
+            }
 
+        }
+
+        binding.editTextAmountProduct.doOnTextChanged { text, start, before, count ->
+            amountProduct = if (!text.isNullOrEmpty()) {
+                text.toString().toInt()
+            } else null
+        }
+
+        binding.ivBackArrow.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 

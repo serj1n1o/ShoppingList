@@ -24,6 +24,7 @@
                 android:id="@+id/ivBackArrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:layout_gravity="start"
                 android:src="@drawable/ic_back_arrow" />
 
@@ -37,6 +38,7 @@
                 android:id="@+id/ivMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:layout_gravity="end"
                 android:layout_marginEnd="@dimen/one_space"
                 android:src="@drawable/ic_menu" />
@@ -114,7 +116,7 @@
         app:behavior_hideable="true"
         app:behavior_peekHeight="@dimen/fifty_one_space"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <View
             android:id="@+id/lineBottomSheetProductAdd"
@@ -162,6 +164,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextAmountProduct"
                 style="@style/textInputEditTextProduct"
+                android:inputType="number"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -221,7 +224,7 @@
         app:behavior_hideable="true"
         app:behavior_peekHeight="@dimen/fifty_one_space"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <View
             android:id="@+id/lineMenu"

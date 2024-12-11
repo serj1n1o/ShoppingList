@@ -121,9 +121,5 @@
         <item name="fontWeight">400</item>
     </style>
 
-    <style name="CheckBoxCustom" parent="Widget.Material3.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/custom_checkbox</item>
-        <item name="android:checkMarkTint">?attr/colorBackground</item>
-    </style>
 
 </resources>
