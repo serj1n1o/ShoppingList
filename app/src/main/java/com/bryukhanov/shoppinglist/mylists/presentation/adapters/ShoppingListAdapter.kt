@@ -6,16 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bryukhanov.shoppinglist.databinding.ItemMyListBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 
-class ShoppingListAdapter(
-    private val shoppingLists: List<ShoppingListItem>,
-    private val clickListener: ClickListener,
-) :
+class ShoppingListAdapter(private val shoppingLists: List<ShoppingListItem>) :
     RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder>() {
 
-    inner class ShoppingListViewHolder(
-        private val binding: ItemMyListBinding,
-        private val clickListener: ClickListener,
-    ) :
+    inner class ShoppingListViewHolder(private val binding: ItemMyListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ShoppingListItem) {
@@ -23,12 +17,7 @@ class ShoppingListAdapter(
                 binding.ivIconList.setImageResource(item.cover)
             }
             binding.tvListName.text = item.name
-            itemView.setOnClickListener { clickListener.onClick.invoke(item.id) }
         }
-    }
-
-    interface ClickListener {
-        val onClick: ((id: Int) -> Unit)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingListViewHolder {
@@ -37,7 +26,7 @@ class ShoppingListAdapter(
             parent,
             false
         )
-        return ShoppingListViewHolder(binding, clickListener)
+        return ShoppingListViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ShoppingListViewHolder, position: Int) {
