@@ -39,17 +39,6 @@ class MyListsViewModel(private val shoppingListInteractor: ShoppingListInteracto
         }
     }
 
-    private fun processResult(shoppingList: List<ShoppingListItem>) {
-        if (shoppingList.isEmpty()) {
-            renderState(MyListsState.Empty)
-        } else {
-            renderState(MyListsState.Content(shoppingList))
-        }
-    }
-
-    private fun renderState(state: MyListsState) {
-        listState.postValue(state)
-    }
     fun deleteAllShoppingLists() {
         viewModelScope.launch {
             shoppingListInteractor.deleteAllLists()
@@ -61,6 +50,19 @@ class MyListsViewModel(private val shoppingListInteractor: ShoppingListInteracto
             shoppingListInteractor.copyShoppingList(shoppingListId)
         }
     }
+
+    private fun processResult(shoppingList: List<ShoppingListItem>) {
+        if (shoppingList.isEmpty()) {
+            renderState(MyListsState.Empty)
+        } else {
+            renderState(MyListsState.Content(shoppingList))
+        }
+    }
+
+    private fun renderState(state: MyListsState) {
+        listState.postValue(state)
+    }
+
 }
 
 
