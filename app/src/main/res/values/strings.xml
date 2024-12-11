@@ -36,4 +36,5 @@
     <string name="dialog_no_card">Отмена</string>
     <string name="dialog_yes_card">Создать</string>
     <string name="et_card_hint">Новый список</string>
+    <string name="error_hint">Название не может быть пустым</string>
 </resources>

@@ -13,6 +13,7 @@ import com.bryukhanov.shoppinglist.databinding.LayoutCustomCardBinding
 import com.bryukhanov.shoppinglist.databinding.LayoutCustomDialogBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
+import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsState
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -44,14 +45,7 @@ class MyListsFragment : Fragment() {
             adapter = this@MyListsFragment.adapter
         }
 
-        //  Фейковые данные для тестирования
-//        adapter.setShoppingLists(
-//            listOf(
-//                ShoppingListItem(id = 1, name = "Продукты", cover = R.drawable.ic_list),
-//                ShoppingListItem(id = 2, name = "Для дома", cover = R.drawable.ic_list),
-//                ShoppingListItem(id = 3, name = "Подарки к Новому году", cover = R.drawable.ic_list)
-//            )
-//        )
+        observeViewModel()
 
         binding.ivDelete.setOnClickListener {
             showCustomDialog()
@@ -59,6 +53,22 @@ class MyListsFragment : Fragment() {
 
         binding.fabAdd.setOnClickListener {
             showCustomCard()
+        }
+
+        viewModel.getAllShoppingLists()
+    }
+
+    private fun observeViewModel() {
+        viewModel.getListState().observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is MyListsState.Content -> {
+                    adapter.setShoppingLists(state.myList)
+                }
+
+                MyListsState.Empty -> {
+                    adapter.clearShoppingLists()
+                }
+            }
         }
     }
 
@@ -100,28 +110,22 @@ class MyListsFragment : Fragment() {
             val listName = dialogBinding.etCreateList.text.toString().trim()
 
             if (listName.isEmpty()) {
-                dialogBinding.textInputLayout.error = "Название не может быть пустым"
+                dialogBinding.textInputLayout.error = getString(R.string.error_hint)
             } else {
                 dialogBinding.textInputLayout.error = null
 
-                // Создаем новый элемент списка
                 val newShoppingList = ShoppingListItem(
-                    id = generateId(),
+                    id = 0,
                     name = listName,
                     cover = R.drawable.ic_list
                 )
 
-                adapter.setShoppingLists(adapter.getShoppingLists() + newShoppingList)
-
+                viewModel.addShoppingList(newShoppingList)
                 dialog.dismiss()
             }
         }
 
         dialog.show()
-    }
-
-    private fun generateId(): Int {
-        return adapter.itemCount + 1
     }
 
     override fun onDestroyView() {
