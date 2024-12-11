@@ -305,9 +305,12 @@
         android:id="@+id/fabAddProduct"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
+        android:layout_gravity="top"
         android:layout_marginEnd="@dimen/four_space"
         android:layout_marginBottom="@dimen/fourteen_space"
+        app:layout_anchor="@id/bottomSheetAddProduct"
+        app:layout_anchorGravity="top|end"
+        app:useCompatPadding="true"
         app:backgroundTint="?attr/colorPrimary"
         app:srcCompat="@drawable/ic_add"
         tools:visibility="visible" />

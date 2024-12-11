@@ -10,8 +10,7 @@
         android:layout_width="@dimen/six_space"
         android:layout_height="@dimen/six_space"
         android:layout_marginStart="@dimen/four_space"
-        android:button="@drawable/custom_checkbox"
-        android:buttonTint="?attr/colorBackground"
+        style="@style/CheckBoxCustom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

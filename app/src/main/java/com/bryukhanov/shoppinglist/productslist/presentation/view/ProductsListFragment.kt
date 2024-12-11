@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.bryukhanov.shoppinglist.R
+import com.bryukhanov.shoppinglist.core.util.Animates
 import com.bryukhanov.shoppinglist.databinding.FragmentProductsListBinding
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
 import com.bryukhanov.shoppinglist.productslist.presentation.adapters.ProductsAdapter
@@ -43,8 +46,9 @@ class ProductsListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        return inflater.inflate(R.layout.fragment_products_list, container, false)
+    ): View {
+        _binding = FragmentProductsListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,6 +66,61 @@ class ProductsListFragment : Fragment() {
                 is ProductsState.Content -> showContent(state.productList)
                 ProductsState.Empty -> showEmptyPlaceHolder()
             }
+        }
+
+        binding.fabAddProduct.setOnClickListener {
+            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        bottomSheetAddProduct?.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        binding.fabAddProduct.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                requireContext(),
+                                R.drawable.ic_confirm
+                            )
+                        )
+                        binding.overlay.isVisible = true
+                        Animates.animateOverlay(true, binding.overlay)
+                        binding.fabAddProduct.setOnClickListener {
+                            viewModel.addProduct(
+                                ProductListItem(
+                                    shoppingListId = shoppingListId,
+                                    name = "Test name",
+                                    position = 1,
+                                    amount = null,
+                                    unit = null
+                                )
+                            )
+                            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_HIDDEN
+                        }
+                    }
+
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.isVisible = false
+                        binding.fabAddProduct.setOnClickListener {
+                            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_COLLAPSED
+                        }
+                        binding.fabAddProduct.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                requireContext(),
+                                R.drawable.ic_add
+                            )
+                        )
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+
+        })
+
+        binding.editTextNameProduct.doOnTextChanged { text, start, before, count ->
+
         }
     }
 

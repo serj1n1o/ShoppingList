@@ -80,6 +80,7 @@
 
     <style name="TextInputLayoutUnitProduct" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
         <item name="boxStrokeColor">@color/stroke_input_text_layout</item>
+        <item name="hintTextColor">?attr/colorBoxStrokeEditTextNameProduct</item>
         <item name="boxStrokeWidth">1dp</item>
         <item name="boxStrokeWidthFocused">3dp</item>
         <item name="boxCornerRadiusTopStart">4dp</item>
@@ -90,6 +91,7 @@
 
     <style name="TextInputLayoutAmountProduct" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">@color/stroke_input_text_layout</item>
+        <item name="hintTextColor">?attr/colorBoxStrokeEditTextNameProduct</item>
         <item name="boxStrokeWidth">1dp</item>
         <item name="boxStrokeWidthFocused">3dp</item>
         <item name="boxCornerRadiusTopStart">4dp</item>
@@ -117,6 +119,11 @@
         <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textSize">@dimen/fourteen_size_text</item>
         <item name="fontWeight">400</item>
+    </style>
+
+    <style name="CheckBoxCustom" parent="Widget.Material3.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/custom_checkbox</item>
+        <item name="android:checkMarkTint">?attr/colorBackground</item>
     </style>
 
 </resources>

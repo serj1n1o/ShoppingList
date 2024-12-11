@@ -3,6 +3,7 @@ package com.bryukhanov.shoppinglist.productslist.presentation.adapters
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bryukhanov.shoppinglist.databinding.ItemProductBinding
@@ -53,6 +54,8 @@ class ProductsAdapter(private val actionListener: ProductsActionListener) :
                 nameProduct.text = item.name
                 if (item.amount != null && item.unit != null) {
                     amountAndUnit.text = item.amount.toString() + item.unit
+                } else {
+                    amountAndUnit.isVisible = false
                 }
                 checkBoxProduct.setOnCheckedChangeListener { _, isChecked ->
                     actionListener.onProductBoughtChangedListener.invoke(item.id, isChecked)

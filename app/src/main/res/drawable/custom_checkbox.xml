@@ -6,7 +6,7 @@
             <size android:width="@dimen/six_space" android:height="@dimen/six_space" />
         </shape>
     </item>
-    <item>
+    <item android:state_checked="false">
         <shape android:shape="oval">
             <solid android:color="@android:color/transparent" />
             <size android:width="@dimen/six_space" android:height="@dimen/six_space" />
