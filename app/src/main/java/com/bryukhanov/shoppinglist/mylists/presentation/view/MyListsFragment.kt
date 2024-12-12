@@ -1,22 +1,31 @@
 package com.bryukhanov.shoppinglist.mylists.presentation.view
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
+import com.bryukhanov.shoppinglist.databinding.LayoutCustomCardBinding
 import com.bryukhanov.shoppinglist.databinding.LayoutCustomDialogBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
+import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsState
+import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class MyListsFragment : Fragment() {
     private var _binding: FragmentMyListsBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel by viewModel<MyListsViewModel>()
+
     private lateinit var adapter: ShoppingListAdapter
 
     override fun onCreateView(
@@ -38,17 +47,30 @@ class MyListsFragment : Fragment() {
             adapter = this@MyListsFragment.adapter
         }
 
-        //  Фейковые данные для тестирования
-        adapter.setShoppingLists(
-            listOf(
-                ShoppingListItem(id = 1, name = "Продукты", cover = R.drawable.ic_list),
-                ShoppingListItem(id = 2, name = "Для дома", cover = R.drawable.ic_list),
-                ShoppingListItem(id = 3, name = "Подарки к Новому году", cover = R.drawable.ic_list)
-            )
-        )
+        observeViewModel()
 
         binding.ivDelete.setOnClickListener {
             showCustomDialog()
+        }
+
+        binding.fabAdd.setOnClickListener {
+            showCustomCard()
+        }
+
+        viewModel.getAllShoppingLists()
+    }
+
+    private fun observeViewModel() {
+        viewModel.getListState().observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is MyListsState.Content -> {
+                    adapter.setShoppingLists(state.myList)
+                }
+
+                MyListsState.Empty -> {
+                    adapter.clearShoppingLists()
+                }
+            }
         }
     }
 
@@ -67,8 +89,50 @@ class MyListsFragment : Fragment() {
         }
 
         dialogBinding.btnYes.setOnClickListener {
-            adapter.clearShoppingLists()
+            viewModel.deleteAllShoppingLists()
             dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showCustomCard() {
+        val dialog = Dialog(requireContext(), R.style.CustomDialogTheme)
+        val dialogBinding = LayoutCustomCardBinding.inflate(layoutInflater)
+
+        dialog.setContentView(dialogBinding.root)
+
+        dialogBinding.etCreateList.requestFocus()
+
+        dialogBinding.btnNoCard.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialogBinding.btnYesCard.setOnClickListener {
+            val listName = dialogBinding.etCreateList.text.toString().trim()
+
+            if (listName.isEmpty()) {
+                dialogBinding.textInputLayout.error = getString(R.string.error_hint)
+            } else {
+                dialogBinding.textInputLayout.error = null
+
+                val newShoppingList = ShoppingListItem(
+                    id = 0,
+                    name = listName,
+                    cover = R.drawable.ic_list
+                )
+
+                viewModel.addShoppingList(newShoppingList)
+
+                val inputMethodManager =
+                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(
+                    dialogBinding.etCreateList.windowToken,
+                    0
+                )
+
+                dialog.dismiss()
+            }
         }
 
         dialog.show()

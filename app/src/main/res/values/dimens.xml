@@ -24,6 +24,8 @@
 
     <dimen name="height_dialog">184dp</dimen>
     <dimen name="width_dialog">312dp</dimen>
+    <dimen name="height_card">264dp</dimen>
+
 
 
     <dimen name="fourteen_size_text">14sp</dimen>

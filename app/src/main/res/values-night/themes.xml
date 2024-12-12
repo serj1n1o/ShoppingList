@@ -20,6 +20,10 @@
         <item name="colorToolbarText">@color/textToolbarNight</item>
         <item name="colorBoxStrokeEditTextNameProduct">@color/darkTintUpText</item>
         <item name="colorTintBtnMinus">@color/colorTintBtnMinusDark</item>
+        <item name="colorTextCard">@color/darkTextCard</item>
+        <item name="colorIconCardAdd">@color/darkIconCardAdd</item>
+        <item name="colorBackgroundHint">@color/darkBackgroundHint</item>
+        <item name="colorCardText">@color/darkCardText</item>
     </style>
 
 </resources>

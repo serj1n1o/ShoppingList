@@ -29,4 +29,12 @@
     <string name="dialog_yes">Да</string>
     <string name="dialog_cancel">Отмена</string>
     <string name="dialog_positive_answer">Удалить</string>
+
+    <!-- custom_card-->
+    <string name="card_message">Добавление списка</string>
+    <string name="card_hint">Название списка</string>
+    <string name="dialog_no_card">Отмена</string>
+    <string name="dialog_yes_card">Создать</string>
+    <string name="et_card_hint">Новый список</string>
+    <string name="error_hint">Название не может быть пустым</string>
 </resources>
