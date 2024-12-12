@@ -1,37 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/two_space"
-    app:cardBackgroundColor="?attr/colorList"
-    app:cardCornerRadius="@dimen/four_space"
-    app:cardElevation="@dimen/two_space">
+    android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/two_space">
+        android:orientation="horizontal"
+        android:padding="@dimen/one_space"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/ivIconList"
-            android:layout_width="@dimen/ten_space"
-            android:layout_height="@dimen/ten_space"
-            android:src="@drawable/ic_list"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <ImageButton
+            android:id="@+id/btnEdit"
+            android:layout_width="@dimen/twelve_space"
+            android:layout_height="@dimen/twelve_space"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/edit"
+            android:src="@drawable/ic_edit_list" />
 
-        <TextView
-            android:id="@+id/tvListName"
-            style="@style/NameList"
-            android:text="List Name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivIconList"
-            app:layout_constraintTop_toTopOf="parent" />
+        <ImageButton
+            android:id="@+id/btnCopy"
+            android:layout_width="@dimen/twelve_space"
+            android:layout_height="@dimen/twelve_space"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/copy"
+            android:src="@drawable/ic_copy_list" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+        <ImageButton
+            android:id="@+id/btnDelete"
+            android:layout_width="@dimen/twelve_space"
+            android:layout_height="@dimen/twelve_space"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/delete"
+            android:src="@drawable/ic_delete_list" />
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/mainContainer"
+        android:layout_width="@dimen/zero_space"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/two_space"
+        app:cardBackgroundColor="?attr/colorList"
+        app:cardCornerRadius="@dimen/four_space"
+        app:cardElevation="@dimen/two_space"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/three_space">
+
+            <ImageView
+                android:id="@+id/ivIconList"
+                android:layout_width="@dimen/ten_space"
+                android:layout_height="@dimen/ten_space"
+                android:src="@drawable/ic_list"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvListName"
+                style="@style/NameList"
+                android:text="List Name"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ivIconList"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

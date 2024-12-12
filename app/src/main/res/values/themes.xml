@@ -16,6 +16,9 @@
         <item name="colorAccentText">@color/accentText</item>
         <item name="colorHintUpText">@color/lightTintUpText</item>
         <item name="colorPlus">@color/lightColorPlus</item>
+        <item name="colorIconList">@color/lightIconList</item>
+        <item name="android:statusBarColor">@color/lightBackground</item>
+
         <item name="colorTopLineBottomSheet">@color/bottomSheetTopLineLight</item>
         <item name="colorToolbarText">@color/textToolbarLight</item>
         <item name="colorBoxStrokeEditTextNameProduct">@color/darkAccent</item>

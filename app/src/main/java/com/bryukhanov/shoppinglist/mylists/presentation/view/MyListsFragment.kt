@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
@@ -21,7 +23,6 @@ import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsViewMod
 import com.bryukhanov.shoppinglist.productslist.presentation.view.ProductsListFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 class MyListsFragment : Fragment() {
     private var _binding: FragmentMyListsBinding? = null
     private val binding get() = _binding!!
@@ -29,6 +30,7 @@ class MyListsFragment : Fragment() {
     private val viewModel by viewModel<MyListsViewModel>()
 
     private lateinit var adapter: ShoppingListAdapter
+    private lateinit var itemTouchHelper: ItemTouchHelper
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +45,23 @@ class MyListsFragment : Fragment() {
 
         adapter = ShoppingListAdapter(object : ShoppingListAdapter.ActionListener {
             override fun onClickItem(id: Int) {
+                adapter.closeSwipedItem()
                 navigateToProductScreen(id)
+            }
+
+            override fun onEdit(id: Int) {
+                adapter.closeSwipedItem()
+                Toast.makeText(context, "Редактирование", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onCopy(id: Int) {
+                adapter.closeSwipedItem()
+                Toast.makeText(requireContext(), "Копирование", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onDelete(id: Int) {
+                adapter.closeSwipedItem()
+                Toast.makeText(requireContext(), "Удалено", Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -52,6 +70,9 @@ class MyListsFragment : Fragment() {
             setHasFixedSize(true)
             adapter = this@MyListsFragment.adapter
         }
+
+        itemTouchHelper = ItemTouchHelper(SwipeCallback(adapter))
+        itemTouchHelper.attachToRecyclerView(binding.rvMyLists)
 
         observeViewModel()
 
@@ -89,8 +110,7 @@ class MyListsFragment : Fragment() {
 
     private fun showCustomDialog() {
         val dialog = Dialog(requireContext(), R.style.CustomDialogTheme)
-        val dialogBinding =
-            LayoutCustomDialogBinding.inflate(layoutInflater)
+        val dialogBinding = LayoutCustomDialogBinding.inflate(layoutInflater)
         dialog.setContentView(dialogBinding.root)
 
         dialogBinding.tvDialogMessage.text = getString(R.string.dialog_message)
@@ -156,3 +176,8 @@ class MyListsFragment : Fragment() {
         _binding = null
     }
 }
+
+
+
+
+

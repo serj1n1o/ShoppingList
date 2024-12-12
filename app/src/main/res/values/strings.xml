@@ -9,6 +9,9 @@
     <string name="myLists_screen_text">Мои списки</string>
     <string name="myLists_screen_no_lists">У вас пока нет списков</string>
     <string name="myLists_screen_create_first_list">Нажмите на кнопку + ниже, чтобы создать\n свой первый список</string>
+    <string name="delete">Удалить</string>
+    <string name="copy">Копировать</string>
+    <string name="edit">Редактировать</string>
 
     <!-- products_screen -->
     <string name="products_screen_text">Продукты</string>

@@ -10,22 +10,52 @@ class ShoppingListAdapter(private val listener: ActionListener) :
     RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder>() {
 
     private val shoppingLists = mutableListOf<ShoppingListItem>()
+    private var swipedPosition: Int = -1
 
     interface ActionListener {
         fun onClickItem(id: Int)
+        fun onEdit(id: Int)
+        fun onCopy(id: Int)
+        fun onDelete(id: Int)
     }
 
     inner class ShoppingListViewHolder(
         private val binding: ItemMyListBinding,
         private val listener: ActionListener,
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ShoppingListItem) {
+        fun bind(item: ShoppingListItem, isSwiped: Boolean) {
             item.cover?.let { binding.ivIconList.setImageResource(it) }
             binding.tvListName.text = item.name
 
-            itemView.setOnClickListener { listener.onClickItem(item.id) }
+            itemView.setOnClickListener {
+                listener.onClickItem(item.id)
+                closeSwipedItem()
+            }
+
+            // Сбрасывает смещение для закрытия свайпа
+            if (!isSwiped) {
+                binding.mainContainer.translationX = 0f
+            }
+
+            binding.btnEdit.setOnClickListener {
+                listener.onEdit(item.id)
+                closeSwipedItem()
+            }
+            binding.btnCopy.setOnClickListener {
+                listener.onCopy(item.id)
+                closeSwipedItem()
+            }
+            binding.btnDelete.setOnClickListener {
+                listener.onDelete(item.id)
+                closeSwipedItem()
+            }
+        }
+
+        private fun closeSwipedItem() {
+            val previousPosition = swipedPosition
+            swipedPosition = -1
+            if (previousPosition != -1) notifyItemChanged(previousPosition)
         }
     }
 
@@ -39,7 +69,8 @@ class ShoppingListAdapter(private val listener: ActionListener) :
     }
 
     override fun onBindViewHolder(holder: ShoppingListViewHolder, position: Int) {
-        holder.bind(shoppingLists[position])
+        val item = shoppingLists[position]
+        holder.bind(item, position == swipedPosition)
     }
 
     override fun getItemCount(): Int = shoppingLists.size
@@ -54,5 +85,25 @@ class ShoppingListAdapter(private val listener: ActionListener) :
         shoppingLists.clear()
         notifyDataSetChanged()
     }
+
+    fun showActions(position: Int) {
+        val previousPosition = swipedPosition
+        swipedPosition = position
+
+        if (previousPosition != -1) notifyItemChanged(previousPosition)
+        notifyItemChanged(swipedPosition)
+    }
+
+    fun closeSwipedItem() {
+        val previousPosition = swipedPosition
+        swipedPosition = -1
+        if (previousPosition != -1) notifyItemChanged(previousPosition)
+    }
 }
+
+
+
+
+
+
 
