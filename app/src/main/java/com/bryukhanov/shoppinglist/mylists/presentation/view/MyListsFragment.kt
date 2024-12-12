@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
@@ -17,6 +18,7 @@ import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsState
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsViewModel
+import com.bryukhanov.shoppinglist.productslist.presentation.view.ProductsListFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -39,7 +41,11 @@ class MyListsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = ShoppingListAdapter()
+        adapter = ShoppingListAdapter(object : ShoppingListAdapter.ActionListener {
+            override fun onClickItem(id: Int) {
+                navigateToProductScreen(id)
+            }
+        })
 
         binding.rvMyLists.apply {
             layoutManager = LinearLayoutManager(context)
@@ -58,6 +64,13 @@ class MyListsFragment : Fragment() {
         }
 
         viewModel.getAllShoppingLists()
+    }
+
+    private fun navigateToProductScreen(id: Int) {
+        findNavController().navigate(
+            R.id.action_myListsFragment_to_productsListFragment,
+            ProductsListFragment.createArgs(id)
+        )
     }
 
     private fun observeViewModel() {
