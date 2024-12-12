@@ -30,7 +30,8 @@ object ShoppingListConverter {
             name = name,
             amount = amount,
             unit = unit,
-            position = position
+            position = position,
+            isBought = isBought
         )
     }
 
