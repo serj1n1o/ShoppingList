@@ -6,16 +6,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bryukhanov.shoppinglist.databinding.ItemMyListBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 
-class ShoppingListAdapter(private val shoppingLists: List<ShoppingListItem>) :
-    RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder>() {
+class ShoppingListAdapter : RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder>() {
+
+    private val shoppingLists = mutableListOf<ShoppingListItem>()
 
     inner class ShoppingListViewHolder(private val binding: ItemMyListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ShoppingListItem) {
-            if (item.cover != null) {
-                binding.ivIconList.setImageResource(item.cover)
-            }
+            item.cover?.let { binding.ivIconList.setImageResource(it) }
             binding.tvListName.text = item.name
         }
     }
@@ -34,4 +33,16 @@ class ShoppingListAdapter(private val shoppingLists: List<ShoppingListItem>) :
     }
 
     override fun getItemCount(): Int = shoppingLists.size
+
+    fun setShoppingLists(newShoppingLists: List<ShoppingListItem>) {
+        shoppingLists.clear()
+        shoppingLists.addAll(newShoppingLists)
+        notifyDataSetChanged()
+    }
+
+    fun clearShoppingLists() {
+        shoppingLists.clear()
+        notifyDataSetChanged()
+    }
 }
+

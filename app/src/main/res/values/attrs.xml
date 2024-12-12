@@ -22,4 +22,8 @@
     <attr name="colorBackgroundEditBtn" format="color" />
     <attr name="colorTintEditBtn" format="color" />
     <attr name="colorUnitBack" format="color" />
+    <attr name="colorTextCard" format="color" />
+    <attr name="colorIconCardAdd" format="color" />
+    <attr name="colorBackgroundHint" format="color" />
+    <attr name="colorCardText" format="color" />
 </resources>

@@ -23,6 +23,10 @@
         <item name="colorBackgroundEditBtn">@color/lightIcon</item>
         <item name="colorTintEditBtn">@color/cancelLightTextOnButton</item>
         <item name="colorUnitBack">@color/colorUnitBackLight</item>
+        <item name="colorTextCard">@color/lightTextCard</item>
+        <item name="colorIconCardAdd">@color/lightIconCardAdd</item>
+        <item name="colorBackgroundHint">@color/lightBackgroundHint</item>
+        <item name="colorCardText">@color/lightCardText</item>
 
     </style>
 
