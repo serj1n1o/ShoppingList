@@ -18,6 +18,7 @@
     <color name="bottomSheetTopLineLight">#827568</color>
     <color name="textToolbarLight">#211A14</color>
     <color name="colorTintBtnMinusLight">#1F211A14</color>
+    <color name="colorUnitBackLight">#FAEBE0</color>
     <color name="lightTextCard">#845416</color>
     <color name="lightIconCardAdd">#50453A</color>
     <color name="lightBackgroundHint">#FFF8F4</color>
@@ -42,6 +43,8 @@
     <color name="bottomSheetTopLineNight">#B0A092</color>
     <color name="textToolbarNight">#FFFAF8</color>
     <color name="colorTintBtnMinusDark">#1FFFFAF8</color>
+    <color name="colorBackgroundEditBtn">#58432C</color>
+    <color name="colorUnitBackDark">#251E17</color>
     <color name="darkTextCard">#E5C5A7</color>
     <color name="darkIconCardAdd">#D4C4B5</color>
     <color name="darkBackgroundHint">#19120C</color>

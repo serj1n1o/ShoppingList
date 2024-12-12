@@ -78,6 +78,7 @@
 
     <style name="TextInputLayoutUnitProduct" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
         <item name="boxStrokeColor">@color/stroke_input_text_layout</item>
+        <item name="hintTextColor">?attr/colorBoxStrokeEditTextNameProduct</item>
         <item name="boxStrokeWidth">1dp</item>
         <item name="boxStrokeWidthFocused">3dp</item>
         <item name="boxCornerRadiusTopStart">4dp</item>
@@ -88,6 +89,7 @@
 
     <style name="TextInputLayoutAmountProduct" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">@color/stroke_input_text_layout</item>
+        <item name="hintTextColor">?attr/colorBoxStrokeEditTextNameProduct</item>
         <item name="boxStrokeWidth">1dp</item>
         <item name="boxStrokeWidthFocused">3dp</item>
         <item name="boxCornerRadiusTopStart">4dp</item>
@@ -96,9 +98,19 @@
         <item name="boxCornerRadiusTopEnd">4dp</item>
     </style>
 
+    <style name="SortInputLayoutProduct" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+        <item name="android:textSize">@dimen/sixteen_size_text</item>
+        <item name="hintTextColor">?attr/colorToolbarText</item>
+        <item name="android:textColorHint">?attr/colorToolbarText</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="fontWeight">400</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+    </style>
+
     <style name="textHintStyle" parent="TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/sixteen_size_text</item>
-        <item name="android:textColor">@color/hint_text_color</item>
+        <item name="hintTextColor">?attr/colorToolbarText</item>
         <item name="fontFamily">@font/roboto</item>
         <item name="fontWeight">400</item>
     </style>
@@ -143,4 +155,5 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+
 </resources>

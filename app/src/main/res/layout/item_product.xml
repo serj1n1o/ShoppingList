@@ -10,15 +10,14 @@
         android:layout_width="@dimen/six_space"
         android:layout_height="@dimen/six_space"
         android:layout_marginStart="@dimen/four_space"
-        android:button="@drawable/custom_checkbox"
-        android:buttonTint="?attr/colorBackground"
+        android:button="@drawable/ic_checkbox_unchecked"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/nameProduct"
-        style="@style/productUnitAmountText"
+        style="@style/productRegularText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/four_space"
@@ -41,6 +40,17 @@
         app:layout_constraintStart_toEndOf="@id/checkBoxProduct"
         app:layout_constraintTop_toBottomOf="@id/nameProduct"
         tools:text="1 kg" />
+
+    <ImageView
+        android:id="@+id/ivDragHandle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_drag_handle"
+        android:layout_marginEnd="@dimen/four_space"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
