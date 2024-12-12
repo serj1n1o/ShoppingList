@@ -6,7 +6,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/twelve_space</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
-        <item name="android:fontFamily">Roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textSize">@dimen/sixteen_size_text</item>
         <item name="android:textStyle">bold</item>
         <item name="fontWeight">500</item>
@@ -17,7 +17,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/two_space</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
-        <item name="android:fontFamily">Roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textSize">@dimen/fourteen_size_text</item>
         <item name="fontWeight">400</item>
     </style>
@@ -27,8 +27,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/four_space</item>
         <item name="android:layout_marginTop">@dimen/four_and_half_space</item>
-        <item name="android:textColor">?attr/colorOnPrimary</item>
-        <item name="android:fontFamily">Roboto</item>
+        <item name="android:textColor">?attr/colorToolbarText</item>
+        <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textSize">@dimen/twenty_two_size_text</item>
         <item name="fontWeight">400</item>
     </style>
@@ -36,10 +36,8 @@
     <style name="DialogTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">@dimen/six_space</item>
-        <item name="android:layout_marginTop">@dimen/sixteen_space</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
-        <item name="android:fontFamily">Roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textSize">@dimen/twenty_four_size_text</item>
         <item name="fontWeight">400</item>
     </style>
@@ -49,10 +47,113 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">@dimen/two_space</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
-        <item name="android:fontFamily">Roboto</item>
+        <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textSize">@dimen/sixteen_size_text</item>
         <item name="fontWeight">400</item>
     </style>
 
+    <style name="TextInputLayoutAddProduct" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/stroke_input_text_layout</item>
+        <item name="hintTextColor">?attr/colorBoxStrokeEditTextNameProduct</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">3dp</item>
+        <item name="boxCornerRadiusTopStart">4dp</item>
+        <item name="boxCornerRadiusBottomEnd">4dp</item>
+        <item name="boxCornerRadiusBottomStart">4dp</item>
+        <item name="boxCornerRadiusTopEnd">4dp</item>
+    </style>
+
+    <style name="textInputEditTextProduct">
+        <item name="android:textFontWeight">400</item>
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:inputType">text</item>
+        <item name="android:textSelectHandle">?attr/colorToolbarText</item>
+        <item name="android:textColorHint">?attr/colorOnSurface</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">@dimen/sixteen_size_text</item>
+        <item name="fontFamily">@font/roboto</item>
+
+    </style>
+
+    <style name="TextInputLayoutUnitProduct" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxStrokeColor">@color/stroke_input_text_layout</item>
+        <item name="hintTextColor">?attr/colorBoxStrokeEditTextNameProduct</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">3dp</item>
+        <item name="boxCornerRadiusTopStart">4dp</item>
+        <item name="boxCornerRadiusBottomEnd">4dp</item>
+        <item name="boxCornerRadiusBottomStart">4dp</item>
+        <item name="boxCornerRadiusTopEnd">4dp</item>
+    </style>
+
+    <style name="TextInputLayoutAmountProduct" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/stroke_input_text_layout</item>
+        <item name="hintTextColor">?attr/colorBoxStrokeEditTextNameProduct</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">3dp</item>
+        <item name="boxCornerRadiusTopStart">4dp</item>
+        <item name="boxCornerRadiusBottomEnd">4dp</item>
+        <item name="boxCornerRadiusBottomStart">4dp</item>
+        <item name="boxCornerRadiusTopEnd">4dp</item>
+    </style>
+
+    <style name="SortInputLayoutProduct" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+        <item name="android:textSize">@dimen/sixteen_size_text</item>
+        <item name="hintTextColor">?attr/colorToolbarText</item>
+        <item name="android:textColorHint">?attr/colorToolbarText</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="fontWeight">400</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+    </style>
+
+    <style name="textHintStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/sixteen_size_text</item>
+        <item name="hintTextColor">?attr/colorToolbarText</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="fontWeight">400</item>
+    </style>
+
+    <style name="productRegularText">
+        <item name="android:textColor">?attr/colorToolbarText</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">@dimen/sixteen_size_text</item>
+        <item name="fontWeight">400</item>
+    </style>
+
+    <style name="productUnitAmountText">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">@dimen/fourteen_size_text</item>
+        <item name="fontWeight">400</item>
+    </style>
+
+    <style name="DialogYesButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/six_space</item>
+        <item name="android:textColor">?attr/colorButtonText</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">@dimen/fourteen_size_text</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontWeight">500</item>
+    </style>
+
+    <style name="DialogNoButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/six_space</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">@dimen/fourteen_size_text</item>
+        <item name="android:textStyle">bold</item>
+        <item name="fontWeight">500</item>
+    </style>
+
+    <style name="CustomDialogTheme" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
 
 </resources>

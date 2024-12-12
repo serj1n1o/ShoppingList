@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.ShoppingList" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorBackground">@color/lightBackground</item>
@@ -19,6 +19,17 @@
         <item name="colorIconList">@color/lightIconList</item>
         <item name="android:statusBarColor">@color/lightBackground</item>
 
+        <item name="colorTopLineBottomSheet">@color/bottomSheetTopLineLight</item>
+        <item name="colorToolbarText">@color/textToolbarLight</item>
+        <item name="colorBoxStrokeEditTextNameProduct">@color/darkAccent</item>
+        <item name="colorTintBtnMinus">@color/colorTintBtnMinusLight</item>
+        <item name="colorBackgroundEditBtn">@color/lightIcon</item>
+        <item name="colorTintEditBtn">@color/cancelLightTextOnButton</item>
+        <item name="colorUnitBack">@color/colorUnitBackLight</item>
+        <item name="colorTextCard">@color/lightTextCard</item>
+        <item name="colorIconCardAdd">@color/lightIconCardAdd</item>
+        <item name="colorBackgroundHint">@color/lightBackgroundHint</item>
+        <item name="colorCardText">@color/lightCardText</item>
 
     </style>
 

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/eighteen_space">
+
+    <CheckBox
+        android:id="@+id/checkBoxProduct"
+        android:layout_width="@dimen/six_space"
+        android:layout_height="@dimen/six_space"
+        android:layout_marginStart="@dimen/four_space"
+        android:background="@drawable/ic_checkbox_unchecked"
+        android:button="@null"
+        android:buttonTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/nameProduct"
+        style="@style/productRegularText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/four_space"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintBottom_toTopOf="@id/amountAndUnit"
+        app:layout_constraintStart_toEndOf="@id/checkBoxProduct"
+        app:layout_constraintTop_toTopOf="@id/checkBoxProduct"
+        tools:text="Apples" />
+
+    <TextView
+        android:id="@+id/amountAndUnit"
+        style="@style/productUnitAmountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/four_space"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@id/checkBoxProduct"
+        app:layout_constraintStart_toEndOf="@id/checkBoxProduct"
+        app:layout_constraintTop_toBottomOf="@id/nameProduct"
+        tools:text="1 kg" />
+
+    <ImageView
+        android:id="@+id/ivDragHandle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_drag_handle"
+        android:layout_marginEnd="@dimen/four_space"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/one_dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,4 +12,32 @@
     <string name="delete">Удалить</string>
     <string name="copy">Копировать</string>
     <string name="edit">Редактировать</string>
+
+    <!-- products_screen -->
+    <string name="products_screen_text">Продукты</string>
+    <string name="products_screen_no_products_text">В списке покупок пока пусто</string>
+    <string name="products_screen_create_first_product_text">Нажмите на кнопку + ниже,\nчтобы добавить товары</string>
+    <string name="product_text">Товар</string>
+    <string name="add_new_product_text">Добавить новый товар</string>
+    <string name="units">Единицы</string>
+    <string name="amount_txt">Количество</string>
+    <string name="sorting_text">Сортировка</string>
+    <string name="sort_alphabet_text">По алфавиту</string>
+    <string name="delete_all_text">Удалить все</string>
+    <string name="clear_bought_products_text">Очистить купленные</string>
+
+    <!-- custom_dialog -->
+    <string name="dialog_message">Удалить все списки?</string>
+    <string name="dialog_no">Нет</string>
+    <string name="dialog_yes">Да</string>
+    <string name="dialog_cancel">Отмена</string>
+    <string name="dialog_positive_answer">Удалить</string>
+
+    <!-- custom_card-->
+    <string name="card_message">Добавление списка</string>
+    <string name="card_hint">Название списка</string>
+    <string name="dialog_no_card">Отмена</string>
+    <string name="dialog_yes_card">Создать</string>
+    <string name="et_card_hint">Новый список</string>
+    <string name="error_hint">Название не может быть пустым</string>
 </resources>

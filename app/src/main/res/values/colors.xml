@@ -16,6 +16,15 @@
     <color name="lightTintUpText">#49454F</color>
     <color name="lightColorPlus">#2B1700</color>
     <color name="lightIconList">#EEE0D5</color>
+    <color name="bottomSheetTopLineLight">#827568</color>
+    <color name="textToolbarLight">#211A14</color>
+    <color name="colorTintBtnMinusLight">#1F211A14</color>
+    <color name="colorUnitBackLight">#FAEBE0</color>
+    <color name="lightTextCard">#845416</color>
+    <color name="lightIconCardAdd">#50453A</color>
+    <color name="lightBackgroundHint">#FFF8F4</color>
+    <color name="lightCardText">#211A14</color>
+
 
     <color name="darkBackground">#130D07</color>
     <color name="darkButton">#BE8543</color>
@@ -32,4 +41,14 @@
     <color name="darkTintUpText">#E5C5A7</color>
     <color name="darkColorPlus">#000000</color>
     <color name="darkIconList">#302921</color>
+    <color name="overlayScreen">#66000000</color>
+    <color name="bottomSheetTopLineNight">#B0A092</color>
+    <color name="textToolbarNight">#FFFAF8</color>
+    <color name="colorTintBtnMinusDark">#1FFFFAF8</color>
+    <color name="colorBackgroundEditBtn">#58432C</color>
+    <color name="colorUnitBackDark">#251E17</color>
+    <color name="darkTextCard">#E5C5A7</color>
+    <color name="darkIconCardAdd">#D4C4B5</color>
+    <color name="darkBackgroundHint">#19120C</color>
+    <color name="darkCardText">#FFFAF8</color>
 </resources>
