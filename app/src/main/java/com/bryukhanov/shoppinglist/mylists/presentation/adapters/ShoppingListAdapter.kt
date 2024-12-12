@@ -1,7 +1,6 @@
 package com.bryukhanov.shoppinglist.mylists.presentation.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bryukhanov.shoppinglist.databinding.ItemMyListBinding
@@ -23,45 +22,42 @@ class ShoppingListAdapter(private val listener: ActionListener) :
     inner class ShoppingListViewHolder(
         private val binding: ItemMyListBinding,
         private val listener: ActionListener,
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
-
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ShoppingListItem, isSwiped: Boolean) {
-
             item.cover?.let { binding.ivIconList.setImageResource(it) }
             binding.tvListName.text = item.name
 
-            itemView.setOnClickListener { listener.onClickItem(item.id) }
-
-            // Управляем видимостью кнопок и смещением контейнера
-            if (isSwiped) {
-                binding.buttonContainer.visibility = View.VISIBLE
-                binding.mainContainer.translationX = -binding.buttonContainer.width.toFloat()
-            } else {
-                binding.buttonContainer.visibility = View.GONE
-                binding.mainContainer.translationX = 0f
+            itemView.setOnClickListener {
+                listener.onClickItem(item.id)
+                closeSwipedItem()
             }
 
-            // Принудительное обновление размеров кнопок
-            binding.buttonContainer.post {
-                if (isSwiped) {
-                    binding.mainContainer.translationX = -binding.buttonContainer.width.toFloat()
-                }
+            // Сбрасывает смещение для закрытия свайпа
+            if (!isSwiped) {
+                binding.mainContainer.translationX = 0f
             }
 
             binding.btnEdit.setOnClickListener {
                 listener.onEdit(item.id)
+                closeSwipedItem()
             }
             binding.btnCopy.setOnClickListener {
                 listener.onCopy(item.id)
+                closeSwipedItem()
             }
             binding.btnDelete.setOnClickListener {
                 listener.onDelete(item.id)
+                closeSwipedItem()
             }
         }
-    }
 
+        private fun closeSwipedItem() {
+            val previousPosition = swipedPosition
+            swipedPosition = -1
+            if (previousPosition != -1) notifyItemChanged(previousPosition)
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingListViewHolder {
         val binding = ItemMyListBinding.inflate(
@@ -94,11 +90,17 @@ class ShoppingListAdapter(private val listener: ActionListener) :
         val previousPosition = swipedPosition
         swipedPosition = position
 
-        // Обновляем только измененные элементы
         if (previousPosition != -1) notifyItemChanged(previousPosition)
         notifyItemChanged(swipedPosition)
     }
+
+    fun closeSwipedItem() {
+        val previousPosition = swipedPosition
+        swipedPosition = -1
+        if (previousPosition != -1) notifyItemChanged(previousPosition)
+    }
 }
+
 
 
 

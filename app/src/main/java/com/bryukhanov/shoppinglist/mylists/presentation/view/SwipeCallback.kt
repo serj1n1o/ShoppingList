@@ -32,13 +32,14 @@ class SwipeCallback(
         isCurrentlyActive: Boolean
     ) {
         val itemView = viewHolder.itemView
-        val buttonContainerWidth = itemView.findViewById<View>(R.id.buttonContainer).width
-        val limitedDx = dX.coerceAtLeast(-buttonContainerWidth.toFloat()) // Ограничиваем свайп
+        val buttonContainer = itemView.findViewById<View>(R.id.buttonContainer)
+        val mainContainer = itemView.findViewById<View>(R.id.mainContainer)
 
-        // Перемещаем контейнер
-        itemView.translationX = limitedDx
+        val buttonContainerWidth = buttonContainer.width
+        val limitedDx = dX.coerceAtLeast(-buttonContainerWidth.toFloat())
 
-        // Прорисовываем изменения
+        mainContainer.translationX = limitedDx
+
         super.onChildDraw(
             c,
             recyclerView,
@@ -50,3 +51,4 @@ class SwipeCallback(
         )
     }
 }
+
