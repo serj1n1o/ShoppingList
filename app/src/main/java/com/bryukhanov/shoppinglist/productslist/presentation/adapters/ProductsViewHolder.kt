@@ -17,7 +17,11 @@ class ProductsViewHolder(
         with(binding) {
             nameProduct.text = item.name
             if (item.amount != null && item.unit != null) {
-                amountAndUnit.text = item.amount.toString() + item.unit
+                amountAndUnit.text = buildString {
+                    append(item.amount)
+                    append(" ")
+                    append(item.unit)
+                }
             } else {
                 amountAndUnit.isVisible = false
             }

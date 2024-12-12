@@ -102,6 +102,8 @@
         android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
         android:background="@color/overlayScreen"
         android:visibility="gone" />
 
@@ -116,7 +118,7 @@
         app:behavior_hideable="true"
         app:behavior_peekHeight="@dimen/fifty_one_space"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <View
             android:id="@+id/lineBottomSheetProductAdd"
@@ -143,6 +145,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextNameProduct"
                 style="@style/textInputEditTextProduct"
+                android:imeOptions="actionDone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/add_new_product_text" />
@@ -165,6 +168,7 @@
                 android:id="@+id/editTextAmountProduct"
                 style="@style/textInputEditTextProduct"
                 android:inputType="number"
+                android:imeOptions="actionDone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -181,7 +185,10 @@
             app:layout_constraintTop_toTopOf="@id/inputLayoutAmountProduct">
 
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/completeTextUnit"
                 style="@style/textInputEditTextProduct"
+                android:dropDownHeight="@dimen/thirty_space"
+                app:dropDownBackgroundTint="?attr/colorUnitBack"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="none" />
@@ -224,7 +231,7 @@
         app:behavior_hideable="true"
         app:behavior_peekHeight="@dimen/fifty_one_space"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <View
             android:id="@+id/lineMenu"
@@ -248,13 +255,11 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutSortMenu"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            style="@style/SortInputLayoutProduct"
             android:layout_width="@dimen/zero_space"
             android:layout_height="@dimen/fourteen_space"
             android:hint="@string/sorting_text"
-            app:boxStrokeWidth="@dimen/zero_space"
             app:expandedHintEnabled="false"
-            app:hintTextAppearance="@style/textHintStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/imgSort"
             app:layout_constraintTop_toBottomOf="@id/lineMenu">

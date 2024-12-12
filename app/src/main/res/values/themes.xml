@@ -20,6 +20,9 @@
         <item name="colorToolbarText">@color/textToolbarLight</item>
         <item name="colorBoxStrokeEditTextNameProduct">@color/darkAccent</item>
         <item name="colorTintBtnMinus">@color/colorTintBtnMinusLight</item>
+        <item name="colorBackgroundEditBtn">@color/lightIcon</item>
+        <item name="colorTintEditBtn">@color/cancelLightTextOnButton</item>
+        <item name="colorUnitBack">@color/colorUnitBackLight</item>
 
     </style>
 

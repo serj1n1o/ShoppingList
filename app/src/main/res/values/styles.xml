@@ -100,9 +100,19 @@
         <item name="boxCornerRadiusTopEnd">4dp</item>
     </style>
 
+    <style name="SortInputLayoutProduct" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+        <item name="android:textSize">@dimen/sixteen_size_text</item>
+        <item name="hintTextColor">?attr/colorToolbarText</item>
+        <item name="android:textColorHint">?attr/colorToolbarText</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="fontWeight">400</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+    </style>
+
     <style name="textHintStyle" parent="TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/sixteen_size_text</item>
-        <item name="android:textColor">@color/hint_text_color</item>
+        <item name="hintTextColor">?attr/colorToolbarText</item>
         <item name="fontFamily">@font/roboto</item>
         <item name="fontWeight">400</item>
     </style>

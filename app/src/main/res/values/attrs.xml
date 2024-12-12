@@ -19,4 +19,7 @@
     <attr name="colorToolbarText" format="color" />
     <attr name="colorBoxStrokeEditTextNameProduct" format="color" />
     <attr name="colorTintBtnMinus" format="color" />
+    <attr name="colorBackgroundEditBtn" format="color" />
+    <attr name="colorTintEditBtn" format="color" />
+    <attr name="colorUnitBack" format="color" />
 </resources>
