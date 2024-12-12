@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -47,30 +48,28 @@ class MyListsFragment : Fragment() {
                 navigateToProductScreen(id)
             }
 
-//            override fun onEdit(position: Int) {
-//                val item = fakeData[position]
-//                Toast.makeText(context, "Редактирование: ${item.name}", Toast.LENGTH_SHORT).show()
-//            }
-//
-//            override fun onCopy(position: Int) {
-//                val item = fakeData[position]
-//                Toast.makeText(context, "Копирование: ${item.name}", Toast.LENGTH_SHORT).show()
-//            }
-//
-//            override fun onDelete(position: Int) {
-//                fakeData.removeAt(position)
-//                adapter.notifyItemRemoved(position)
-//                Toast.makeText(context, "Удалено", Toast.LENGTH_SHORT).show()
-//            }
-        })
+            override fun onEdit(id: Int) {
+                Toast.makeText(context, "Редактирование", Toast.LENGTH_SHORT).show()
+            }
 
-        adapter.notifyDataSetChanged()
+            override fun onCopy(id: Int) {
+                Toast.makeText(requireContext(), "Копирование", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onDelete(id: Int) {
+                Toast.makeText(requireContext(), "Удалено", Toast.LENGTH_SHORT).show()
+            }
+        })
 
         binding.rvMyLists.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             adapter = this@MyListsFragment.adapter
         }
+
+        val itemTouchHelper = ItemTouchHelper(SwipeCallback(adapter))
+        itemTouchHelper.attachToRecyclerView(binding.rvMyLists)
+
 
         observeViewModel()
 
@@ -178,6 +177,7 @@ class MyListsFragment : Fragment() {
         _binding = null
     }
 }
+
 
 
 
