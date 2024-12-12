@@ -56,7 +56,7 @@ class ProductsViewModel(private val productListInteractor: ProductListInteractor
         viewModelScope.launch {
             val product = productListInteractor.getProductById(productId)
             if (product != null) {
-                productListInteractor.updateProduct(product.copy(isBought = isBought))
+                updateProduct(product.copy(isBought = isBought))
             }
         }
     }
