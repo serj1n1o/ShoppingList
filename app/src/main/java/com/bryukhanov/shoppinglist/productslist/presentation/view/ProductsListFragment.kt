@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.core.util.Animates
+import com.bryukhanov.shoppinglist.core.util.CustomDialog
 import com.bryukhanov.shoppinglist.core.util.Units
 import com.bryukhanov.shoppinglist.databinding.FragmentProductsListBinding
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
@@ -67,8 +68,8 @@ class ProductsListFragment : Fragment() {
 
         val shoppingListId = requireArguments().getInt(KEY_PRODUCT_LIST, 0)
 
-        val unitList = Units.entries
-        val unitsAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item_layout, unitList)
+        val unitsAdapter =
+            ArrayAdapter(requireContext(), R.layout.dropdown_item_layout, Units.entries)
 
         binding.completeTextUnit.setAdapter(unitsAdapter)
 
@@ -92,36 +93,10 @@ class ProductsListFragment : Fragment() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_COLLAPSED -> {
-                        binding.fabAddProduct.setImageDrawable(
-                            ContextCompat.getDrawable(
-                                requireContext(),
-                                R.drawable.ic_confirm
-                            )
-                        )
+                        swapImageFab(state = BottomSheetBehavior.STATE_COLLAPSED)
                         showOverlay(true)
                         binding.fabAddProduct.setOnClickListener {
-                            if (!nameProduct.isNullOrEmpty()) {
-                                viewModel.addProduct(
-                                    ProductListItem(
-                                        shoppingListId = shoppingListId,
-                                        name = nameProduct!!,
-                                        position = productsAdapter.itemCount,
-                                        amount = amountProduct,
-                                        unit = unitProduct,
-                                    )
-                                )
-                                hideKeyboard(it)
-                                bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_HIDDEN
-                                clearFieldsProduct()
-                            } else {
-                                // думаю что тут можно сделать для валидации ввода, пока так
-                                Toast.makeText(
-                                    requireContext(),
-                                    "НЕОБХОДИМО ВВЕСТИ НАЗВАНИЕ",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-
+                            createProduct(shoppingListId = shoppingListId, view = it)
                         }
                     }
 
@@ -130,12 +105,7 @@ class ProductsListFragment : Fragment() {
                         binding.fabAddProduct.setOnClickListener {
                             bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_COLLAPSED
                         }
-                        binding.fabAddProduct.setImageDrawable(
-                            ContextCompat.getDrawable(
-                                requireContext(),
-                                R.drawable.ic_add
-                            )
-                        )
+                        swapImageFab(state = BottomSheetBehavior.STATE_HIDDEN)
                     }
 
                     else -> {}
@@ -236,12 +206,96 @@ class ProductsListFragment : Fragment() {
 
         })
 
+        binding.completeTextUnit.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                val viewComplete = binding.completeTextUnit
+                hideKeyboard(viewComplete)
+                viewComplete.post { viewComplete.showDropDown() }
+            }
+        }
+
+        binding.deleteAllProductsMenu.setOnClickListener {
+            bottomSheetMenu?.state = BottomSheetBehavior.STATE_HIDDEN
+            if (productsAdapter.itemCount > 0) {
+                CustomDialog(requireContext()).showConfirmDialog(
+                    theme = R.style.CustomDialogTheme,
+                    message = getString(R.string.dialog_message_delete_all_product),
+                    positiveButtonText = getString(R.string.dialog_positive_answer),
+                    negativeButtonText = getString(R.string.dialog_cancel),
+                    onPositiveClick = {
+                        viewModel.deleteAllProduct(shoppingListId)
+                    }
+                )
+            }
+        }
+
+        binding.clearBoughtMenu.setOnClickListener {
+            bottomSheetMenu?.state = BottomSheetBehavior.STATE_HIDDEN
+            if (productsAdapter.itemCount > 0) {
+                CustomDialog(requireContext()).showConfirmDialog(
+                    theme = R.style.CustomDialogTheme,
+                    message = getString(R.string.dialog_message_delete_bought_product),
+                    positiveButtonText = getString(R.string.dialog_positive_answer),
+                    negativeButtonText = getString(R.string.dialog_cancel),
+                    onPositiveClick = {
+                        viewModel.deleteBoughtProduct(shoppingListId)
+                    }
+                )
+            }
+        }
+
         binding.overlay.setOnClickListener {
             bottomSheetMenu?.state = BottomSheetBehavior.STATE_HIDDEN
             bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
 
+    }
+
+    private fun createProduct(shoppingListId: Int, view: View) {
+        if (!nameProduct.isNullOrEmpty()) {
+            viewModel.addProduct(
+                ProductListItem(
+                    shoppingListId = shoppingListId,
+                    name = nameProduct!!,
+                    position = productsAdapter.itemCount,
+                    amount = amountProduct,
+                    unit = unitProduct,
+                )
+            )
+            hideKeyboard(view)
+            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_HIDDEN
+            clearFieldsProduct()
+        } else {
+            // думаю что тут можно сделать для валидации ввода, пока так
+            Toast.makeText(
+                requireContext(),
+                "НЕОБХОДИМО ВВЕСТИ НАЗВАНИЕ",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun swapImageFab(state: Int) {
+        when (state) {
+            BottomSheetBehavior.STATE_HIDDEN -> {
+                binding.fabAddProduct.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_add
+                    )
+                )
+            }
+
+            BottomSheetBehavior.STATE_COLLAPSED -> {
+                binding.fabAddProduct.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_confirm
+                    )
+                )
+            }
+        }
     }
 
     private fun clearFieldsProduct() {
