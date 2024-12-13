@@ -1,6 +1,9 @@
 package com.bryukhanov.shoppinglist.mylists.presentation.adapters
 
+import android.animation.ObjectAnimator
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bryukhanov.shoppinglist.databinding.ItemMyListBinding
@@ -30,6 +33,7 @@ class ShoppingListAdapter(private val listener: ActionListener) :
 
             itemView.setOnClickListener {
                 if (isSwiped) {
+                    animateReset(binding.mainContainer)
                     closeSwipedItem()
                 } else {
                     listener.onClickItem(item.id)
@@ -54,12 +58,6 @@ class ShoppingListAdapter(private val listener: ActionListener) :
                 listener.onDelete(item.id)
                 closeSwipedItem()
             }
-        }
-
-        private fun closeSwipedItem() {
-            val previousPosition = swipedPosition
-            swipedPosition = -1
-            if (previousPosition != -1) notifyItemChanged(previousPosition)
         }
     }
 
@@ -103,6 +101,15 @@ class ShoppingListAdapter(private val listener: ActionListener) :
         swipedPosition = -1
         if (previousPosition != -1) notifyItemChanged(previousPosition)
     }
+
+    private fun animateReset(view: View) {
+        Log.d("SwipeCallback", "AR called")
+        ObjectAnimator.ofFloat(view, "translationX", view.translationX, 0f).apply {
+            duration = 300
+            start()
+        }
+    }
+
 }
 
 

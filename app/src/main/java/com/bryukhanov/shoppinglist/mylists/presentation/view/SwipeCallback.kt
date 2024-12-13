@@ -7,9 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
 
+import android.animation.ObjectAnimator
+import android.util.Log
+
 class SwipeCallback(
     private val adapter: ShoppingListAdapter
-) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
     override fun onMove(
         recyclerView: RecyclerView,
@@ -19,7 +22,12 @@ class SwipeCallback(
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.bindingAdapterPosition
-        adapter.showActions(position)
+        if (direction == ItemTouchHelper.LEFT) {
+            adapter.showActions(position)
+        } else if (direction == ItemTouchHelper.RIGHT) {
+            animateReset(viewHolder.itemView.findViewById(R.id.mainContainer))
+            adapter.closeSwipedItem()
+        }
     }
 
     override fun onChildDraw(
@@ -36,7 +44,8 @@ class SwipeCallback(
         val mainContainer = itemView.findViewById<View>(R.id.mainContainer)
 
         val buttonContainerWidth = buttonContainer.width
-        val limitedDx = dX.coerceAtLeast(-buttonContainerWidth.toFloat())
+
+        val limitedDx = dX.coerceIn(-buttonContainerWidth.toFloat(), 0f)
 
         mainContainer.translationX = limitedDx
 
@@ -50,5 +59,18 @@ class SwipeCallback(
             isCurrentlyActive
         )
     }
+
+    private fun animateReset(view: View) {
+        Log.d("SwipeCallback", "animateReset called")
+        ObjectAnimator.ofFloat(view, "translationX", view.translationX, 0f).apply {
+            duration =300
+            start()
+        }
+    }
 }
+
+
+
+
+
 
