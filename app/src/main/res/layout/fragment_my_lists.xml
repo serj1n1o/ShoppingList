@@ -91,6 +91,13 @@
         app:layout_constraintTop_toBottomOf="@id/tvNoLists"
         app:layout_constraintVertical_bias="0" />
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupEmptyState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="placeholderMyLists,tvNoLists,tvCreateFirstList" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMyLists"
         android:layout_width="@dimen/zero_space"
