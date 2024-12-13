@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
@@ -21,6 +22,7 @@ import com.bryukhanov.shoppinglist.core.util.Animates
 import com.bryukhanov.shoppinglist.core.util.CustomDialog
 import com.bryukhanov.shoppinglist.core.util.Units
 import com.bryukhanov.shoppinglist.databinding.FragmentProductsListBinding
+import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
 import com.bryukhanov.shoppinglist.productslist.presentation.adapters.ProductsAdapter
 import com.bryukhanov.shoppinglist.productslist.presentation.viewmodel.ProductsState
@@ -65,14 +67,20 @@ class ProductsListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initBottomSheet()
 
-        val shoppingListId = requireArguments().getInt(KEY_PRODUCT_LIST, 0)
+        val shoppingList = BundleCompat.getParcelable(
+            requireArguments(),
+            KEY_PRODUCT_LIST,
+            ShoppingListItem::class.java
+        ) as ShoppingListItem
+
+        binding.txtProducts.text = shoppingList.name
 
         val unitsAdapter =
             ArrayAdapter(requireContext(), R.layout.dropdown_item_layout, Units.entries)
 
         binding.completeTextUnit.setAdapter(unitsAdapter)
 
-        viewModel.getProducts(shoppingListId)
+        viewModel.getProducts(shoppingList.id)
 
         binding.rvProducts.adapter = productsAdapter
 
@@ -95,7 +103,7 @@ class ProductsListFragment : Fragment() {
                         swapImageFab(state = BottomSheetBehavior.STATE_COLLAPSED)
                         showOverlay(true)
                         binding.fabAddProduct.setOnClickListener {
-                            createProduct(shoppingListId = shoppingListId, view = it)
+                            createProduct(shoppingListId = shoppingList.id, view = it)
                         }
                     }
 
@@ -222,7 +230,7 @@ class ProductsListFragment : Fragment() {
                     positiveButtonText = getString(R.string.dialog_positive_answer),
                     negativeButtonText = getString(R.string.dialog_cancel),
                     onPositiveClick = {
-                        viewModel.deleteAllProduct(shoppingListId)
+                        viewModel.deleteAllProduct(shoppingList.id)
                     },
                     onNegativeClick = {}
                 )
@@ -238,7 +246,7 @@ class ProductsListFragment : Fragment() {
                     positiveButtonText = getString(R.string.dialog_positive_answer),
                     negativeButtonText = getString(R.string.dialog_cancel),
                     onPositiveClick = {
-                        viewModel.deleteBoughtProduct(shoppingListId)
+                        viewModel.deleteBoughtProduct(shoppingList.id)
                     },
                     onNegativeClick = {}
                 )
@@ -354,6 +362,7 @@ class ProductsListFragment : Fragment() {
 
     companion object {
         const val KEY_PRODUCT_LIST = "KEY PRODUCT"
-        fun createArgs(id: Int): Bundle = bundleOf(KEY_PRODUCT_LIST to id)
+        fun createArgs(shoppingList: ShoppingListItem): Bundle =
+            bundleOf(KEY_PRODUCT_LIST to shoppingList)
     }
 }
