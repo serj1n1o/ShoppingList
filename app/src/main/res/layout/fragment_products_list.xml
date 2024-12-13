@@ -219,7 +219,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/minusUnit" />
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -273,15 +272,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:background="@android:color/transparent"
+                android:drawableStart="@drawable/ic_sort_alphabet"
                 android:gravity="center_vertical"
                 android:inputType="none"
                 android:paddingStart="@dimen/three_space"
-                android:text="@string/sort_alphabet_text"
+                tools:text="@string/sort_alphabet_text"
                 android:textColor="@color/accentText"
                 android:textSize="@dimen/fourteen_size_text" />
-
         </com.google.android.material.textfield.TextInputLayout>
-
 
         <TextView
             android:id="@+id/deleteAllProductsMenu"

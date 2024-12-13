@@ -4,11 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.productslist.domain.api.ProductListInteractor
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
 import kotlinx.coroutines.launch
 
 class ProductsViewModel(private val productListInteractor: ProductListInteractor) : ViewModel() {
+
+    private val selectedSorting = MutableLiveData<SortingVariants>(SortingVariants.ALPHABET)
+
+    fun setSorting(sort: SortingVariants) {
+        selectedSorting.postValue(sort)
+    }
+
+    fun getSelectedSorting(): LiveData<SortingVariants> = selectedSorting
 
     private val productState = MutableLiveData<ProductsState>()
 

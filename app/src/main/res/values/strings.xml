@@ -20,6 +20,7 @@
     <string name="amount_txt">Количество</string>
     <string name="sorting_text">Сортировка</string>
     <string name="sort_alphabet_text">По алфавиту</string>
+    <string name="sort_user_text">Пользовательская</string>
     <string name="delete_all_text">Удалить все</string>
     <string name="clear_bought_products_text">Очистить купленные</string>
 

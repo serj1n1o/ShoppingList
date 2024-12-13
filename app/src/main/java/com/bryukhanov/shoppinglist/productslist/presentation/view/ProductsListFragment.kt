@@ -19,9 +19,11 @@ import androidx.navigation.fragment.findNavController
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.core.util.Animates
 import com.bryukhanov.shoppinglist.core.util.CustomDialog
+import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.core.util.Units
 import com.bryukhanov.shoppinglist.databinding.FragmentProductsListBinding
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
+import com.bryukhanov.shoppinglist.productslist.domain.models.SortOption
 import com.bryukhanov.shoppinglist.productslist.presentation.adapters.ProductsAdapter
 import com.bryukhanov.shoppinglist.productslist.presentation.viewmodel.ProductsState
 import com.bryukhanov.shoppinglist.productslist.presentation.viewmodel.ProductsViewModel
@@ -68,7 +70,12 @@ class ProductsListFragment : Fragment() {
         val shoppingListId = requireArguments().getInt(KEY_PRODUCT_LIST, 0)
 
         val unitsAdapter =
-            ArrayAdapter(requireContext(), R.layout.dropdown_item_layout, Units.entries)
+            ArrayAdapter(requireContext(), R.layout.dropdown_item_layout_unit, Units.entries)
+
+        val sortOption = listOf(
+            SortOption(R.drawable.ic_sort_alphabet, SortingVariants.ALPHABET.toString(), false),
+            SortOption(R.drawable.ic_sort_user, SortingVariants.USER.toString(), false)
+        )
 
         binding.completeTextUnit.setAdapter(unitsAdapter)
 
@@ -116,8 +123,23 @@ class ProductsListFragment : Fragment() {
 
         })
 
-        binding.completeTextUnit.setOnItemClickListener { _, _, position, _ ->
-            unitProduct = Units.entries[position].toString()
+        with(binding) {
+
+            completeTextUnit.setOnItemClickListener { _, _, position, _ ->
+                unitProduct = Units.entries[position].toString()
+            }
+        }
+
+        viewModel.getSelectedSorting().observe(viewLifecycleOwner) { sort ->
+            when (sort!!) {
+                SortingVariants.ALPHABET -> {
+                    binding.completeTextSortMenu.setText(SortingVariants.ALPHABET.toString())
+                }
+
+                SortingVariants.USER -> {
+                    binding.completeTextSortMenu.setText(SortingVariants.USER.toString())
+                }
+            }
         }
 
         with(binding.editTextNameProduct) {
