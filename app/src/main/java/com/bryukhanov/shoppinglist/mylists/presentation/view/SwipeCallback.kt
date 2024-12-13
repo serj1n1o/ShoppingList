@@ -9,6 +9,7 @@ import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAda
 
 import android.animation.ObjectAnimator
 import android.util.Log
+import com.bryukhanov.shoppinglist.core.util.Animates
 
 class SwipeCallback(
     private val adapter: ShoppingListAdapter
@@ -25,7 +26,7 @@ class SwipeCallback(
         if (direction == ItemTouchHelper.LEFT) {
             adapter.showActions(position)
         } else if (direction == ItemTouchHelper.RIGHT) {
-            animateReset(viewHolder.itemView.findViewById(R.id.mainContainer))
+            Animates.animateReset(viewHolder.itemView.findViewById(R.id.mainContainer))
             adapter.closeSwipedItem()
         }
     }
@@ -58,14 +59,6 @@ class SwipeCallback(
             actionState,
             isCurrentlyActive
         )
-    }
-
-    private fun animateReset(view: View) {
-        Log.d("SwipeCallback", "animateReset called")
-        ObjectAnimator.ofFloat(view, "translationX", view.translationX, 0f).apply {
-            duration =300
-            start()
-        }
     }
 }
 
