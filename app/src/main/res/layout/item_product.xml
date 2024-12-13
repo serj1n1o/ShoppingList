@@ -60,4 +60,31 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <LinearLayout
+        android:id="@+id/buttonEditProductContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:layout_marginHorizontal="@dimen/four_space"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnEditProduct"
+            android:layout_width="@dimen/twelve_space"
+            android:layout_height="@dimen/twelve_space"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_edit" />
+
+        <ImageButton
+            android:id="@+id/btnDeleteProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_delete" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

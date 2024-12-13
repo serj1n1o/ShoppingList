@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/six_space"
+        android:layout_marginBottom="@dimen/six_space"
         android:gravity="center"
         android:orientation="horizontal">
 
