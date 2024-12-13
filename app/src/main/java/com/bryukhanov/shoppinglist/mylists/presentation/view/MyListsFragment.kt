@@ -13,9 +13,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
+import com.bryukhanov.shoppinglist.core.util.CustomDialog
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
 import com.bryukhanov.shoppinglist.databinding.LayoutCustomCardBinding
-import com.bryukhanov.shoppinglist.databinding.LayoutCustomDialogBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsState
@@ -109,24 +109,16 @@ class MyListsFragment : Fragment() {
     }
 
     private fun showCustomDialog() {
-        val dialog = Dialog(requireContext(), R.style.CustomDialogTheme)
-        val dialogBinding = LayoutCustomDialogBinding.inflate(layoutInflater)
-        dialog.setContentView(dialogBinding.root)
-
-        dialogBinding.tvDialogMessage.text = getString(R.string.dialog_message)
-        dialogBinding.btnNo.text = getString(R.string.dialog_cancel)
-        dialogBinding.btnYes.text = getString(R.string.dialog_positive_answer)
-
-        dialogBinding.btnNo.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialogBinding.btnYes.setOnClickListener {
-            viewModel.deleteAllShoppingLists()
-            dialog.dismiss()
-        }
-
-        dialog.show()
+        CustomDialog(requireContext()).showConfirmDialog(
+            theme = R.style.CustomDialogTheme,
+            message = getString(R.string.dialog_message),
+            positiveButtonText = getString(R.string.dialog_positive_answer),
+            negativeButtonText = getString(R.string.dialog_cancel),
+            onPositiveClick = {
+                viewModel.deleteAllShoppingLists()
+            },
+            onNegativeClick = {}
+        )
     }
 
     private fun showCustomCard() {
