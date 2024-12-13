@@ -15,7 +15,7 @@ class ShoppingListAdapter(private val listener: ActionListener) :
     private var swipedPosition: Int = -1
 
     interface ActionListener {
-        fun onClickItem(id: Int)
+        fun onClickItem(myList: ShoppingListItem)
         fun onEdit(id: Int)
         fun onCopy(id: Int)
         fun onDelete(id: Int)
@@ -35,7 +35,7 @@ class ShoppingListAdapter(private val listener: ActionListener) :
                     Animates.animateReset(binding.mainContainer)
                     closeSwipedItem()
                 } else {
-                    listener.onClickItem(item.id)
+                    listener.onClickItem(item)
                     closeSwipedItem()
                 }
             }

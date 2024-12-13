@@ -5,11 +5,8 @@ import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bryukhanov.shoppinglist.R
-import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
-
-import android.animation.ObjectAnimator
-import android.util.Log
 import com.bryukhanov.shoppinglist.core.util.Animates
+import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
 
 class SwipeCallback(
     private val adapter: ShoppingListAdapter

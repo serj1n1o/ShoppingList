@@ -44,9 +44,9 @@ class MyListsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = ShoppingListAdapter(object : ShoppingListAdapter.ActionListener {
-            override fun onClickItem(id: Int) {
+            override fun onClickItem(myList: ShoppingListItem) {
                 adapter.closeSwipedItem()
-                navigateToProductScreen(id)
+                navigateToProductScreen(myList)
             }
 
             override fun onEdit(id: Int) {
@@ -87,10 +87,10 @@ class MyListsFragment : Fragment() {
         viewModel.getAllShoppingLists()
     }
 
-    private fun navigateToProductScreen(id: Int) {
+    private fun navigateToProductScreen(myList: ShoppingListItem) {
         findNavController().navigate(
             R.id.action_myListsFragment_to_productsListFragment,
-            ProductsListFragment.createArgs(id)
+            ProductsListFragment.createArgs(myList)
         )
     }
 
