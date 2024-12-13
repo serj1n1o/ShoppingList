@@ -13,6 +13,7 @@ class CustomDialog(private val context: Context) {
         positiveButtonText: String,
         negativeButtonText: String,
         onPositiveClick: () -> Unit,
+        onNegativeClick: () -> Unit,
     ) {
         val dialog = Dialog(context, theme)
         val dialogBinding = LayoutCustomDialogBinding.inflate(LayoutInflater.from(context))
@@ -23,6 +24,7 @@ class CustomDialog(private val context: Context) {
         dialogBinding.btnYes.text = positiveButtonText
 
         dialogBinding.btnNo.setOnClickListener {
+            onNegativeClick()
             dialog.dismiss()
         }
 

@@ -50,7 +50,6 @@ class ProductsListFragment : Fragment() {
                 get() = { id, isBought ->
                     viewModel.updateProductBoughtStatus(id, isBought)
                 }
-
         })
     }
 
@@ -224,7 +223,8 @@ class ProductsListFragment : Fragment() {
                     negativeButtonText = getString(R.string.dialog_cancel),
                     onPositiveClick = {
                         viewModel.deleteAllProduct(shoppingListId)
-                    }
+                    },
+                    onNegativeClick = {}
                 )
             }
         }
@@ -239,7 +239,8 @@ class ProductsListFragment : Fragment() {
                     negativeButtonText = getString(R.string.dialog_cancel),
                     onPositiveClick = {
                         viewModel.deleteBoughtProduct(shoppingListId)
-                    }
+                    },
+                    onNegativeClick = {}
                 )
             }
         }
@@ -342,7 +343,7 @@ class ProductsListFragment : Fragment() {
 
     private fun showOverlay(show: Boolean) {
         binding.overlay.isVisible = show
-        Animates.animateOverlay(true, binding.overlay)
+        Animates.animateOverlay(show, binding.overlay)
     }
 
     private fun hideKeyboard(view: View) {
