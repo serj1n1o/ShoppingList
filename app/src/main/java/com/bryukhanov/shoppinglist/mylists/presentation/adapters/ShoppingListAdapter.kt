@@ -1,6 +1,7 @@
 package com.bryukhanov.shoppinglist.mylists.presentation.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bryukhanov.shoppinglist.core.util.Animates
@@ -39,21 +40,26 @@ class ShoppingListAdapter(private val listener: ActionListener) :
                 }
             }
 
-            // Сбрасывает смещение для закрытия свайпа
             if (!isSwiped) {
                 binding.mainContainer.translationX = 0f
+                binding.buttonContainer.visibility = View.GONE
+            } else {
+                binding.buttonContainer.visibility = View.VISIBLE
             }
 
             binding.btnEdit.setOnClickListener {
                 listener.onEdit(item.id)
+                Animates.animateReset(binding.mainContainer)
                 closeSwipedItem()
             }
             binding.btnCopy.setOnClickListener {
                 listener.onCopy(item.id)
+                Animates.animateReset(binding.mainContainer)
                 closeSwipedItem()
             }
             binding.btnDelete.setOnClickListener {
                 listener.onDelete(item.id)
+                Animates.animateReset(binding.mainContainer)
                 closeSwipedItem()
             }
         }
