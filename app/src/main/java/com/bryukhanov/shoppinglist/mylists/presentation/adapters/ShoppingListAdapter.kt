@@ -29,8 +29,12 @@ class ShoppingListAdapter(private val listener: ActionListener) :
             binding.tvListName.text = item.name
 
             itemView.setOnClickListener {
-                listener.onClickItem(item.id)
-                closeSwipedItem()
+                if (isSwiped) {
+                    closeSwipedItem()
+                } else {
+                    listener.onClickItem(item.id)
+                    closeSwipedItem()
+                }
             }
 
             // Сбрасывает смещение для закрытия свайпа

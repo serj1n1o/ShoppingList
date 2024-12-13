@@ -61,7 +61,7 @@ class MyListsFragment : Fragment() {
 
             override fun onDelete(id: Int) {
                 adapter.closeSwipedItem()
-                Toast.makeText(requireContext(), "Удалено", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Удаление", Toast.LENGTH_SHORT).show()
             }
         })
 
