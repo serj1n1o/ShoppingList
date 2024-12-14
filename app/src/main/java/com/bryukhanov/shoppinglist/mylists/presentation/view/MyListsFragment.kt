@@ -253,12 +253,21 @@ class MyListsFragment : Fragment() {
 
                 if (drawableEnd != null && event.rawX >= (etSearch.right - drawableEnd.bounds.width())) {
                     etSearch.text.clear()
-                    etSearch.performClick()
+                    showMyListsWithOverlay()
                     return@setOnTouchListener true
                 }
             }
             false
         }
+    }
+
+    private fun showMyListsWithOverlay() {
+        binding.rvSearchResults.visibility = View.GONE
+        binding.layoutSearchNotFoundContainer.visibility = View.GONE
+        binding.rvMyLists.visibility = View.VISIBLE
+        binding.dimOverlay.visibility = View.VISIBLE
+        binding.searchDivider.visibility = View.VISIBLE
+        binding.etSearch.visibility = View.VISIBLE
     }
 
     private fun filterLists(query: String) {
@@ -300,7 +309,6 @@ class MyListsFragment : Fragment() {
         binding.rvMyLists.visibility = View.VISIBLE
         binding.groupEmptyState.visibility = if (originalList.isEmpty()) View.VISIBLE else View.GONE
     }
-
 
     private fun hideSearchField() {
         binding.etSearch.visibility = View.GONE
