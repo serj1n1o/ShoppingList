@@ -12,6 +12,7 @@
     <string name="delete">Удалить</string>
     <string name="copy">Копировать</string>
     <string name="edit">Редактировать</string>
+    <string name="enter_request">Поиск списков</string>
 
     <!-- products_screen -->
     <string name="products_screen_text">Продукты</string>

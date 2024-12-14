@@ -1,13 +1,18 @@
 package com.bryukhanov.shoppinglist.mylists.presentation.view
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -42,6 +47,8 @@ class MyListsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.groupEmptyState.visibility = View.VISIBLE
 
         adapter = ShoppingListAdapter(object : ShoppingListAdapter.ActionListener {
             override fun onClickItem(myList: ShoppingListItem) {
@@ -84,6 +91,16 @@ class MyListsFragment : Fragment() {
             showCustomCard()
         }
 
+        binding.ivSearch.setOnClickListener {
+            binding.etSearch.visibility = View.VISIBLE
+            binding.groupEmptyState.visibility = View.INVISIBLE
+            binding.rvMyLists.visibility = View.INVISIBLE
+            binding.fabAdd.visibility = View.INVISIBLE
+            binding.etSearch.requestFocus()
+        }
+
+        setupSearch()
+
         viewModel.getAllShoppingLists()
     }
 
@@ -99,10 +116,14 @@ class MyListsFragment : Fragment() {
             when (state) {
                 is MyListsState.Content -> {
                     adapter.setShoppingLists(state.myList)
+                    binding.rvMyLists.visibility = View.VISIBLE
+                    binding.groupEmptyState.visibility = View.GONE
                 }
 
                 MyListsState.Empty -> {
                     adapter.clearShoppingLists()
+                    binding.rvMyLists.visibility = View.GONE
+                    binding.groupEmptyState.visibility = View.VISIBLE
                 }
             }
         }
@@ -161,6 +182,49 @@ class MyListsFragment : Fragment() {
         }
 
         dialog.show()
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupSearch() {
+        val etSearch = binding.etSearch
+        val icBackArrow = ContextCompat.getDrawable(requireContext(), R.drawable.ic_back_arrow_list)
+        val icClear = ContextCompat.getDrawable(requireContext(), R.drawable.ic_clear)
+
+        etSearch.setCompoundDrawablesWithIntrinsicBounds(icBackArrow, null, null, null)
+
+        etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (!s.isNullOrEmpty()) {
+                    etSearch.setCompoundDrawablesWithIntrinsicBounds(
+                        icBackArrow,
+                        null,
+                        icClear,
+                        null
+                    )
+                } else {
+                    etSearch.setCompoundDrawablesWithIntrinsicBounds(icBackArrow, null, null, null)
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        etSearch.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                val drawableEnd = etSearch.compoundDrawables[2]
+                if (drawableEnd != null && event.rawX >= (etSearch.right - drawableEnd.bounds.width())) {
+                    etSearch.text.clear()
+                    etSearch.performClick()
+                    return@setOnTouchListener true
+                }
+            }
+            false
+        }
+        etSearch.setOnClickListener {
+
+        }
     }
 
     override fun onDestroyView() {

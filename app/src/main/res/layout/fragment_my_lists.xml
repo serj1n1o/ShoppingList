@@ -11,6 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/sixteen_space"
+        android:visibility="visible"
         app:contentInsetStart="@dimen/zero_space"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -50,6 +51,22 @@
             app:layout_constraintStart_toEndOf="@id/ivDelete" />
 
     </androidx.appcompat.widget.Toolbar>
+
+    <EditText
+        android:id="@+id/etSearch"
+        style="@style/Search"
+        android:background="?attr/colorToolBar"
+        android:drawableStart="@drawable/ic_back_arrow_list"
+        android:drawableEnd="@drawable/ic_clear"
+        android:drawablePadding="@dimen/one_space"
+        android:focusableInTouchMode="true"
+        android:hint="@string/enter_request"
+        android:lines="1"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/placeholderMyLists"
@@ -104,7 +121,7 @@
         android:layout_height="@dimen/zero_space"
         android:clipToPadding="false"
         android:paddingHorizontal="@dimen/four_space"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
