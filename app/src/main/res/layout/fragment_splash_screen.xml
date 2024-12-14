@@ -28,7 +28,7 @@
         android:layout_gravity="center"
         android:layout_marginHorizontal="44dp"
         android:layout_marginTop="64dp"
-        android:src="@drawable/splash_screen_img"
+        android:src="@drawable/splash_screen"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
