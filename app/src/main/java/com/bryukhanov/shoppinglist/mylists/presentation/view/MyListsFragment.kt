@@ -213,7 +213,14 @@ class MyListsFragment : Fragment() {
 
         etSearch.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP) {
+                val drawableStart = etSearch.compoundDrawables[0]
                 val drawableEnd = etSearch.compoundDrawables[2]
+
+                if (drawableStart != null && event.rawX <= (etSearch.left + drawableStart.bounds.width())) {
+                    hideSearchField()
+                    return@setOnTouchListener true
+                }
+
                 if (drawableEnd != null && event.rawX >= (etSearch.right - drawableEnd.bounds.width())) {
                     etSearch.text.clear()
                     etSearch.performClick()
@@ -222,9 +229,26 @@ class MyListsFragment : Fragment() {
             }
             false
         }
-        etSearch.setOnClickListener {
+    }
 
+    private fun hideSearchField() {
+        binding.etSearch.visibility = View.GONE
+        binding.groupEmptyState.visibility = View.VISIBLE
+        binding.fabAdd.visibility = View.VISIBLE
+        binding.etSearch.text.clear()
+        binding.etSearch.clearFocus()
+
+        if (adapter.itemCount > 0) {
+            binding.rvMyLists.visibility = View.VISIBLE
+            binding.groupEmptyState.visibility = View.GONE
+        } else {
+            binding.rvMyLists.visibility = View.GONE
+            binding.groupEmptyState.visibility = View.VISIBLE
         }
+
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
     }
 
     override fun onDestroyView() {
