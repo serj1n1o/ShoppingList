@@ -13,6 +13,8 @@
     <string name="copy">Копировать</string>
     <string name="edit">Редактировать</string>
     <string name="enter_request">Поиск списков</string>
+    <string name="myLists_screen_not_found">Мы не смогли найти то,\n что вы искали</string>
+    <string name="myLists_screen_try_again">Попробуйте изменить запрос\n или проверить написание</string>
 
     <!-- products_screen -->
     <string name="products_screen_text">Продукты</string>
@@ -43,4 +45,5 @@
     <string name="dialog_yes_card">Создать</string>
     <string name="et_card_hint">Новый список</string>
     <string name="error_hint">Название не может быть пустым</string>
+
 </resources>

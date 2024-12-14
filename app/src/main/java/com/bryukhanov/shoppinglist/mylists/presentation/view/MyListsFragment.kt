@@ -77,7 +77,6 @@ class MyListsFragment : Fragment() {
 
         searchAdapter = ShoppingListAdapter(listener = object : ShoppingListAdapter.ActionListener {
             override fun onClickItem(myList: ShoppingListItem) {
-                //searchAdapter.closeSwipedItem()
                 navigateToProductScreen(myList)
                 hideSearchField()
             }
@@ -270,6 +269,7 @@ class MyListsFragment : Fragment() {
             binding.groupEmptyState.visibility =
                 if (originalList.isEmpty()) View.VISIBLE else View.GONE
             binding.dimOverlay.visibility = View.VISIBLE
+            binding.layoutSearchNotFoundContainer.visibility = View.VISIBLE
         } else {
             val filteredList = originalList.filter {
                 it.name.startsWith(query, ignoreCase = true)
@@ -282,13 +282,18 @@ class MyListsFragment : Fragment() {
 
             if (filteredList.isNotEmpty()) {
                 binding.rvSearchResults.visibility = View.VISIBLE
+                binding.layoutSearchNotFoundContainer.visibility = View.GONE
+                binding.searchDivider.visibility = View.GONE
                 binding.dimOverlay.visibility = View.GONE
             } else {
-                binding.rvSearchResults.visibility = View.VISIBLE
-                binding.dimOverlay.visibility = View.VISIBLE
+                binding.rvSearchResults.visibility = View.GONE
+                binding.layoutSearchNotFoundContainer.visibility = View.VISIBLE
+                binding.searchDivider.visibility = View.VISIBLE
+                binding.dimOverlay.visibility = View.GONE
             }
         }
     }
+
 
     private fun hideSearchResults() {
         binding.rvSearchResults.visibility = View.GONE
@@ -303,6 +308,8 @@ class MyListsFragment : Fragment() {
         binding.etSearch.text.clear()
         binding.etSearch.clearFocus()
         binding.rvSearchResults.visibility = View.GONE
+        binding.layoutSearchNotFoundContainer.visibility = View.GONE
+        binding.searchDivider.visibility = View.GONE
         binding.rvMyLists.visibility = View.VISIBLE
         binding.groupEmptyState.visibility = if (originalList.isEmpty()) View.VISIBLE else View.GONE
 
