@@ -6,10 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bryukhanov.shoppinglist.core.util.Animates
 import com.bryukhanov.shoppinglist.databinding.ItemMyListBinding
+import com.bryukhanov.shoppinglist.databinding.ItemMyListSearchBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 
-class ShoppingListAdapter(private val listener: ActionListener) :
-    RecyclerView.Adapter<ShoppingListAdapter.ShoppingListViewHolder>() {
+class ShoppingListAdapter(
+    private val listener: ActionListener,
+    private val isSearchMode: Boolean = false
+) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val shoppingLists = mutableListOf<ShoppingListItem>()
     private var swipedPosition: Int = -1
@@ -21,9 +25,60 @@ class ShoppingListAdapter(private val listener: ActionListener) :
         fun onDelete(id: Int)
     }
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (isSearchMode) {
+            val binding = ItemMyListSearchBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
+            )
+            SearchListViewHolder(binding, listener)
+        } else {
+            val binding = ItemMyListBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
+            )
+            ShoppingListViewHolder(binding, listener)
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = shoppingLists[position]
+        when (holder) {
+            is ShoppingListViewHolder -> holder.bind(item, position == swipedPosition)
+
+            is SearchListViewHolder -> holder.bind(item)
+
+        }
+    }
+
+    override fun getItemCount(): Int = shoppingLists.size
+
+    fun setShoppingLists(newShoppingLists: List<ShoppingListItem>) {
+        shoppingLists.clear()
+        shoppingLists.addAll(newShoppingLists)
+        notifyDataSetChanged()
+    }
+
+    fun clearShoppingLists() {
+        shoppingLists.clear()
+        notifyDataSetChanged()
+    }
+
+    fun showActions(position: Int) {
+        val previousPosition = swipedPosition
+        swipedPosition = position
+
+        if (previousPosition != -1) notifyItemChanged(previousPosition)
+        notifyItemChanged(swipedPosition)
+    }
+
+    fun closeSwipedItem() {
+        val previousPosition = swipedPosition
+        swipedPosition = -1
+        if (previousPosition != -1) notifyItemChanged(previousPosition)
+    }
+
     inner class ShoppingListViewHolder(
         private val binding: ItemMyListBinding,
-        private val listener: ActionListener,
+        private val listener: ActionListener
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ShoppingListItem, isSwiped: Boolean) {
@@ -65,45 +120,14 @@ class ShoppingListAdapter(private val listener: ActionListener) :
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingListViewHolder {
-        val binding = ItemMyListBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-        return ShoppingListViewHolder(binding, listener)
-    }
-
-    override fun onBindViewHolder(holder: ShoppingListViewHolder, position: Int) {
-        val item = shoppingLists[position]
-        holder.bind(item, position == swipedPosition)
-    }
-
-    override fun getItemCount(): Int = shoppingLists.size
-
-    fun setShoppingLists(newShoppingLists: List<ShoppingListItem>) {
-        shoppingLists.clear()
-        shoppingLists.addAll(newShoppingLists)
-        notifyDataSetChanged()
-    }
-
-    fun clearShoppingLists() {
-        shoppingLists.clear()
-        notifyDataSetChanged()
-    }
-
-    fun showActions(position: Int) {
-        val previousPosition = swipedPosition
-        swipedPosition = position
-
-        if (previousPosition != -1) notifyItemChanged(previousPosition)
-        notifyItemChanged(swipedPosition)
-    }
-
-    fun closeSwipedItem() {
-        val previousPosition = swipedPosition
-        swipedPosition = -1
-        if (previousPosition != -1) notifyItemChanged(previousPosition)
+    inner class SearchListViewHolder(
+        private val binding: ItemMyListSearchBinding,
+        private val listener: ActionListener
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: ShoppingListItem) {
+            binding.tvListNameSearch.text = item.name
+            itemView.setOnClickListener { listener.onClickItem(item) }
+        }
     }
 
 }

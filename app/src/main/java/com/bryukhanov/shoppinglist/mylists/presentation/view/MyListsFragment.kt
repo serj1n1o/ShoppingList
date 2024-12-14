@@ -35,7 +35,10 @@ class MyListsFragment : Fragment() {
     private val viewModel by viewModel<MyListsViewModel>()
 
     private lateinit var adapter: ShoppingListAdapter
+    private lateinit var searchAdapter: ShoppingListAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
+
+    private var originalList: List<ShoppingListItem> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,7 +53,7 @@ class MyListsFragment : Fragment() {
 
         binding.groupEmptyState.visibility = View.VISIBLE
 
-        adapter = ShoppingListAdapter(object : ShoppingListAdapter.ActionListener {
+        adapter = ShoppingListAdapter(listener = object : ShoppingListAdapter.ActionListener {
             override fun onClickItem(myList: ShoppingListItem) {
                 adapter.closeSwipedItem()
                 navigateToProductScreen(myList)
@@ -72,10 +75,28 @@ class MyListsFragment : Fragment() {
             }
         })
 
+        searchAdapter = ShoppingListAdapter(listener = object : ShoppingListAdapter.ActionListener {
+            override fun onClickItem(myList: ShoppingListItem) {
+                //searchAdapter.closeSwipedItem()
+                navigateToProductScreen(myList)
+                hideSearchField()
+            }
+
+            override fun onEdit(id: Int) {}
+            override fun onCopy(id: Int) {}
+            override fun onDelete(id: Int) {}
+        }, isSearchMode = true)
+
         binding.rvMyLists.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             adapter = this@MyListsFragment.adapter
+        }
+
+        binding.rvSearchResults.apply {
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            binding.rvSearchResults.adapter = this@MyListsFragment.searchAdapter
         }
 
         itemTouchHelper = ItemTouchHelper(SwipeCallback(adapter))
@@ -84,19 +105,23 @@ class MyListsFragment : Fragment() {
         observeViewModel()
 
         binding.ivDelete.setOnClickListener {
+            adapter.closeSwipedItem()
             showCustomDialog()
         }
 
         binding.fabAdd.setOnClickListener {
+            adapter.closeSwipedItem()
             showCustomCard()
         }
 
         binding.ivSearch.setOnClickListener {
+            adapter.closeSwipedItem()
             binding.etSearch.visibility = View.VISIBLE
             binding.dimOverlay.visibility = View.VISIBLE
             binding.etSearch.requestFocus()
 
-            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(binding.etSearch, InputMethodManager.SHOW_IMPLICIT)
         }
 
@@ -116,12 +141,14 @@ class MyListsFragment : Fragment() {
         viewModel.getListState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is MyListsState.Content -> {
+                    originalList = state.myList
                     adapter.setShoppingLists(state.myList)
                     binding.rvMyLists.visibility = View.VISIBLE
                     binding.groupEmptyState.visibility = View.GONE
                 }
 
                 MyListsState.Empty -> {
+                    originalList = emptyList()
                     adapter.clearShoppingLists()
                     binding.rvMyLists.visibility = View.GONE
                     binding.groupEmptyState.visibility = View.VISIBLE
@@ -129,6 +156,7 @@ class MyListsFragment : Fragment() {
             }
         }
     }
+
 
     private fun showCustomDialog() {
         CustomDialog(requireContext()).showConfirmDialog(
@@ -204,8 +232,10 @@ class MyListsFragment : Fragment() {
                         icClear,
                         null
                     )
+                    filterLists(s.toString())
                 } else {
                     etSearch.setCompoundDrawablesWithIntrinsicBounds(icBackArrow, null, null, null)
+                    hideSearchResults()
                 }
             }
 
@@ -232,11 +262,49 @@ class MyListsFragment : Fragment() {
         }
     }
 
+    private fun filterLists(query: String) {
+        if (query.isEmpty()) {
+            searchAdapter.setShoppingLists(emptyList())
+            binding.rvSearchResults.visibility = View.GONE
+            binding.rvMyLists.visibility = View.VISIBLE
+            binding.groupEmptyState.visibility =
+                if (originalList.isEmpty()) View.VISIBLE else View.GONE
+            binding.dimOverlay.visibility = View.VISIBLE
+        } else {
+            val filteredList = originalList.filter {
+                it.name.startsWith(query, ignoreCase = true)
+            }
+
+            searchAdapter.setShoppingLists(filteredList)
+
+            binding.rvMyLists.visibility = View.GONE
+            binding.groupEmptyState.visibility = View.GONE
+
+            if (filteredList.isNotEmpty()) {
+                binding.rvSearchResults.visibility = View.VISIBLE
+                binding.dimOverlay.visibility = View.GONE
+            } else {
+                binding.rvSearchResults.visibility = View.VISIBLE
+                binding.dimOverlay.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun hideSearchResults() {
+        binding.rvSearchResults.visibility = View.GONE
+        binding.rvMyLists.visibility = View.VISIBLE
+        binding.groupEmptyState.visibility = if (originalList.isEmpty()) View.VISIBLE else View.GONE
+    }
+
+
     private fun hideSearchField() {
         binding.etSearch.visibility = View.GONE
         binding.dimOverlay.visibility = View.GONE
         binding.etSearch.text.clear()
         binding.etSearch.clearFocus()
+        binding.rvSearchResults.visibility = View.GONE
+        binding.rvMyLists.visibility = View.VISIBLE
+        binding.groupEmptyState.visibility = if (originalList.isEmpty()) View.VISIBLE else View.GONE
 
         val imm =
             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
