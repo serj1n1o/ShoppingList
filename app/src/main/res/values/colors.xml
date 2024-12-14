@@ -51,4 +51,5 @@
     <color name="darkIconCardAdd">#D4C4B5</color>
     <color name="darkBackgroundHint">#19120C</color>
     <color name="darkCardText">#FFFAF8</color>
+    <color name="viewBackground">#80000000</color>
 </resources>

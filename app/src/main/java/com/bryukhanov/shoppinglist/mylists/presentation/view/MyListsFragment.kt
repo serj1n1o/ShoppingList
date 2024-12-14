@@ -93,10 +93,11 @@ class MyListsFragment : Fragment() {
 
         binding.ivSearch.setOnClickListener {
             binding.etSearch.visibility = View.VISIBLE
-            binding.groupEmptyState.visibility = View.INVISIBLE
-            binding.rvMyLists.visibility = View.INVISIBLE
-            binding.fabAdd.visibility = View.INVISIBLE
+            binding.dimOverlay.visibility = View.VISIBLE
             binding.etSearch.requestFocus()
+
+            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(binding.etSearch, InputMethodManager.SHOW_IMPLICIT)
         }
 
         setupSearch()
@@ -233,18 +234,9 @@ class MyListsFragment : Fragment() {
 
     private fun hideSearchField() {
         binding.etSearch.visibility = View.GONE
-        binding.groupEmptyState.visibility = View.VISIBLE
-        binding.fabAdd.visibility = View.VISIBLE
+        binding.dimOverlay.visibility = View.GONE
         binding.etSearch.text.clear()
         binding.etSearch.clearFocus()
-
-        if (adapter.itemCount > 0) {
-            binding.rvMyLists.visibility = View.VISIBLE
-            binding.groupEmptyState.visibility = View.GONE
-        } else {
-            binding.rvMyLists.visibility = View.GONE
-            binding.groupEmptyState.visibility = View.VISIBLE
-        }
 
         val imm =
             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
