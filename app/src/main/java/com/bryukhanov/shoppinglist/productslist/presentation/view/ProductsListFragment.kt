@@ -1,19 +1,16 @@
 package com.bryukhanov.shoppinglist.productslist.presentation.view
 
 import android.content.Context
-import android.content.res.Resources
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
-import android.widget.FrameLayout
+import android.widget.CheckBox
+import android.widget.LinearLayout
 import android.widget.PopupWindow
-import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -280,45 +277,76 @@ class ProductsListFragment : Fragment() {
     }
 
     private fun showPopupWindow(anchor: View) {
-        val popupView = layoutInflater.inflate(R.layout.dropdown_layout_sorting_radio_group, null)
-        val radioGroup = popupView.findViewById<RadioGroup>(R.id.sortGroup)
+        val popupView = layoutInflater.inflate(R.layout.dropdown_sorting_select_layout, null)
 
         val popupWindow = PopupWindow(
             popupView,
-            FrameLayout.LayoutParams.WRAP_CONTENT,
-            FrameLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
             true
         )
 
-        when (viewModel.getSelectedSorting().value) {
-            SortingVariants.ALPHABET -> popupView.findViewById<RadioButton>(R.id.sortAlphabet).isChecked =
-                true
+        val checkboxAlphabet = popupView.findViewById<CheckBox>(R.id.checkBoxAlphabetSort)
+        val checkboxUser = popupView.findViewById<CheckBox>(R.id.checkBoxUserSort)
 
-            SortingVariants.USER -> popupView.findViewById<RadioButton>(R.id.sortUser).isChecked =
-                true
-
-            else -> {}
-        }
-        radioGroup.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.sortAlphabet -> {
-                    binding.sortLayout.typeSort.text = SortingVariants.ALPHABET.toString()
-                    viewModel.setSorting(SortingVariants.ALPHABET)
-                }
-
-                R.id.sortUser -> {
-                    binding.sortLayout.typeSort.text = SortingVariants.USER.toString()
-                    viewModel.setSorting(SortingVariants.USER)
-                }
+        checkboxAlphabet.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                buttonView.background =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_checked)
+                checkboxUser.background =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_unchecked)
+            } else {
+                buttonView.background =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_unchecked)
             }
+        }
+
+        checkboxUser.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                buttonView.background =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_checked)
+                checkboxAlphabet.background =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_unchecked)
+            } else {
+                buttonView.background =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_unchecked)
+            }
+        }
+        when (viewModel.getSelectedSorting().value) {
+            SortingVariants.ALPHABET -> {
+                checkboxAlphabet.isChecked = true
+                checkboxUser.isChecked = false
+            }
+
+            SortingVariants.USER -> {
+                checkboxUser.isChecked = true
+                checkboxAlphabet.isChecked = false
+            }
+
+            null -> {}
+        }
+
+        popupView.findViewById<LinearLayout>(R.id.alphabetSorting).setOnClickListener {
+            binding.sortLayout.typeSort.text = SortingVariants.ALPHABET.toString()
+            viewModel.setSorting(SortingVariants.ALPHABET)
+            checkboxAlphabet.isChecked = true
+            checkboxUser.isChecked = false
             popupWindow.dismiss()
         }
 
-        val anchorLocation = IntArray(2)
-        anchor.getLocationOnScreen(anchorLocation)
-        val popupY = anchorLocation[1]
-        val popupX = Resources.getSystem().displayMetrics.widthPixels - (popupWindow.width + 4)
-        popupWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, popupX, popupY)
+        popupView.findViewById<LinearLayout>(R.id.userSorting).setOnClickListener {
+            binding.sortLayout.typeSort.text = SortingVariants.USER.toString()
+            viewModel.setSorting(SortingVariants.USER)
+            checkboxUser.isChecked = true
+            checkboxAlphabet.isChecked = false
+            popupWindow.dismiss()
+        }
+        popupWindow.contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        val popupWidth = popupWindow.contentView.measuredWidth
+
+        val x = (anchor.width - popupWidth) * COEFFICIENT
+        val y = -anchor.height
+        popupWindow.showAsDropDown(anchor, x.toInt(), y)
     }
 
     private fun createProduct(shoppingListId: Int, view: View) {
@@ -421,6 +449,7 @@ class ProductsListFragment : Fragment() {
     }
 
     companion object {
+        private const val COEFFICIENT = 4 / 5f
         const val KEY_PRODUCT_LIST = "KEY PRODUCT"
         fun createArgs(id: Int): Bundle = bundleOf(KEY_PRODUCT_LIST to id)
     }
