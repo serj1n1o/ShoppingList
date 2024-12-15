@@ -24,8 +24,8 @@
                 android:id="@+id/ivBackArrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:layout_gravity="start"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_back_arrow" />
 
             <TextView
@@ -38,9 +38,9 @@
                 android:id="@+id/ivMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:layout_gravity="end"
                 android:layout_marginEnd="@dimen/one_space"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_menu" />
 
         </androidx.appcompat.widget.Toolbar>
@@ -51,11 +51,11 @@
             android:layout_height="@dimen/zero_space"
             android:visibility="visible"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_product"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbarProducts" />
+            app:layout_constraintTop_toBottomOf="@id/toolbarProducts"
+            tools:listitem="@layout/item_product" />
 
         <LinearLayout
             android:id="@+id/placeholderProductsEmpty"
@@ -102,9 +102,9 @@
         android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/overlayScreen"
         android:clickable="true"
         android:focusable="true"
-        android:background="@color/overlayScreen"
         android:visibility="gone" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -145,10 +145,10 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextNameProduct"
                 style="@style/textInputEditTextProduct"
-                android:imeOptions="actionDone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="@string/add_new_product_text" />
+                android:hint="@string/add_new_product_text"
+                android:imeOptions="actionDone" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -167,11 +167,11 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextAmountProduct"
                 style="@style/textInputEditTextProduct"
-                android:inputType="number"
-                android:maxLength="8"
-                android:imeOptions="actionDone"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:maxLength="8" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -188,11 +188,11 @@
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/completeTextUnit"
                 style="@style/textInputEditTextProduct"
-                android:dropDownHeight="@dimen/thirty_space"
-                app:dropDownBackgroundTint="?attr/colorUnitBack"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="none" />
+                android:dropDownHeight="@dimen/thirty_space"
+                android:inputType="none"
+                app:dropDownBackgroundTint="?attr/colorUnitBack" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageButton
@@ -201,8 +201,8 @@
             android:layout_height="@dimen/twelve_space"
             android:layout_marginStart="@dimen/four_space"
             android:backgroundTint="@android:color/transparent"
-            android:src="@drawable/ic_minus_not_select"
             android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_minus_not_select"
             app:layout_constraintBottom_toBottomOf="@id/inputLayoutUnitProduct"
             app:layout_constraintEnd_toStartOf="@id/plusUnit"
             app:layout_constraintTop_toTopOf="@id/inputLayoutUnitProduct" />
@@ -212,8 +212,8 @@
             android:layout_width="@dimen/twelve_space"
             android:layout_height="@dimen/twelve_space"
             android:layout_marginEnd="@dimen/four_space"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:backgroundTint="@android:color/transparent"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_plus"
             app:layout_constraintBottom_toBottomOf="@id/minusUnit"
             app:layout_constraintEnd_toEndOf="parent"
@@ -226,6 +226,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bottom_sheet_background"
+        android:layout_marginHorizontal="@dimen/one_space"
         android:clickable="true"
         android:focusable="true"
         android:orientation="vertical"
@@ -246,40 +247,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/imgSort"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_swap_prod"
-            app:layout_constraintBottom_toBottomOf="@id/textInputLayoutSortMenu"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textInputLayoutSortMenu" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayoutSortMenu"
-            style="@style/SortInputLayoutProduct"
-            android:layout_width="@dimen/zero_space"
+        <include
+            android:id="@+id/sortLayout"
+            layout="@layout/select_sorting_layout"
+            android:layout_width="0dp"
             android:layout_height="@dimen/fourteen_space"
-            android:hint="@string/sorting_text"
-            app:expandedHintEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/imgSort"
-            app:layout_constraintTop_toBottomOf="@id/lineMenu">
-
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/completeTextSortMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:background="@android:color/transparent"
-                android:drawableStart="@drawable/ic_sort_alphabet"
-                android:gravity="center_vertical"
-                android:inputType="none"
-                android:paddingStart="@dimen/three_space"
-                tools:text="@string/sort_alphabet_text"
-                android:textColor="@color/accentText"
-                android:textSize="@dimen/fourteen_size_text" />
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lineMenu" />
 
         <TextView
             android:id="@+id/deleteAllProductsMenu"
@@ -287,13 +262,13 @@
             android:layout_width="@dimen/zero_space"
             android:layout_height="@dimen/fourteen_space"
             android:drawablePadding="@dimen/three_space"
-            android:gravity="center_vertical"
             android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center_vertical"
             android:text="@string/delete_all_text"
             app:drawableStartCompat="@drawable/ic_delete_prod"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textInputLayoutSortMenu" />
+            app:layout_constraintTop_toBottomOf="@id/sortLayout" />
 
         <TextView
             android:id="@+id/clearBoughtMenu"
@@ -301,14 +276,13 @@
             android:layout_width="@dimen/zero_space"
             android:layout_height="@dimen/fourteen_space"
             android:drawablePadding="@dimen/three_space"
-            android:gravity="center_vertical"
             android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center_vertical"
             android:text="@string/clear_bought_products_text"
             app:drawableStartCompat="@drawable/ic_clear_prod"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/deleteAllProductsMenu" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -319,11 +293,11 @@
         android:layout_gravity="top"
         android:layout_marginEnd="@dimen/four_space"
         android:layout_marginBottom="@dimen/fourteen_space"
+        app:backgroundTint="?attr/colorPrimary"
         app:layout_anchor="@id/bottomSheetAddProduct"
         app:layout_anchorGravity="top|end"
-        app:useCompatPadding="true"
-        app:backgroundTint="?attr/colorPrimary"
         app:srcCompat="@drawable/ic_add"
+        app:useCompatPadding="true"
         tools:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

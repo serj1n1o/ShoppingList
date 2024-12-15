@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class ProductsViewModel(private val productListInteractor: ProductListInteractor) : ViewModel() {
 
-    private val selectedSorting = MutableLiveData<SortingVariants>(SortingVariants.ALPHABET)
+    private val selectedSorting = MutableLiveData(SortingVariants.ALPHABET)
 
     fun setSorting(sort: SortingVariants) {
         selectedSorting.postValue(sort)
@@ -29,6 +29,17 @@ class ProductsViewModel(private val productListInteractor: ProductListInteractor
                 processResult(productList)
             }
         }
+    }
+
+    fun sortProducts(sortType: SortingVariants, list: List<ProductListItem>? = null) {
+        var currentList: List<ProductListItem>? = null
+        var sortedList: List<ProductListItem>? = null
+        currentList = list ?: (productState.value as? ProductsState.Content)?.productList
+        sortedList = when (sortType) {
+            SortingVariants.ALPHABET -> currentList?.sortedBy { it.name }
+            SortingVariants.USER -> currentList?.sortedBy { it.position }
+        }
+        productState.value = sortedList?.let { ProductsState.Content(it) }
     }
 
     fun addProduct(product: ProductListItem) {
@@ -74,12 +85,13 @@ class ProductsViewModel(private val productListInteractor: ProductListInteractor
         if (productList.isEmpty()) {
             renderState(ProductsState.Empty)
         } else {
-            renderState(ProductsState.Content(productList))
+            selectedSorting.value?.let { sortProducts(it, productList) }
         }
     }
 
     private fun renderState(state: ProductsState) {
         productState.postValue(state)
     }
+
 
 }

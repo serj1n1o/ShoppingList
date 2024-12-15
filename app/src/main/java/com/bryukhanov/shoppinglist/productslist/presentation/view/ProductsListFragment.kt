@@ -1,13 +1,19 @@
 package com.bryukhanov.shoppinglist.productslist.presentation.view
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
+import android.widget.FrameLayout
+import android.widget.PopupWindow
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -23,7 +29,6 @@ import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.core.util.Units
 import com.bryukhanov.shoppinglist.databinding.FragmentProductsListBinding
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
-import com.bryukhanov.shoppinglist.productslist.domain.models.SortOption
 import com.bryukhanov.shoppinglist.productslist.presentation.adapters.ProductsAdapter
 import com.bryukhanov.shoppinglist.productslist.presentation.viewmodel.ProductsState
 import com.bryukhanov.shoppinglist.productslist.presentation.viewmodel.ProductsViewModel
@@ -71,12 +76,6 @@ class ProductsListFragment : Fragment() {
 
         val unitsAdapter =
             ArrayAdapter(requireContext(), R.layout.dropdown_item_layout_unit, Units.entries)
-
-        val sortOption = listOf(
-            SortOption(R.drawable.ic_sort_alphabet, SortingVariants.ALPHABET.toString(), false),
-            SortOption(R.drawable.ic_sort_user, SortingVariants.USER.toString(), false)
-        )
-
         binding.completeTextUnit.setAdapter(unitsAdapter)
 
         viewModel.getProducts(shoppingListId)
@@ -87,6 +86,20 @@ class ProductsListFragment : Fragment() {
             when (state) {
                 is ProductsState.Content -> showContent(state.productList)
                 ProductsState.Empty -> showEmptyPlaceHolder()
+            }
+        }
+
+        viewModel.getSelectedSorting().observe(viewLifecycleOwner) { sort ->
+            when (sort!!) {
+                SortingVariants.ALPHABET -> {
+                    binding.sortLayout.typeSort.text = SortingVariants.ALPHABET.toString()
+                    viewModel.sortProducts(sort)
+                }
+
+                SortingVariants.USER -> {
+                    binding.sortLayout.typeSort.text = SortingVariants.USER.toString()
+                    viewModel.sortProducts(sort)
+                }
             }
         }
 
@@ -127,18 +140,6 @@ class ProductsListFragment : Fragment() {
 
             completeTextUnit.setOnItemClickListener { _, _, position, _ ->
                 unitProduct = Units.entries[position].toString()
-            }
-        }
-
-        viewModel.getSelectedSorting().observe(viewLifecycleOwner) { sort ->
-            when (sort!!) {
-                SortingVariants.ALPHABET -> {
-                    binding.completeTextSortMenu.setText(SortingVariants.ALPHABET.toString())
-                }
-
-                SortingVariants.USER -> {
-                    binding.completeTextSortMenu.setText(SortingVariants.USER.toString())
-                }
             }
         }
 
@@ -272,7 +273,52 @@ class ProductsListFragment : Fragment() {
             bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
+        binding.sortLayout.root.setOnClickListener {
+            showPopupWindow(binding.sortLayout.root)
+        }
 
+    }
+
+    private fun showPopupWindow(anchor: View) {
+        val popupView = layoutInflater.inflate(R.layout.dropdown_layout_sorting_radio_group, null)
+        val radioGroup = popupView.findViewById<RadioGroup>(R.id.sortGroup)
+
+        val popupWindow = PopupWindow(
+            popupView,
+            FrameLayout.LayoutParams.WRAP_CONTENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        when (viewModel.getSelectedSorting().value) {
+            SortingVariants.ALPHABET -> popupView.findViewById<RadioButton>(R.id.sortAlphabet).isChecked =
+                true
+
+            SortingVariants.USER -> popupView.findViewById<RadioButton>(R.id.sortUser).isChecked =
+                true
+
+            else -> {}
+        }
+        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.sortAlphabet -> {
+                    binding.sortLayout.typeSort.text = SortingVariants.ALPHABET.toString()
+                    viewModel.setSorting(SortingVariants.ALPHABET)
+                }
+
+                R.id.sortUser -> {
+                    binding.sortLayout.typeSort.text = SortingVariants.USER.toString()
+                    viewModel.setSorting(SortingVariants.USER)
+                }
+            }
+            popupWindow.dismiss()
+        }
+
+        val anchorLocation = IntArray(2)
+        anchor.getLocationOnScreen(anchorLocation)
+        val popupY = anchorLocation[1]
+        val popupX = Resources.getSystem().displayMetrics.widthPixels - (popupWindow.width + 4)
+        popupWindow.showAtLocation(anchor, Gravity.NO_GRAVITY, popupX, popupY)
     }
 
     private fun createProduct(shoppingListId: Int, view: View) {
