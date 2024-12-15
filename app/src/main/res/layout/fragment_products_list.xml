@@ -13,7 +13,8 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbarProducts"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/sixteen_space"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/sixteen_space"
             app:contentInsetStart="@dimen/zero_space"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -250,7 +251,7 @@
         <include
             android:id="@+id/sortLayout"
             layout="@layout/select_sorting_layout"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/zero_space"
             android:layout_height="@dimen/fourteen_space"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -298,6 +299,7 @@
         app:layout_anchorGravity="top|end"
         app:srcCompat="@drawable/ic_add"
         app:useCompatPadding="true"
+        app:tint="?attr/colorPlus"
         tools:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class ProductsViewModel(private val productListInteractor: ProductListInteractor) : ViewModel() {
 
-    private val selectedSorting = MutableLiveData(SortingVariants.ALPHABET)
+    private val selectedSorting = MutableLiveData(SortingVariants.USER)
 
     fun setSorting(sort: SortingVariants) {
         selectedSorting.postValue(sort)
