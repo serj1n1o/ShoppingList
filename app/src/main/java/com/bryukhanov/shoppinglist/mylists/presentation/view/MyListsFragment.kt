@@ -7,20 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
+import com.bryukhanov.shoppinglist.core.util.CustomDialog
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
 import com.bryukhanov.shoppinglist.databinding.LayoutCustomCardBinding
-import com.bryukhanov.shoppinglist.databinding.LayoutCustomDialogBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsState
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsViewModel
 import com.bryukhanov.shoppinglist.productslist.presentation.view.ProductsListFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class MyListsFragment : Fragment() {
     private var _binding: FragmentMyListsBinding? = null
@@ -29,6 +30,7 @@ class MyListsFragment : Fragment() {
     private val viewModel by viewModel<MyListsViewModel>()
 
     private lateinit var adapter: ShoppingListAdapter
+    private lateinit var itemTouchHelper: ItemTouchHelper
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,8 +44,24 @@ class MyListsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = ShoppingListAdapter(object : ShoppingListAdapter.ActionListener {
-            override fun onClickItem(id: Int) {
-                navigateToProductScreen(id)
+            override fun onClickItem(myList: ShoppingListItem) {
+                adapter.closeSwipedItem()
+                navigateToProductScreen(myList)
+            }
+
+            override fun onEdit(id: Int) {
+                adapter.closeSwipedItem()
+                Toast.makeText(context, "Редактирование", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onCopy(id: Int) {
+                adapter.closeSwipedItem()
+                Toast.makeText(requireContext(), "Копирование", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onDelete(id: Int) {
+                adapter.closeSwipedItem()
+                Toast.makeText(requireContext(), "Удаление", Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -52,6 +70,9 @@ class MyListsFragment : Fragment() {
             setHasFixedSize(true)
             adapter = this@MyListsFragment.adapter
         }
+
+        itemTouchHelper = ItemTouchHelper(SwipeCallback(adapter))
+        itemTouchHelper.attachToRecyclerView(binding.rvMyLists)
 
         observeViewModel()
 
@@ -66,10 +87,10 @@ class MyListsFragment : Fragment() {
         viewModel.getAllShoppingLists()
     }
 
-    private fun navigateToProductScreen(id: Int) {
+    private fun navigateToProductScreen(myList: ShoppingListItem) {
         findNavController().navigate(
             R.id.action_myListsFragment_to_productsListFragment,
-            ProductsListFragment.createArgs(id)
+            ProductsListFragment.createArgs(myList)
         )
     }
 
@@ -88,25 +109,16 @@ class MyListsFragment : Fragment() {
     }
 
     private fun showCustomDialog() {
-        val dialog = Dialog(requireContext(), R.style.CustomDialogTheme)
-        val dialogBinding =
-            LayoutCustomDialogBinding.inflate(layoutInflater)
-        dialog.setContentView(dialogBinding.root)
-
-        dialogBinding.tvDialogMessage.text = getString(R.string.dialog_message)
-        dialogBinding.btnNo.text = getString(R.string.dialog_cancel)
-        dialogBinding.btnYes.text = getString(R.string.dialog_positive_answer)
-
-        dialogBinding.btnNo.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialogBinding.btnYes.setOnClickListener {
-            viewModel.deleteAllShoppingLists()
-            dialog.dismiss()
-        }
-
-        dialog.show()
+        CustomDialog(requireContext()).showConfirmDialog(
+            theme = R.style.CustomDialogTheme,
+            message = getString(R.string.dialog_message),
+            positiveButtonText = getString(R.string.dialog_positive_answer),
+            negativeButtonText = getString(R.string.dialog_cancel),
+            onPositiveClick = {
+                viewModel.deleteAllShoppingLists()
+            },
+            onNegativeClick = {}
+        )
     }
 
     private fun showCustomCard() {
@@ -156,3 +168,8 @@ class MyListsFragment : Fragment() {
         _binding = null
     }
 }
+
+
+
+
+

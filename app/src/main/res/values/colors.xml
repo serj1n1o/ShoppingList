@@ -15,6 +15,7 @@
     <color name="accentText">#34C759</color>
     <color name="lightTintUpText">#49454F</color>
     <color name="lightColorPlus">#2B1700</color>
+    <color name="lightIconList">#EEE0D5</color>
     <color name="bottomSheetTopLineLight">#827568</color>
     <color name="textToolbarLight">#211A14</color>
     <color name="colorTintBtnMinusLight">#1F211A14</color>
@@ -39,6 +40,7 @@
     <color name="darkList">#302921</color>
     <color name="darkTintUpText">#E5C5A7</color>
     <color name="darkColorPlus">#000000</color>
+    <color name="darkIconList">#302921</color>
     <color name="overlayScreen">#66000000</color>
     <color name="bottomSheetTopLineNight">#B0A092</color>
     <color name="textToolbarNight">#FFFAF8</color>
