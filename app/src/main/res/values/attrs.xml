@@ -27,4 +27,5 @@
     <attr name="colorIconCardAdd" format="color" />
     <attr name="colorBackgroundHint" format="color" />
     <attr name="colorCardText" format="color" />
+    <attr name="colorViewBackground" format="color" />
 </resources>

@@ -1,13 +1,17 @@
 package com.bryukhanov.shoppinglist.mylists.presentation.view
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -30,7 +34,10 @@ class MyListsFragment : Fragment() {
     private val viewModel by viewModel<MyListsViewModel>()
 
     private lateinit var adapter: ShoppingListAdapter
+    private lateinit var searchAdapter: ShoppingListAdapter
     private lateinit var itemTouchHelper: ItemTouchHelper
+
+    private var originalList: List<ShoppingListItem> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +50,9 @@ class MyListsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = ShoppingListAdapter(object : ShoppingListAdapter.ActionListener {
+        binding.groupEmptyState.visibility = View.VISIBLE
+
+        adapter = ShoppingListAdapter(listener = object : ShoppingListAdapter.ActionListener {
             override fun onClickItem(myList: ShoppingListItem) {
                 adapter.closeSwipedItem()
                 navigateToProductScreen(myList)
@@ -65,10 +74,27 @@ class MyListsFragment : Fragment() {
             }
         })
 
+        searchAdapter = ShoppingListAdapter(listener = object : ShoppingListAdapter.ActionListener {
+            override fun onClickItem(myList: ShoppingListItem) {
+                navigateToProductScreen(myList)
+                hideSearchField()
+            }
+
+            override fun onEdit(id: Int) {}
+            override fun onCopy(id: Int) {}
+            override fun onDelete(id: Int) {}
+        }, isSearchMode = true)
+
         binding.rvMyLists.apply {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             adapter = this@MyListsFragment.adapter
+        }
+
+        binding.rvSearchResults.apply {
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            binding.rvSearchResults.adapter = this@MyListsFragment.searchAdapter
         }
 
         itemTouchHelper = ItemTouchHelper(SwipeCallback(adapter))
@@ -77,12 +103,27 @@ class MyListsFragment : Fragment() {
         observeViewModel()
 
         binding.ivDelete.setOnClickListener {
+            adapter.closeSwipedItem()
             showCustomDialog()
         }
 
         binding.fabAdd.setOnClickListener {
+            adapter.closeSwipedItem()
             showCustomCard()
         }
+
+        binding.ivSearch.setOnClickListener {
+            adapter.closeSwipedItem()
+            binding.etSearch.visibility = View.VISIBLE
+            binding.dimOverlay.visibility = View.VISIBLE
+            binding.etSearch.requestFocus()
+
+            val imm =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(binding.etSearch, InputMethodManager.SHOW_IMPLICIT)
+        }
+
+        setupSearch()
 
         viewModel.getAllShoppingLists()
     }
@@ -98,11 +139,17 @@ class MyListsFragment : Fragment() {
         viewModel.getListState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is MyListsState.Content -> {
+                    originalList = state.myList
                     adapter.setShoppingLists(state.myList)
+                    binding.rvMyLists.visibility = View.VISIBLE
+                    binding.groupEmptyState.visibility = View.GONE
                 }
 
                 MyListsState.Empty -> {
+                    originalList = emptyList()
                     adapter.clearShoppingLists()
+                    binding.rvMyLists.visibility = View.GONE
+                    binding.groupEmptyState.visibility = View.VISIBLE
                 }
             }
         }
@@ -161,6 +208,114 @@ class MyListsFragment : Fragment() {
         }
 
         dialog.show()
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupSearch() {
+        val etSearch = binding.etSearch
+        val icBackArrow = ContextCompat.getDrawable(requireContext(), R.drawable.ic_back_arrow_list)
+        val icClear = ContextCompat.getDrawable(requireContext(), R.drawable.ic_clear)
+
+        etSearch.setCompoundDrawablesWithIntrinsicBounds(icBackArrow, null, null, null)
+
+        etSearch.doOnTextChanged { text, _, _, _ ->
+            if (!text.isNullOrEmpty()) {
+                etSearch.setCompoundDrawablesWithIntrinsicBounds(
+                    icBackArrow,
+                    null,
+                    icClear,
+                    null
+                )
+                filterLists(text.toString())
+            } else {
+                etSearch.setCompoundDrawablesWithIntrinsicBounds(icBackArrow, null, null, null)
+                hideSearchResults()
+            }
+        }
+
+        etSearch.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                val drawableStart = etSearch.compoundDrawables[0]
+                val drawableEnd = etSearch.compoundDrawables[2]
+
+                if (drawableStart != null && event.rawX <= (etSearch.left + drawableStart.bounds.width())) {
+                    hideSearchField()
+                    return@setOnTouchListener true
+                }
+
+                if (drawableEnd != null && event.rawX >= (etSearch.right - drawableEnd.bounds.width())) {
+                    etSearch.text.clear()
+                    showMyListsWithOverlay()
+                    return@setOnTouchListener true
+                }
+            }
+            false
+        }
+    }
+
+    private fun showMyListsWithOverlay() {
+        binding.rvSearchResults.visibility = View.GONE
+        binding.layoutSearchNotFoundContainer.visibility = View.GONE
+        binding.rvMyLists.visibility = View.VISIBLE
+        binding.dimOverlay.visibility = View.VISIBLE
+        binding.searchDivider.visibility = View.VISIBLE
+        binding.etSearch.visibility = View.VISIBLE
+    }
+
+    private fun filterLists(query: String) {
+        if (query.isEmpty()) {
+            searchAdapter.setShoppingLists(emptyList())
+            binding.rvSearchResults.visibility = View.GONE
+            binding.rvMyLists.visibility = View.VISIBLE
+            binding.groupEmptyState.visibility =
+                if (originalList.isEmpty()) View.VISIBLE else View.GONE
+            binding.dimOverlay.visibility = View.VISIBLE
+            binding.layoutSearchNotFoundContainer.visibility = View.VISIBLE
+        } else {
+            val filteredList = originalList.filter {
+                it.name.startsWith(query, ignoreCase = true)
+            }
+
+            searchAdapter.setShoppingLists(filteredList)
+
+            binding.rvMyLists.visibility = View.GONE
+            binding.groupEmptyState.visibility = View.GONE
+
+            if (filteredList.isNotEmpty()) {
+                binding.rvSearchResults.visibility = View.VISIBLE
+                binding.layoutSearchNotFoundContainer.visibility = View.GONE
+                binding.searchDivider.visibility = View.VISIBLE
+                binding.dimOverlay.visibility = View.GONE
+            } else {
+                binding.rvSearchResults.visibility = View.GONE
+                binding.layoutSearchNotFoundContainer.visibility = View.VISIBLE
+                binding.searchDivider.visibility = View.VISIBLE
+                binding.dimOverlay.visibility = View.GONE
+            }
+        }
+    }
+
+
+    private fun hideSearchResults() {
+        binding.rvSearchResults.visibility = View.GONE
+        binding.rvMyLists.visibility = View.VISIBLE
+        binding.groupEmptyState.visibility = if (originalList.isEmpty()) View.VISIBLE else View.GONE
+    }
+
+    private fun hideSearchField() {
+        binding.etSearch.visibility = View.GONE
+        binding.dimOverlay.visibility = View.GONE
+        binding.etSearch.text.clear()
+        binding.etSearch.clearFocus()
+        binding.rvSearchResults.visibility = View.GONE
+        binding.layoutSearchNotFoundContainer.visibility = View.GONE
+        binding.searchDivider.visibility = View.GONE
+        binding.rvMyLists.visibility = View.VISIBLE
+        binding.groupEmptyState.visibility = if (originalList.isEmpty()) View.VISIBLE else View.GONE
+
+        val imm =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
     }
 
     override fun onDestroyView() {

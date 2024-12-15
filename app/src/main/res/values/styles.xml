@@ -161,4 +161,17 @@
         <item name="colorControlActivated">?attr/colorPrimaryVariant</item>
     </style>
 
+    <style name="Search">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/eighteen_space</item>
+        <item name="android:textColor">?attr/colorToolbarText</item>
+        <item name="android:textColorHint">?attr/colorOnSurface</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">@dimen/sixteen_size_text</item>
+        <item name="android:imeOptions">actionDone|flagNoExtractUi</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:background">@null</item>
+        <item name="fontWeight">400</item>
+    </style>
+
 </resources>
