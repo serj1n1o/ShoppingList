@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -13,6 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -220,26 +219,20 @@ class MyListsFragment : Fragment() {
 
         etSearch.setCompoundDrawablesWithIntrinsicBounds(icBackArrow, null, null, null)
 
-        etSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (!s.isNullOrEmpty()) {
-                    etSearch.setCompoundDrawablesWithIntrinsicBounds(
-                        icBackArrow,
-                        null,
-                        icClear,
-                        null
-                    )
-                    filterLists(s.toString())
-                } else {
-                    etSearch.setCompoundDrawablesWithIntrinsicBounds(icBackArrow, null, null, null)
-                    hideSearchResults()
-                }
+        etSearch.doOnTextChanged { text, _, _, _ ->
+            if (!text.isNullOrEmpty()) {
+                etSearch.setCompoundDrawablesWithIntrinsicBounds(
+                    icBackArrow,
+                    null,
+                    icClear,
+                    null
+                )
+                filterLists(text.toString())
+            } else {
+                etSearch.setCompoundDrawablesWithIntrinsicBounds(icBackArrow, null, null, null)
+                hideSearchResults()
             }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
+        }
 
         etSearch.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP) {
@@ -292,7 +285,7 @@ class MyListsFragment : Fragment() {
             if (filteredList.isNotEmpty()) {
                 binding.rvSearchResults.visibility = View.VISIBLE
                 binding.layoutSearchNotFoundContainer.visibility = View.GONE
-                binding.searchDivider.visibility = View.GONE
+                binding.searchDivider.visibility = View.VISIBLE
                 binding.dimOverlay.visibility = View.GONE
             } else {
                 binding.rvSearchResults.visibility = View.GONE
