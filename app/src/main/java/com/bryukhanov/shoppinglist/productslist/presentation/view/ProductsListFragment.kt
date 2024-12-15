@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
+import android.widget.CheckBox
+import android.widget.LinearLayout
+import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -20,6 +23,7 @@ import androidx.navigation.fragment.findNavController
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.core.util.Animates
 import com.bryukhanov.shoppinglist.core.util.CustomDialog
+import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.core.util.Units
 import com.bryukhanov.shoppinglist.databinding.FragmentProductsListBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
@@ -76,8 +80,7 @@ class ProductsListFragment : Fragment() {
         binding.txtProducts.text = shoppingList.name
 
         val unitsAdapter =
-            ArrayAdapter(requireContext(), R.layout.dropdown_item_layout, Units.entries)
-
+            ArrayAdapter(requireContext(), R.layout.dropdown_item_layout_unit, Units.entries)
         binding.completeTextUnit.setAdapter(unitsAdapter)
 
         viewModel.getProducts(shoppingList.id)
@@ -88,6 +91,20 @@ class ProductsListFragment : Fragment() {
             when (state) {
                 is ProductsState.Content -> showContent(state.productList)
                 ProductsState.Empty -> showEmptyPlaceHolder()
+            }
+        }
+
+        viewModel.getSelectedSorting().observe(viewLifecycleOwner) { sort ->
+            when (sort!!) {
+                SortingVariants.ALPHABET -> {
+                    binding.sortLayout.typeSort.text = SortingVariants.ALPHABET.toString()
+                    viewModel.sortProducts(sort)
+                }
+
+                SortingVariants.USER -> {
+                    binding.sortLayout.typeSort.text = SortingVariants.USER.toString()
+                    viewModel.sortProducts(sort)
+                }
             }
         }
 
@@ -124,8 +141,11 @@ class ProductsListFragment : Fragment() {
 
         })
 
-        binding.completeTextUnit.setOnItemClickListener { _, _, position, _ ->
-            unitProduct = Units.entries[position].toString()
+        with(binding) {
+
+            completeTextUnit.setOnItemClickListener { _, _, position, _ ->
+                unitProduct = Units.entries[position].toString()
+            }
         }
 
         with(binding.editTextNameProduct) {
@@ -258,7 +278,83 @@ class ProductsListFragment : Fragment() {
             bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
+        binding.sortLayout.root.setOnClickListener {
+            showPopupWindow(binding.sortLayout.root)
+        }
 
+    }
+
+    private fun showPopupWindow(anchor: View) {
+        val popupView = layoutInflater.inflate(R.layout.dropdown_sorting_select_layout, null)
+
+        val popupWindow = PopupWindow(
+            popupView,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        val checkboxAlphabet = popupView.findViewById<CheckBox>(R.id.checkBoxAlphabetSort)
+        val checkboxUser = popupView.findViewById<CheckBox>(R.id.checkBoxUserSort)
+
+        checkboxAlphabet.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                buttonView.background =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_checked)
+                checkboxUser.background =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_unchecked)
+            } else {
+                buttonView.background =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_unchecked)
+            }
+        }
+
+        checkboxUser.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                buttonView.background =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_checked)
+                checkboxAlphabet.background =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_unchecked)
+            } else {
+                buttonView.background =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_unchecked)
+            }
+        }
+        when (viewModel.getSelectedSorting().value) {
+            SortingVariants.ALPHABET -> {
+                checkboxAlphabet.isChecked = true
+                checkboxUser.isChecked = false
+            }
+
+            SortingVariants.USER -> {
+                checkboxUser.isChecked = true
+                checkboxAlphabet.isChecked = false
+            }
+
+            null -> {}
+        }
+
+        popupView.findViewById<LinearLayout>(R.id.alphabetSorting).setOnClickListener {
+            binding.sortLayout.typeSort.text = SortingVariants.ALPHABET.toString()
+            viewModel.setSorting(SortingVariants.ALPHABET)
+            checkboxAlphabet.isChecked = true
+            checkboxUser.isChecked = false
+            popupWindow.dismiss()
+        }
+
+        popupView.findViewById<LinearLayout>(R.id.userSorting).setOnClickListener {
+            binding.sortLayout.typeSort.text = SortingVariants.USER.toString()
+            viewModel.setSorting(SortingVariants.USER)
+            checkboxUser.isChecked = true
+            checkboxAlphabet.isChecked = false
+            popupWindow.dismiss()
+        }
+        popupWindow.contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        val popupWidth = popupWindow.contentView.measuredWidth
+
+        val x = (anchor.width - popupWidth) * COEFFICIENT
+        val y = -anchor.height
+        popupWindow.showAsDropDown(anchor, x.toInt(), y)
     }
 
     private fun createProduct(shoppingListId: Int, view: View) {
@@ -361,6 +457,7 @@ class ProductsListFragment : Fragment() {
     }
 
     companion object {
+        private const val COEFFICIENT = 4 / 5f
         const val KEY_PRODUCT_LIST = "KEY PRODUCT"
         fun createArgs(shoppingList: ShoppingListItem): Bundle =
             bundleOf(KEY_PRODUCT_LIST to shoppingList)

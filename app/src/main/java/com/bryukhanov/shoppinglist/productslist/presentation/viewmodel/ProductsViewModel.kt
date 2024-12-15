@@ -4,11 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.productslist.domain.api.ProductListInteractor
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
 import kotlinx.coroutines.launch
 
 class ProductsViewModel(private val productListInteractor: ProductListInteractor) : ViewModel() {
+
+    private val selectedSorting = MutableLiveData(SortingVariants.USER)
+
+    fun setSorting(sort: SortingVariants) {
+        selectedSorting.postValue(sort)
+    }
+
+    fun getSelectedSorting(): LiveData<SortingVariants> = selectedSorting
 
     private val productState = MutableLiveData<ProductsState>()
 
@@ -20,6 +29,17 @@ class ProductsViewModel(private val productListInteractor: ProductListInteractor
                 processResult(productList)
             }
         }
+    }
+
+    fun sortProducts(sortType: SortingVariants, list: List<ProductListItem>? = null) {
+        var currentList: List<ProductListItem>? = null
+        var sortedList: List<ProductListItem>? = null
+        currentList = list ?: (productState.value as? ProductsState.Content)?.productList
+        sortedList = when (sortType) {
+            SortingVariants.ALPHABET -> currentList?.sortedBy { it.name }
+            SortingVariants.USER -> currentList?.sortedBy { it.position }
+        }
+        productState.value = sortedList?.let { ProductsState.Content(it) }
     }
 
     fun addProduct(product: ProductListItem) {
@@ -65,12 +85,13 @@ class ProductsViewModel(private val productListInteractor: ProductListInteractor
         if (productList.isEmpty()) {
             renderState(ProductsState.Empty)
         } else {
-            renderState(ProductsState.Content(productList))
+            selectedSorting.value?.let { sortProducts(it, productList) }
         }
     }
 
     private fun renderState(state: ProductsState) {
         productState.postValue(state)
     }
+
 
 }

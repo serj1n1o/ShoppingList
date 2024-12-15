@@ -98,7 +98,7 @@
         <item name="boxCornerRadiusTopEnd">4dp</item>
     </style>
 
-    <style name="SortInputLayoutProduct" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
+    <style name="SortInputLayoutProduct" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <item name="android:textSize">@dimen/sixteen_size_text</item>
         <item name="hintTextColor">?attr/colorToolbarText</item>
         <item name="android:textColorHint">?attr/colorToolbarText</item>
@@ -154,6 +154,11 @@
     <style name="CustomDialogTheme" parent="Theme.AppCompat.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="ColorRadioButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">?attr/colorHintUpText</item>
+        <item name="colorControlActivated">?attr/colorPrimaryVariant</item>
     </style>
 
     <style name="Search">
