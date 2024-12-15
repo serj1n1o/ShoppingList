@@ -155,7 +155,6 @@ class MyListsFragment : Fragment() {
         }
     }
 
-
     private fun showCustomDialog() {
         CustomDialog(requireContext()).showConfirmDialog(
             theme = R.style.CustomDialogTheme,
