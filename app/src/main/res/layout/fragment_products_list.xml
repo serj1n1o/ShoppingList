@@ -150,8 +150,7 @@
                 android:inputType="textCapWords"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="@string/add_new_product_text"
-                android:imeOptions="actionDone" />
+                android:hint="@string/add_new_product_text" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
