@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/bottom_sheet_background"
+    android:layout_marginHorizontal="@dimen/one_space">
+    <View
+        android:id="@+id/lineMenu"
+        android:layout_width="@dimen/eight_space"
+        android:layout_height="@dimen/one_space"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/four_space"
+        android:background="@drawable/top_line_bottomsheet"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvIcons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/ten_space"
+        android:layout_marginStart="@dimen/ten_space"
+        android:layout_marginEnd="@dimen/ten_space"
+        android:layout_marginBottom="@dimen/four_space" />
+</LinearLayout>

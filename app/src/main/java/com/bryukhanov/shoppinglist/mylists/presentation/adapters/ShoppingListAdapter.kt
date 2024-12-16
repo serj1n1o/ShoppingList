@@ -3,11 +3,14 @@ package com.bryukhanov.shoppinglist.mylists.presentation.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.core.util.Animates
 import com.bryukhanov.shoppinglist.databinding.ItemMyListBinding
 import com.bryukhanov.shoppinglist.databinding.ItemMyListSearchBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class ShoppingListAdapter(
     private val listener: ActionListener,
@@ -85,6 +88,10 @@ class ShoppingListAdapter(
             item.cover?.let { binding.ivIconList.setImageResource(it) }
             binding.tvListName.text = item.name
 
+            binding.ivIconList.setOnClickListener {
+                showIconPickerDialog(item)
+            }
+
             itemView.setOnClickListener {
                 if (isSwiped) {
                     Animates.animateReset(binding.mainContainer)
@@ -118,7 +125,43 @@ class ShoppingListAdapter(
                 closeSwipedItem()
             }
         }
+
+        private fun showIconPickerDialog(item: ShoppingListItem) {
+            val dialog = BottomSheetDialog(itemView.context)
+            val view =
+                LayoutInflater.from(itemView.context).inflate(R.layout.dialog_icon_picker, null)
+            dialog.setContentView(view)
+
+            val iconRecyclerView = view.findViewById<RecyclerView>(R.id.rvIcons)
+            val icons = getIconsList()
+
+            val adapter = IconPickerAdapter(icons) { selectedIconResId ->
+                item.cover = selectedIconResId
+                binding.ivIconList.setImageResource(selectedIconResId)
+                dialog.dismiss()
+            }
+
+            iconRecyclerView.adapter = adapter
+            iconRecyclerView.layoutManager = GridLayoutManager(itemView.context, 5)
+
+            dialog.show()
+        }
+
+        private fun getIconsList(): List<Int> {
+            return listOf(
+                R.drawable.ic_icon0,
+                R.drawable.ic_icon1,
+                R.drawable.ic_icon2,
+                R.drawable.ic_icon0,
+                R.drawable.ic_icon1,
+                R.drawable.ic_icon2,
+                R.drawable.ic_icon0,
+                R.drawable.ic_icon1,
+                R.drawable.ic_icon2
+            )
+        }
     }
+
 
     inner class SearchListViewHolder(
         private val binding: ItemMyListSearchBinding,
