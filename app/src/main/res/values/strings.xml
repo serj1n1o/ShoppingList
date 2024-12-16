@@ -32,6 +32,7 @@
 
     <!-- custom_dialog -->
     <string name="dialog_message">Удалить все списки?</string>
+    <string name="dialog_message_delete_item_list">Удалить список\n\u00AB%1$s\u00BB?</string>
     <string name="dialog_message_delete_all_product">Удалить все товары?</string>
     <string name="dialog_message_delete_bought_product">Удалить\nвсе купленные\nтовары?</string>
     <string name="dialog_no">Нет</string>
@@ -40,10 +41,12 @@
     <string name="dialog_positive_answer">Удалить</string>
 
     <!-- custom_card-->
-    <string name="card_message">Добавление списка</string>
+    <string name="card_message_create">Добавление списка</string>
+    <string name="card_message_edit">Переименование списка</string>
+    <string name="dialog_yes_card_edit">Переименовать</string>
     <string name="card_hint">Название списка</string>
     <string name="dialog_no_card">Отмена</string>
-    <string name="dialog_yes_card">Создать</string>
+    <string name="dialog_yes_card_create">Создать</string>
     <string name="et_card_hint">Новый список</string>
     <string name="error_hint">Название не может быть пустым</string>
 

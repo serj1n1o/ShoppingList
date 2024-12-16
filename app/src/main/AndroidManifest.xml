@@ -16,7 +16,7 @@
         <activity
             android:name=".core.ui.MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan|stateHidden">
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,7 +1,6 @@
 package com.bryukhanov.shoppinglist.mylists.presentation.view
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +8,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -19,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.core.util.CustomDialog
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
-import com.bryukhanov.shoppinglist.databinding.LayoutCustomCardBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsState
@@ -58,19 +55,19 @@ class MyListsFragment : Fragment() {
                 navigateToProductScreen(myList)
             }
 
-            override fun onEdit(id: Int) {
+            override fun onEdit(myList: ShoppingListItem) {
                 adapter.closeSwipedItem()
-                Toast.makeText(context, "Редактирование", Toast.LENGTH_SHORT).show()
+                showCustomCardEditList(myList)
             }
 
-            override fun onCopy(id: Int) {
+            override fun onCopy(listId: Int) {
+                viewModel.copyShoppingList(shoppingListId = listId)
                 adapter.closeSwipedItem()
-                Toast.makeText(requireContext(), "Копирование", Toast.LENGTH_SHORT).show()
             }
 
-            override fun onDelete(id: Int) {
+            override fun onDelete(myList: ShoppingListItem) {
+                showCustomDialogItemDelete(myList)
                 adapter.closeSwipedItem()
-                Toast.makeText(requireContext(), "Удаление", Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -80,9 +77,9 @@ class MyListsFragment : Fragment() {
                 hideSearchField()
             }
 
-            override fun onEdit(id: Int) {}
-            override fun onCopy(id: Int) {}
-            override fun onDelete(id: Int) {}
+            override fun onEdit(myList: ShoppingListItem) {}
+            override fun onCopy(listId: Int) {}
+            override fun onDelete(myList: ShoppingListItem) {}
         }, isSearchMode = true)
 
         binding.rvMyLists.apply {
@@ -104,12 +101,12 @@ class MyListsFragment : Fragment() {
 
         binding.ivDelete.setOnClickListener {
             adapter.closeSwipedItem()
-            showCustomDialog()
+            showCustomDialogDeleteAll()
         }
 
         binding.fabAdd.setOnClickListener {
             adapter.closeSwipedItem()
-            showCustomCard()
+            showCustomCardCreateList()
         }
 
         binding.ivSearch.setOnClickListener {
@@ -155,7 +152,7 @@ class MyListsFragment : Fragment() {
         }
     }
 
-    private fun showCustomDialog() {
+    private fun showCustomDialogDeleteAll() {
         CustomDialog(requireContext()).showConfirmDialog(
             theme = R.style.CustomDialogTheme,
             message = getString(R.string.dialog_message),
@@ -168,46 +165,50 @@ class MyListsFragment : Fragment() {
         )
     }
 
-    private fun showCustomCard() {
-        val dialog = Dialog(requireContext(), R.style.CustomDialogTheme)
-        val dialogBinding = LayoutCustomCardBinding.inflate(layoutInflater)
+    private fun showCustomDialogItemDelete(myList: ShoppingListItem) {
+        CustomDialog(requireContext()).showConfirmDialog(
+            theme = R.style.CustomDialogTheme,
+            message = getString(R.string.dialog_message_delete_item_list, myList.name),
+            positiveButtonText = getString(R.string.dialog_positive_answer),
+            negativeButtonText = getString(R.string.dialog_cancel),
+            onPositiveClick = {
+                viewModel.deleteShoppingList(myList)
+            },
+            onNegativeClick = {}
+        )
+    }
 
-        dialog.setContentView(dialogBinding.root)
-
-        dialogBinding.etCreateList.requestFocus()
-
-        dialogBinding.btnNoCard.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialogBinding.btnYesCard.setOnClickListener {
-            val listName = dialogBinding.etCreateList.text.toString().trim()
-
-            if (listName.isEmpty()) {
-                dialogBinding.textInputLayout.error = getString(R.string.error_hint)
-            } else {
-                dialogBinding.textInputLayout.error = null
-
+    private fun showCustomCardCreateList() {
+        CustomDialog(requireContext()).showCustomCard(
+            theme = R.style.CustomDialogTheme,
+            title = getString(R.string.card_message_create),
+            positiveButtonText = getString(R.string.dialog_yes_card_create),
+            negativeButtonText = getString(R.string.dialog_cancel),
+            onNegativeClick = {},
+            onPositiveClick = { name ->
                 val newShoppingList = ShoppingListItem(
                     id = 0,
-                    name = listName,
+                    name = name,
                     cover = R.drawable.ic_list
                 )
-
                 viewModel.addShoppingList(newShoppingList)
-
-                val inputMethodManager =
-                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(
-                    dialogBinding.etCreateList.windowToken,
-                    0
-                )
-
-                dialog.dismiss()
             }
-        }
+        )
+    }
 
-        dialog.show()
+    private fun showCustomCardEditList(myList: ShoppingListItem) {
+        CustomDialog(requireContext()).showCustomCard(
+            theme = R.style.CustomDialogTheme,
+            title = getString(R.string.card_message_edit),
+            initialText = myList.name,
+            positiveButtonText = getString(R.string.dialog_yes_card_edit),
+            negativeButtonText = getString(R.string.dialog_cancel),
+            onNegativeClick = {},
+            onPositiveClick = { name ->
+                val newShoppingList = myList.copy(name = name)
+                viewModel.updateShoppingList(newShoppingList)
+            }
+        )
     }
 
     @SuppressLint("ClickableViewAccessibility")
