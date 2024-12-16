@@ -10,9 +10,9 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="@dimen/one_space"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/btnEdit"
@@ -48,10 +48,10 @@
         app:cardBackgroundColor="?attr/colorList"
         app:cardCornerRadius="@dimen/four_space"
         app:cardElevation="@dimen/two_space"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -62,6 +62,7 @@
                 android:id="@+id/ivIconList"
                 android:layout_width="@dimen/ten_space"
                 android:layout_height="@dimen/ten_space"
+                android:background="@drawable/icon_background"
                 android:src="@drawable/ic_list"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

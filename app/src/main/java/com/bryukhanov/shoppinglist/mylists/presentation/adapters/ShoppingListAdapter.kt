@@ -1,13 +1,21 @@
 package com.bryukhanov.shoppinglist.mylists.presentation.adapters
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Typeface
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bryukhanov.shoppinglist.core.util.Animates
 import com.bryukhanov.shoppinglist.databinding.ItemMyListBinding
 import com.bryukhanov.shoppinglist.databinding.ItemMyListSearchBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
+import com.bryukhanov.shoppinglist.mylists.presentation.view.EmojiBottomSheetFragment
 
 class ShoppingListAdapter(
     private val listener: ActionListener,
@@ -85,6 +93,18 @@ class ShoppingListAdapter(
             item.cover?.let { binding.ivIconList.setImageResource(it) }
             binding.tvListName.text = item.name
 
+            binding.ivIconList.setOnClickListener {
+                val bottomSheet = EmojiBottomSheetFragment { emoji ->
+                    val emojiBitmap = emojiToBitmap(itemView.context, emoji, sizeInDp = 36f)
+                    binding.ivIconList.setImageBitmap(emojiBitmap)
+                }
+                bottomSheet.show(
+                    (itemView.context as AppCompatActivity).supportFragmentManager,
+                    "emojiBottomSheet"
+                )
+            }
+
+
             itemView.setOnClickListener {
                 if (isSwiped) {
                     Animates.animateReset(binding.mainContainer)
@@ -118,6 +138,27 @@ class ShoppingListAdapter(
                 closeSwipedItem()
             }
         }
+    }
+
+    fun emojiToBitmap(context: Context, emoji: String, sizeInDp: Float = 40f): Bitmap {
+        val sizeInPx = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, sizeInDp, context.resources.displayMetrics
+        ).toInt()
+
+        val paint = Paint().apply {
+            textSize = sizeInPx * 0.8f
+            typeface = Typeface.DEFAULT
+            isAntiAlias = true
+            textAlign = Paint.Align.CENTER
+        }
+
+        val bitmap = Bitmap.createBitmap(sizeInPx, sizeInPx, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        val baseline = (sizeInPx / 2) - (paint.descent() + paint.ascent()) / 2
+        canvas.drawText(emoji, sizeInPx / 2f, baseline, paint)
+
+        return bitmap
     }
 
     inner class SearchListViewHolder(
