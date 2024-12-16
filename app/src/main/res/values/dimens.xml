@@ -22,10 +22,10 @@
     <dimen name="thirty_space">120dp</dimen>
     <dimen name="fifty_one_space">204dp</dimen>
 
+    <dimen name="size_icon_app">108dp</dimen>
     <dimen name="height_dialog">184dp</dimen>
     <dimen name="width_dialog">312dp</dimen>
     <dimen name="height_card">264dp</dimen>
-
 
     <dimen name="fourteen_size_text">14sp</dimen>
     <dimen name="sixteen_size_text">16sp</dimen>
