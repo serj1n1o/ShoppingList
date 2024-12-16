@@ -149,15 +149,17 @@ class ShoppingListAdapter(
 
         private fun getIconsList(): List<Int> {
             return listOf(
-                R.drawable.ic_icon0,
+                R.drawable.ic_list,
                 R.drawable.ic_icon1,
-                R.drawable.ic_icon2,
-                R.drawable.ic_icon0,
+                R.drawable.ic_list,
                 R.drawable.ic_icon1,
-                R.drawable.ic_icon2,
-                R.drawable.ic_icon0,
+                R.drawable.ic_list,
                 R.drawable.ic_icon1,
-                R.drawable.ic_icon2
+                R.drawable.ic_list,
+                R.drawable.ic_icon1,
+                R.drawable.ic_list,
+                R.drawable.ic_icon1
+
             )
         }
     }
