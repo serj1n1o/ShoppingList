@@ -161,7 +161,26 @@ class ShoppingListAdapter(
                 R.drawable.ic_icon7,
                 R.drawable.ic_icon8,
                 R.drawable.ic_icon9,
-                R.drawable.ic_icon10
+                R.drawable.ic_icon10,
+                R.drawable.ic_icon11,
+                R.drawable.ic_icon12,
+                R.drawable.ic_icon13,
+                R.drawable.ic_icon14,
+                R.drawable.ic_icon15,
+                R.drawable.ic_icon16,
+                R.drawable.ic_icon17,
+                R.drawable.ic_icon18,
+                R.drawable.ic_icon19,
+                R.drawable.ic_icon20,
+                R.drawable.ic_icon21,
+                R.drawable.ic_icon22,
+                R.drawable.ic_icon23,
+                R.drawable.ic_icon24,
+                R.drawable.ic_icon25,
+                R.drawable.ic_icon26,
+                R.drawable.ic_icon27,
+                R.drawable.ic_icon28,
+                R.drawable.ic_icon29
             )
         }
     }
