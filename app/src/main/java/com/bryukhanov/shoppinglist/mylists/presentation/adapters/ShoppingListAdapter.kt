@@ -153,15 +153,15 @@ class ShoppingListAdapter(
             return listOf(
                 R.drawable.ic_list,
                 R.drawable.ic_icon1,
-                R.drawable.ic_list,
-                R.drawable.ic_icon1,
-                R.drawable.ic_list,
-                R.drawable.ic_icon1,
-                R.drawable.ic_list,
-                R.drawable.ic_icon1,
-                R.drawable.ic_list,
-                R.drawable.ic_icon1
-
+                R.drawable.ic_icon2,
+                R.drawable.ic_icon3,
+                R.drawable.ic_icon4,
+                R.drawable.ic_icon5,
+                R.drawable.ic_icon6,
+                R.drawable.ic_icon7,
+                R.drawable.ic_icon8,
+                R.drawable.ic_icon9,
+                R.drawable.ic_icon10
             )
         }
     }
