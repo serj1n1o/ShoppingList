@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +26,7 @@ import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAda
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsState
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsViewModel
 import com.bryukhanov.shoppinglist.productslist.presentation.view.ProductsListFragment
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MyListsFragment : Fragment() {
@@ -53,6 +55,13 @@ class MyListsFragment : Fragment() {
         binding.groupEmptyState.visibility = View.VISIBLE
 
         adapter = ShoppingListAdapter(listener = object : ShoppingListAdapter.ActionListener {
+
+            override fun onCoverChanged(item: ShoppingListItem) {
+                lifecycleScope.launch {
+                    viewModel.updateShoppingList(item)
+                }
+            }
+
             override fun onClickItem(myList: ShoppingListItem) {
                 adapter.closeSwipedItem()
                 navigateToProductScreen(myList)
@@ -75,6 +84,12 @@ class MyListsFragment : Fragment() {
         })
 
         searchAdapter = ShoppingListAdapter(listener = object : ShoppingListAdapter.ActionListener {
+            override fun onCoverChanged(item: ShoppingListItem) {
+                lifecycleScope.launch {
+                    viewModel.updateShoppingList(item)
+                }
+            }
+
             override fun onClickItem(myList: ShoppingListItem) {
                 navigateToProductScreen(myList)
                 hideSearchField()
@@ -134,6 +149,7 @@ class MyListsFragment : Fragment() {
             ProductsListFragment.createArgs(myList)
         )
     }
+
 
     private fun observeViewModel() {
         viewModel.getListState().observe(viewLifecycleOwner) { state ->

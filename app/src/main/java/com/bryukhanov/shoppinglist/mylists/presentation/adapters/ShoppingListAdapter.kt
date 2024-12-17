@@ -22,6 +22,7 @@ class ShoppingListAdapter(
     private var swipedPosition: Int = -1
 
     interface ActionListener {
+        fun onCoverChanged(item: ShoppingListItem)
         fun onClickItem(myList: ShoppingListItem)
         fun onEdit(id: Int)
         fun onCopy(id: Int)
@@ -138,6 +139,7 @@ class ShoppingListAdapter(
             val adapter = IconPickerAdapter(icons) { selectedIconResId ->
                 item.cover = selectedIconResId
                 binding.ivIconList.setImageResource(selectedIconResId)
+                listener.onCoverChanged(item)
                 dialog.dismiss()
             }
 
@@ -163,7 +165,6 @@ class ShoppingListAdapter(
             )
         }
     }
-
 
     inner class SearchListViewHolder(
         private val binding: ItemMyListSearchBinding,
