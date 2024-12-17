@@ -18,6 +18,7 @@
     <dimen name="fourteen_space">56dp</dimen>
     <dimen name="sixteen_space">64dp</dimen>
     <dimen name="eighteen_space">72dp</dimen>
+    <dimen name="twenty_four_space">96dp</dimen>
     <dimen name="twenty_five_space">100dp</dimen>
     <dimen name="thirty_space">120dp</dimen>
     <dimen name="fifty_one_space">204dp</dimen>

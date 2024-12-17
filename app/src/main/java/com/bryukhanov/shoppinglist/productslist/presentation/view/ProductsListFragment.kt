@@ -2,6 +2,7 @@ package com.bryukhanov.shoppinglist.productslist.presentation.view
 
 import android.content.Context
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ import com.bryukhanov.shoppinglist.core.util.Animates
 import com.bryukhanov.shoppinglist.core.util.CustomDialog
 import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.core.util.Units
+import com.bryukhanov.shoppinglist.core.util.setItemTouchHelper
 import com.bryukhanov.shoppinglist.databinding.FragmentProductsListBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
@@ -48,6 +50,8 @@ class ProductsListFragment : Fragment() {
     private var amountProduct: Int? = null
     private var unitProduct: String? = null
 
+    private var productItem: ProductListItem? = null
+
     private val productsAdapter by lazy {
         ProductsAdapter(object : ProductsAdapter.ProductsActionListener {
             override val onProductClickListener: () -> Unit
@@ -55,6 +59,15 @@ class ProductsListFragment : Fragment() {
             override val onProductBoughtChangedListener: (Int, Boolean) -> Unit
                 get() = { id, isBought ->
                     viewModel.updateProductBoughtStatus(id, isBought)
+                }
+            override val onDeleteClick: (ProductListItem) -> Unit
+                get() = { product ->
+                    viewModel.deleteProduct(product)
+                }
+            override val onEditClick: (ProductListItem) -> Unit
+                get() = { product ->
+                    productItem = product
+                    openAddProductBottomSheet(product)
                 }
         })
     }
@@ -87,6 +100,8 @@ class ProductsListFragment : Fragment() {
 
         binding.rvProducts.adapter = productsAdapter
 
+        setItemTouchHelper(requireContext(), binding.rvProducts, productsAdapter)
+
         viewModel.getProductState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is ProductsState.Content -> showContent(state.productList)
@@ -109,7 +124,7 @@ class ProductsListFragment : Fragment() {
         }
 
         binding.fabAddProduct.setOnClickListener {
-            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_COLLAPSED
+            openAddProductBottomSheet()
         }
 
         bottomSheetAddProduct?.addBottomSheetCallback(object :
@@ -120,7 +135,11 @@ class ProductsListFragment : Fragment() {
                         swapImageFab(state = BottomSheetBehavior.STATE_COLLAPSED)
                         showOverlay(true)
                         binding.fabAddProduct.setOnClickListener {
-                            createProduct(shoppingListId = shoppingList.id, view = it)
+                            if (productItem != null) {
+                                updateProduct(productItem!!, it)
+                            } else {
+                                createProduct(shoppingListId = shoppingList.id, view = it)
+                            }
                         }
                     }
 
@@ -142,7 +161,6 @@ class ProductsListFragment : Fragment() {
         })
 
         with(binding) {
-
             completeTextUnit.setOnItemClickListener { _, _, position, _ ->
                 unitProduct = Units.entries[position].toString()
             }
@@ -285,6 +303,24 @@ class ProductsListFragment : Fragment() {
 
     }
 
+    private fun openAddProductBottomSheet(product: ProductListItem? = null) {
+        if (product != null) {
+            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_COLLAPSED
+            with(binding) {
+                editTextNameProduct.setText(product.name)
+                editTextAmountProduct.setText(product.amount?.toString())
+                val unit = Units.entries.find { it.toString() == product.unit }
+                if (unit != null) {
+                    completeTextUnit.setText(unit.toString(), false)
+                    unitProduct = unit.toString()
+                }
+
+            }
+        } else {
+            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
+
     private fun showPopupWindow(anchor: View) {
         val popupView = layoutInflater.inflate(R.layout.dropdown_sorting_select_layout, null)
 
@@ -294,14 +330,14 @@ class ProductsListFragment : Fragment() {
             LinearLayout.LayoutParams.WRAP_CONTENT,
             true
         )
-
+        setBackgroundSortLayout()
         val checkboxAlphabet = popupView.findViewById<CheckBox>(R.id.checkBoxAlphabetSort)
         val checkboxUser = popupView.findViewById<CheckBox>(R.id.checkBoxUserSort)
 
         checkboxAlphabet.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 buttonView.background =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_checked)
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_sort_checked)
                 checkboxUser.background =
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_unchecked)
             } else {
@@ -313,7 +349,7 @@ class ProductsListFragment : Fragment() {
         checkboxUser.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 buttonView.background =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_checked)
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_sort_checked)
                 checkboxAlphabet.background =
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_unchecked)
             } else {
@@ -356,6 +392,10 @@ class ProductsListFragment : Fragment() {
         val x = (anchor.width - popupWidth) * COEFFICIENT
         val y = -anchor.height
         popupWindow.showAsDropDown(anchor, x.toInt(), y)
+
+        popupWindow.setOnDismissListener {
+            setBackgroundSortLayoutReset()
+        }
     }
 
     private fun createProduct(shoppingListId: Int, view: View) {
@@ -369,6 +409,17 @@ class ProductsListFragment : Fragment() {
                     amount = amountProduct,
                     unit = unitProduct,
                 )
+            )
+            hideKeyboard(view)
+            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_HIDDEN
+            clearFieldsProduct()
+        }
+    }
+
+    private fun updateProduct(product: ProductListItem, view: View) {
+        if (!nameProduct.isNullOrEmpty()) {
+            viewModel.updateProduct(
+                product.copy(name = nameProduct!!, amount = amountProduct, unit = unitProduct)
             )
             hideKeyboard(view)
             bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_HIDDEN
@@ -433,6 +484,7 @@ class ProductsListFragment : Fragment() {
         with(binding) {
             placeholderProductsEmpty.isVisible = true
             rvProducts.isVisible = false
+            productsAdapter.clearProductList()
         }
     }
 
@@ -451,6 +503,62 @@ class ProductsListFragment : Fragment() {
         val imm =
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun setBackgroundSortLayout() {
+        with(binding) {
+            sortLayout.root.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.sort_checked_background)
+            sortLayout.typeSort.setTextColor(
+                getColorFromAttr(
+                    requireContext(),
+                    R.attr.colorSortTextActive
+                )
+            )
+            sortLayout.titleSort.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.darkColorPlus
+                )
+            )
+            sortLayout.imgSort.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_swap_prod_active_layout
+                )
+            )
+        }
+    }
+
+    private fun setBackgroundSortLayoutReset() {
+        with(binding) {
+            sortLayout.root.background = null
+            sortLayout.typeSort.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.accentText
+                )
+            )
+            sortLayout.titleSort.setTextColor(
+                getColorFromAttr(
+                    requireContext(),
+                    R.attr.colorToolbarText
+                )
+            )
+            sortLayout.imgSort.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_swap_prod
+                )
+            )
+        }
+    }
+
+    private fun getColorFromAttr(context: Context, attr: Int): Int {
+        val typedValue = TypedValue()
+        val theme = context.theme
+        theme.resolveAttribute(attr, typedValue, true)
+        return typedValue.data
     }
 
     companion object {

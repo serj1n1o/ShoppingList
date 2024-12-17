@@ -31,7 +31,8 @@
         <item name="colorBackgroundHint">@color/lightBackgroundHint</item>
         <item name="colorCardText">@color/lightCardText</item>
         <item name="colorViewBackground">@color/viewBackground</item>
-
+        <item name="colorSortActiveBackground">@color/lightIcon</item>
+        <item name="colorSortTextActive">@color/sortTextActiveLight</item>
 
     </style>
 

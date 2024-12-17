@@ -15,6 +15,8 @@ class ProductsAdapter(private val actionListener: ProductsActionListener) :
     interface ProductsActionListener {
         val onProductClickListener: (() -> Unit)
         val onProductBoughtChangedListener: ((id: Int, isBought: Boolean) -> Unit)
+        val onDeleteClick: (ProductListItem) -> Unit
+        val onEditClick: (ProductListItem) -> Unit
     }
 
     fun setProductList(newList: List<ProductListItem>) {
