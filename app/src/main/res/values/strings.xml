@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">ShoppingList</string>
     <!-- splash_screen -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="splash_screen_text_welcome">Добро пожаловать в Список покупок!</string>
     <string name="splash_screen_text_tasks">Создавайте списки, добавляйте товары,\nотмечайте, что уже куплено</string>
 
@@ -15,6 +14,7 @@
     <string name="enter_request">Поиск списков</string>
     <string name="myLists_screen_not_found">Мы не смогли найти то,\n что вы искали</string>
     <string name="myLists_screen_try_again">Попробуйте изменить запрос\n или проверить написание</string>
+    <string name="icon">Иконка</string>
 
     <!-- products_screen -->
     <string name="products_screen_text">Продукты</string>

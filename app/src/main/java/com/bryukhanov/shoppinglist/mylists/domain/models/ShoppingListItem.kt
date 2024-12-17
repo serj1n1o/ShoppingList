@@ -7,5 +7,5 @@ import kotlinx.parcelize.Parcelize
 data class ShoppingListItem(
     val id: Int = 0,
     val name: String,
-    val cover: Int?,
+    var cover: Int?,
 ) : Parcelable
