@@ -14,7 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class ShoppingListAdapter(
     private val listener: ActionListener,
-    private val isSearchMode: Boolean = false
+    private val isSearchMode: Boolean = false,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -24,9 +24,9 @@ class ShoppingListAdapter(
     interface ActionListener {
         fun onCoverChanged(item: ShoppingListItem)
         fun onClickItem(myList: ShoppingListItem)
-        fun onEdit(id: Int)
-        fun onCopy(id: Int)
-        fun onDelete(id: Int)
+        fun onEdit(myList: ShoppingListItem)
+        fun onCopy(listId: Int)
+        fun onDelete(myList: ShoppingListItem)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -82,7 +82,7 @@ class ShoppingListAdapter(
 
     inner class ShoppingListViewHolder(
         private val binding: ItemMyListBinding,
-        private val listener: ActionListener
+        private val listener: ActionListener,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ShoppingListItem, isSwiped: Boolean) {
@@ -111,7 +111,7 @@ class ShoppingListAdapter(
             }
 
             binding.btnEdit.setOnClickListener {
-                listener.onEdit(item.id)
+                listener.onEdit(item)
                 Animates.animateReset(binding.mainContainer)
                 closeSwipedItem()
             }
@@ -121,7 +121,7 @@ class ShoppingListAdapter(
                 closeSwipedItem()
             }
             binding.btnDelete.setOnClickListener {
-                listener.onDelete(item.id)
+                listener.onDelete(item)
                 Animates.animateReset(binding.mainContainer)
                 closeSwipedItem()
             }
@@ -187,7 +187,7 @@ class ShoppingListAdapter(
 
     inner class SearchListViewHolder(
         private val binding: ItemMyListSearchBinding,
-        private val listener: ActionListener
+        private val listener: ActionListener,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ShoppingListItem) {
             binding.tvListNameSearch.text = item.name
