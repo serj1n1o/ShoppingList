@@ -135,10 +135,11 @@
             android:id="@+id/inputLayoutNameProduct"
             style="@style/TextInputLayoutAddProduct"
             android:layout_width="@dimen/zero_space"
-            android:layout_height="@dimen/fourteen_space"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/four_space"
             android:hint="@string/product_text"
             app:expandedHintEnabled="false"
+            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lineBottomSheetProductAdd">
@@ -149,7 +150,7 @@
                 android:imeOptions="actionDone"
                 android:inputType="textCapWords"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="@string/add_new_product_text" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -160,7 +161,6 @@
             android:layout_width="@dimen/zero_space"
             android:layout_height="@dimen/fourteen_space"
             android:layout_marginStart="@dimen/four_space"
-            android:layout_marginTop="@dimen/four_space"
             android:hint="@string/amount_txt"
             app:layout_constraintEnd_toStartOf="@id/inputLayoutUnitProduct"
             app:layout_constraintStart_toStartOf="parent"
@@ -235,7 +235,7 @@
         app:behavior_hideable="true"
         app:behavior_peekHeight="@dimen/fifty_one_space"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <View
             android:id="@+id/lineMenu"
@@ -294,8 +294,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:layout_marginEnd="@dimen/four_space"
-        android:layout_marginBottom="@dimen/fourteen_space"
+        android:layout_marginEnd="@dimen/one_space"
+        android:layout_marginBottom="@dimen/nine_space"
         app:backgroundTint="?attr/colorPrimary"
         app:layout_anchor="@id/bottomSheetAddProduct"
         app:layout_anchorGravity="top|end"

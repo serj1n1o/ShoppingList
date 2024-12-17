@@ -168,9 +168,10 @@ class ProductsListFragment : Fragment() {
 
         with(binding.editTextNameProduct) {
             doOnTextChanged { text, _, _, _ ->
-                if (!text.isNullOrEmpty()) {
-                    nameProduct = text.toString()
+                if (binding.inputLayoutNameProduct.error != null && !text.isNullOrEmpty()) {
+                    binding.inputLayoutNameProduct.error = null
                 }
+                nameProduct = text?.toString()
             }
 
             setOnEditorActionListener { _, actionId, _ ->
@@ -399,6 +400,7 @@ class ProductsListFragment : Fragment() {
 
     private fun createProduct(shoppingListId: Int, view: View) {
         if (!nameProduct.isNullOrEmpty()) {
+            binding.inputLayoutNameProduct.error = null
             viewModel.addProduct(
                 ProductListItem(
                     shoppingListId = shoppingListId,
@@ -422,6 +424,8 @@ class ProductsListFragment : Fragment() {
             hideKeyboard(view)
             bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_HIDDEN
             clearFieldsProduct()
+        } else {
+            binding.inputLayoutNameProduct.error = getString(R.string.error_hint)
         }
     }
 
