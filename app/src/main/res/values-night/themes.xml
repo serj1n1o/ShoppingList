@@ -35,4 +35,6 @@
 
     </style>
 
+    <style name="Theme.ShoppingList" parent="Base.Theme.ShoppingList" />
+
 </resources>
