@@ -145,7 +145,6 @@ class MyListsFragment : Fragment() {
         )
     }
 
-
     private fun observeViewModel() {
         viewModel.getListState().observe(viewLifecycleOwner) { state ->
             when (state) {
