@@ -25,6 +25,7 @@ import com.bryukhanov.shoppinglist.core.util.Animates
 import com.bryukhanov.shoppinglist.core.util.CustomDialog
 import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.core.util.Units
+import com.bryukhanov.shoppinglist.core.util.setItemTouchHelper
 import com.bryukhanov.shoppinglist.databinding.FragmentProductsListBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
@@ -48,6 +49,8 @@ class ProductsListFragment : Fragment() {
     private var amountProduct: Int? = null
     private var unitProduct: String? = null
 
+    private var productItem: ProductListItem? = null
+
     private val productsAdapter by lazy {
         ProductsAdapter(object : ProductsAdapter.ProductsActionListener {
             override val onProductClickListener: () -> Unit
@@ -55,6 +58,15 @@ class ProductsListFragment : Fragment() {
             override val onProductBoughtChangedListener: (Int, Boolean) -> Unit
                 get() = { id, isBought ->
                     viewModel.updateProductBoughtStatus(id, isBought)
+                }
+            override val onDeleteClick: (ProductListItem) -> Unit
+                get() = { product ->
+                    viewModel.deleteProduct(product)
+                }
+            override val onEditClick: (ProductListItem) -> Unit
+                get() = { product ->
+                    productItem = product
+                    openAddProductBottomSheet(product)
                 }
         })
     }
@@ -87,6 +99,8 @@ class ProductsListFragment : Fragment() {
 
         binding.rvProducts.adapter = productsAdapter
 
+        setItemTouchHelper(requireContext(), binding.rvProducts, productsAdapter)
+
         viewModel.getProductState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is ProductsState.Content -> showContent(state.productList)
@@ -109,7 +123,7 @@ class ProductsListFragment : Fragment() {
         }
 
         binding.fabAddProduct.setOnClickListener {
-            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_COLLAPSED
+            openAddProductBottomSheet()
         }
 
         bottomSheetAddProduct?.addBottomSheetCallback(object :
@@ -120,7 +134,11 @@ class ProductsListFragment : Fragment() {
                         swapImageFab(state = BottomSheetBehavior.STATE_COLLAPSED)
                         showOverlay(true)
                         binding.fabAddProduct.setOnClickListener {
-                            createProduct(shoppingListId = shoppingList.id, view = it)
+                            if (productItem != null) {
+                                updateProduct(productItem!!, it)
+                            } else {
+                                createProduct(shoppingListId = shoppingList.id, view = it)
+                            }
                         }
                     }
 
@@ -142,7 +160,6 @@ class ProductsListFragment : Fragment() {
         })
 
         with(binding) {
-
             completeTextUnit.setOnItemClickListener { _, _, position, _ ->
                 unitProduct = Units.entries[position].toString()
             }
@@ -284,6 +301,24 @@ class ProductsListFragment : Fragment() {
 
     }
 
+    private fun openAddProductBottomSheet(product: ProductListItem? = null) {
+        if (product != null) {
+            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_COLLAPSED
+            with(binding) {
+                editTextNameProduct.setText(product.name)
+                editTextAmountProduct.setText(product.amount?.toString())
+                val unit = Units.entries.find { it.toString() == product.unit }
+                if (unit != null) {
+                    completeTextUnit.setText(unit.toString(), false)
+                    unitProduct = unit.toString()
+                }
+
+            }
+        } else {
+            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
+
     private fun showPopupWindow(anchor: View) {
         val popupView = layoutInflater.inflate(R.layout.dropdown_sorting_select_layout, null)
 
@@ -371,13 +406,17 @@ class ProductsListFragment : Fragment() {
             hideKeyboard(view)
             bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_HIDDEN
             clearFieldsProduct()
-        } else {
-            // думаю что тут можно сделать для валидации ввода, пока так
-            Toast.makeText(
-                requireContext(),
-                "НЕОБХОДИМО ВВЕСТИ НАЗВАНИЕ",
-                Toast.LENGTH_SHORT
-            ).show()
+        }
+    }
+
+    private fun updateProduct(product: ProductListItem, view: View) {
+        if (!nameProduct.isNullOrEmpty()) {
+            viewModel.updateProduct(
+                product.copy(name = nameProduct!!, amount = amountProduct, unit = unitProduct)
+            )
+            hideKeyboard(view)
+            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_HIDDEN
+            clearFieldsProduct()
         }
     }
 
@@ -436,6 +475,7 @@ class ProductsListFragment : Fragment() {
         with(binding) {
             placeholderProductsEmpty.isVisible = true
             rvProducts.isVisible = false
+            productsAdapter.clearProductList()
         }
     }
 

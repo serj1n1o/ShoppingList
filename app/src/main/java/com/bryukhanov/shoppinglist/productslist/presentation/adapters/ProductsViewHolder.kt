@@ -50,6 +50,8 @@ class ProductsViewHolder(
 
         }
         itemView.setOnClickListener { actionListener.onProductClickListener.invoke() }
+        binding.btnDeleteProduct.setOnClickListener { actionListener.onDeleteClick.invoke(item) }
+        binding.btnEditProduct.setOnClickListener { actionListener.onEditClick.invoke(item) }
     }
 
 }

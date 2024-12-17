@@ -6,7 +6,7 @@ import androidx.core.view.isVisible
 
 object Animates {
 
-    fun animateOverlay(show: Boolean, view: View, duration: Long = 300L) {
+    fun animateOverlay(show: Boolean, view: View, duration: Long = ANIMATION_DURATION) {
         val alpha = if (show) 1f else 0f
         view.animate()
             .alpha(alpha)

@@ -37,7 +37,7 @@ class ProductsViewModel(private val productListInteractor: ProductListInteractor
         currentList = list ?: (productState.value as? ProductsState.Content)?.productList
         sortedList = when (sortType) {
             SortingVariants.ALPHABET -> currentList?.sortedBy { it.name }
-            SortingVariants.USER -> currentList?.sortedBy { it.position }
+            SortingVariants.USER -> currentList?.sortedByDescending { it.position }
         }
         productState.value = sortedList?.let { ProductsState.Content(it) }
     }
