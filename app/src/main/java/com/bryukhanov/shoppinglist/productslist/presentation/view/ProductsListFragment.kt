@@ -2,6 +2,7 @@ package com.bryukhanov.shoppinglist.productslist.presentation.view
 
 import android.content.Context
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -328,14 +329,14 @@ class ProductsListFragment : Fragment() {
             LinearLayout.LayoutParams.WRAP_CONTENT,
             true
         )
-
+        setBackgroundSortLayout()
         val checkboxAlphabet = popupView.findViewById<CheckBox>(R.id.checkBoxAlphabetSort)
         val checkboxUser = popupView.findViewById<CheckBox>(R.id.checkBoxUserSort)
 
         checkboxAlphabet.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 buttonView.background =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_checked)
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_sort_checked)
                 checkboxUser.background =
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_unchecked)
             } else {
@@ -347,7 +348,7 @@ class ProductsListFragment : Fragment() {
         checkboxUser.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 buttonView.background =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_checked)
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_sort_checked)
                 checkboxAlphabet.background =
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_unchecked)
             } else {
@@ -390,6 +391,10 @@ class ProductsListFragment : Fragment() {
         val x = (anchor.width - popupWidth) * COEFFICIENT
         val y = -anchor.height
         popupWindow.showAsDropDown(anchor, x.toInt(), y)
+
+        popupWindow.setOnDismissListener {
+            setBackgroundSortLayoutReset()
+        }
     }
 
     private fun createProduct(shoppingListId: Int, view: View) {
@@ -494,6 +499,62 @@ class ProductsListFragment : Fragment() {
         val imm =
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    private fun setBackgroundSortLayout() {
+        with(binding) {
+            sortLayout.root.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.sort_checked_background)
+            sortLayout.typeSort.setTextColor(
+                getColorFromAttr(
+                    requireContext(),
+                    R.attr.colorSortTextActive
+                )
+            )
+            sortLayout.titleSort.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.darkColorPlus
+                )
+            )
+            sortLayout.imgSort.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_swap_prod_active_layout
+                )
+            )
+        }
+    }
+
+    private fun setBackgroundSortLayoutReset() {
+        with(binding) {
+            sortLayout.root.background = null
+            sortLayout.typeSort.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.accentText
+                )
+            )
+            sortLayout.titleSort.setTextColor(
+                getColorFromAttr(
+                    requireContext(),
+                    R.attr.colorToolbarText
+                )
+            )
+            sortLayout.imgSort.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_swap_prod
+                )
+            )
+        }
+    }
+
+    private fun getColorFromAttr(context: Context, attr: Int): Int {
+        val typedValue = TypedValue()
+        val theme = context.theme
+        theme.resolveAttribute(attr, typedValue, true)
+        return typedValue.data
     }
 
     companion object {

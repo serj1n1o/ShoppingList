@@ -28,4 +28,6 @@
     <attr name="colorBackgroundHint" format="color" />
     <attr name="colorCardText" format="color" />
     <attr name="colorViewBackground" format="color" />
+    <attr name="colorSortActiveBackground" format="color" />
+    <attr name="colorSortTextActive" format="color" />
 </resources>

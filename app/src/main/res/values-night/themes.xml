@@ -30,6 +30,8 @@
         <item name="colorBackgroundHint">@color/darkBackgroundHint</item>
         <item name="colorCardText">@color/darkCardText</item>
         <item name="colorViewBackground">@color/viewBackground</item>
+        <item name="colorSortActiveBackground">@color/darkIcon</item>
+        <item name="colorSortTextActive">@color/sortTextActiveDark</item>
 
     </style>
 
