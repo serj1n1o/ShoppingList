@@ -190,6 +190,7 @@ class ShoppingListAdapter(
         private val listener: ActionListener,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ShoppingListItem) {
+            item.cover?.let { binding.ivIconListSearch.setImageResource(it) }
             binding.tvListNameSearch.text = item.name
             itemView.setOnClickListener { listener.onClickItem(item) }
         }

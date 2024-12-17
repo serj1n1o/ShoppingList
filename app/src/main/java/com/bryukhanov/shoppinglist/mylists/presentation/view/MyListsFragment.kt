@@ -59,9 +59,6 @@ class MyListsFragment : Fragment() {
                 .commit()
         }
 
-
-        binding.groupEmptyState.visibility = View.VISIBLE
-
         adapter = ShoppingListAdapter(listener = object : ShoppingListAdapter.ActionListener {
 
             override fun onCoverChanged(item: ShoppingListItem) {
@@ -157,7 +154,6 @@ class MyListsFragment : Fragment() {
             ProductsListFragment.createArgs(myList)
         )
     }
-
 
     private fun observeViewModel() {
         viewModel.getListState().observe(viewLifecycleOwner) { state ->
