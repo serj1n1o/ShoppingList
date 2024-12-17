@@ -97,6 +97,10 @@ class ProductsListFragment : Fragment() {
             KEY_PRODUCT_LIST,
             ShoppingListItem::class.java
         ) as ShoppingListItem
+        viewModel.shoppingList = shoppingList
+        val typeSort =
+            if (shoppingList.sortType == SortingVariants.USER.toString()) SortingVariants.USER else SortingVariants.ALPHABET
+        viewModel.setSorting(typeSort)
 
         binding.txtProducts.text = shoppingList.name
 

@@ -12,6 +12,7 @@ object ShoppingListConverter {
             id = id,
             name = name,
             cover = cover,
+            sortType = sortType,
         )
     }
 
@@ -20,6 +21,7 @@ object ShoppingListConverter {
             id = id,
             name = name,
             cover = cover,
+            sortType = sortType,
         )
     }
 

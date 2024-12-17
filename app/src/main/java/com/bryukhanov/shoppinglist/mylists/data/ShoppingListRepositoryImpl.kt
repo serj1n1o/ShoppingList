@@ -64,7 +64,11 @@ class ShoppingListRepositoryImpl(
                 )
 
                 val newShoppingList =
-                    ShoppingListItemDbo(name = newName, cover = originalList.cover)
+                    ShoppingListItemDbo(
+                        name = newName,
+                        cover = originalList.cover,
+                        sortType = originalList.sortType
+                    )
                 val newShoppingListId =
                     dataBase.shoppingListDao().addShoppingList(newShoppingList).toInt()
 

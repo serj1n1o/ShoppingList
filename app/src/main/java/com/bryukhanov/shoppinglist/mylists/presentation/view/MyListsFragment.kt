@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.core.util.CustomDialog
+import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
@@ -205,7 +206,8 @@ class MyListsFragment : Fragment() {
                 val newShoppingList = ShoppingListItem(
                     id = 0,
                     name = name,
-                    cover = R.drawable.ic_list
+                    cover = R.drawable.ic_list,
+                    sortType = SortingVariants.USER.toString()
                 )
                 viewModel.addShoppingList(newShoppingList)
             }

@@ -8,4 +8,5 @@ data class ShoppingListItem(
     val id: Int = 0,
     val name: String,
     var cover: Int?,
+    var sortType: String,
 ) : Parcelable
