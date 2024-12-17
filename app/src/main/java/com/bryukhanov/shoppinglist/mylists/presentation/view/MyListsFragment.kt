@@ -49,8 +49,6 @@ class MyListsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.groupEmptyState.visibility = View.VISIBLE
-
         adapter = ShoppingListAdapter(listener = object : ShoppingListAdapter.ActionListener {
 
             override fun onCoverChanged(item: ShoppingListItem) {
