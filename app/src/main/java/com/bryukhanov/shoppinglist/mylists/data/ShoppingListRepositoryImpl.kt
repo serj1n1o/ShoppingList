@@ -2,8 +2,8 @@ package com.bryukhanov.shoppinglist.mylists.data
 
 import com.bryukhanov.shoppinglist.core.util.NameShoppingListGenerator
 import com.bryukhanov.shoppinglist.db.DataBase
-import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter
 import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter.toDbo
+import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter.toUiShoppingList
 import com.bryukhanov.shoppinglist.db.entity.ShoppingListItemDbo
 import com.bryukhanov.shoppinglist.mylists.domain.api.ShoppingListRepository
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
@@ -16,13 +16,12 @@ import kotlinx.coroutines.withContext
 
 class ShoppingListRepositoryImpl(
     private val dataBase: DataBase,
-    private val shoppingListConverter: ShoppingListConverter,
     private val nameShoppingListGenerator: NameShoppingListGenerator,
 ) : ShoppingListRepository {
 
     override fun getAllShoppingLists(): Flow<List<ShoppingListItem>> {
         return dataBase.shoppingListDao().getAllShoppingList().map { listDbo ->
-            shoppingListConverter.shoppingListDboToShoppingList(listDbo)
+            listDbo.toUiShoppingList()
         }.flowOn(Dispatchers.IO)
     }
 

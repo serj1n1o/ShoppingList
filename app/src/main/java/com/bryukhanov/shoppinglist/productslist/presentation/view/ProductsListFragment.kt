@@ -27,6 +27,7 @@ import com.bryukhanov.shoppinglist.core.util.CustomDialog
 import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.core.util.Units
 import com.bryukhanov.shoppinglist.core.util.setItemTouchHelper
+import com.bryukhanov.shoppinglist.core.util.setupDragAndDrop
 import com.bryukhanov.shoppinglist.databinding.FragmentProductsListBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
@@ -55,7 +56,9 @@ class ProductsListFragment : Fragment() {
     private val productsAdapter by lazy {
         ProductsAdapter(object : ProductsAdapter.ProductsActionListener {
             override val onProductClickListener: () -> Unit
-                get() = { Toast.makeText(requireContext(), "CLICK", Toast.LENGTH_SHORT).show() }
+                get() = {
+                    Toast.makeText(requireContext(), "CLICK", Toast.LENGTH_SHORT).show()
+                }
             override val onProductBoughtChangedListener: (Int, Boolean) -> Unit
                 get() = { id, isBought ->
                     viewModel.updateProductBoughtStatus(id, isBought)
@@ -69,6 +72,11 @@ class ProductsListFragment : Fragment() {
                     productItem = product
                     openAddProductBottomSheet(product)
                 }
+            override val onUpdateItems: (products: List<ProductListItem>) -> Unit
+                get() = { products ->
+                    viewModel.updatePositionProducts(products)
+                }
+
         })
     }
 
@@ -102,6 +110,8 @@ class ProductsListFragment : Fragment() {
 
         setItemTouchHelper(requireContext(), binding.rvProducts, productsAdapter)
 
+        setupDragAndDrop(requireContext(), binding.rvProducts, productsAdapter)
+
         viewModel.getProductState().observe(viewLifecycleOwner) { state ->
             when (state) {
                 is ProductsState.Content -> showContent(state.productList)
@@ -121,7 +131,9 @@ class ProductsListFragment : Fragment() {
                     viewModel.sortProducts(sort)
                 }
             }
+            enableDrag(sort)
         }
+
 
         binding.fabAddProduct.setOnClickListener {
             openAddProductBottomSheet()
@@ -301,6 +313,25 @@ class ProductsListFragment : Fragment() {
             showPopupWindow(binding.sortLayout.root)
         }
 
+    }
+
+    private fun enableDrag(sortType: SortingVariants) {
+        val oldUserSorting = productsAdapter.isUserSortingEnabled
+        when (sortType) {
+            SortingVariants.ALPHABET -> {
+                productsAdapter.isUserSortingEnabled = false
+                if (oldUserSorting) {
+                    productsAdapter.notifyItemAdapter()
+                }
+            }
+
+            SortingVariants.USER -> {
+                productsAdapter.isUserSortingEnabled = true
+                if (!oldUserSorting) {
+                    productsAdapter.notifyItemAdapter()
+                }
+            }
+        }
     }
 
     private fun openAddProductBottomSheet(product: ProductListItem? = null) {

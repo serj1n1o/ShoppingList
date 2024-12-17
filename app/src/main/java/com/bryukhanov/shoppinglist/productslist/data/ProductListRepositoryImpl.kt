@@ -1,9 +1,10 @@
 package com.bryukhanov.shoppinglist.productslist.data
 
 import com.bryukhanov.shoppinglist.db.DataBase
-import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter
 import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter.toDbo
+import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter.toDboProductList
 import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter.toUi
+import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter.toUiProductList
 import com.bryukhanov.shoppinglist.productslist.domain.api.ProductListRepository
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
 import kotlinx.coroutines.Dispatchers
@@ -14,14 +15,12 @@ import kotlinx.coroutines.withContext
 
 class ProductListRepositoryImpl(
     private val dataBase: DataBase,
-    private val shoppingListConverter: ShoppingListConverter,
 ) : ProductListRepository {
 
     override fun getAllProducts(shoppingListId: Int): Flow<List<ProductListItem>> {
-        // доработать метод, в завиимости от выбранной сортировки просить нужный метод в DAO
         return dataBase.productListDao().getAllProductsForShoppingList(shoppingListId)
             .map { listDbo ->
-                shoppingListConverter.productListDboToProductList(listDbo)
+                listDbo.toUiProductList()
             }.flowOn(Dispatchers.IO)
     }
 
@@ -60,4 +59,11 @@ class ProductListRepositoryImpl(
             dataBase.productListDao().getProductById(productId)?.toUi()
         }
     }
+
+    override suspend fun updateSwapProducts(swapItems: List<ProductListItem>) {
+        return withContext(Dispatchers.IO) {
+            dataBase.productListDao().updateSwapProducts(swapItems.toDboProductList())
+        }
+    }
+
 }

@@ -18,4 +18,6 @@ interface ProductListRepository {
     suspend fun updateProduct(productListItem: ProductListItem)
 
     suspend fun getProductById(productId: Int): ProductListItem?
+
+    suspend fun updateSwapProducts(swapItems: List<ProductListItem>)
 }

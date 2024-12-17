@@ -148,7 +148,7 @@
                 android:id="@+id/editTextNameProduct"
                 style="@style/textInputEditTextProduct"
                 android:imeOptions="actionDone"
-                android:inputType="textCapWords"
+                android:inputType="textCapSentences"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/add_new_product_text" />

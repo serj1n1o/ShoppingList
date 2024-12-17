@@ -41,4 +41,7 @@ interface ProductListDao {
 
     @Query("SELECT * FROM product_list WHERE id = :productId")
     suspend fun getProductById(productId: Int): ProductListItemDbo?
+
+    @Update
+    suspend fun updateSwapProducts(products: List<ProductListItemDbo>)
 }

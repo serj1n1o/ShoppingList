@@ -47,15 +47,15 @@ object ShoppingListConverter {
         )
     }
 
-    fun shoppingListDboToShoppingList(list: List<ShoppingListItemDbo>): List<ShoppingListItem> {
-        return list.map { listDbo ->
-            listDbo.toUi()
-        }
+    fun List<ProductListItemDbo>.toUiProductList(): List<ProductListItem> {
+        return this.map { it.toUi() }
     }
 
-    fun productListDboToProductList(list: List<ProductListItemDbo>): List<ProductListItem> {
-        return list.map { listDbo ->
-            listDbo.toUi()
-        }
+    fun List<ShoppingListItemDbo>.toUiShoppingList(): List<ShoppingListItem> {
+        return this.map { it.toUi() }
+    }
+
+    fun List<ProductListItem>.toDboProductList(): List<ProductListItemDbo> {
+        return this.map { it.toDbo() }
     }
 }

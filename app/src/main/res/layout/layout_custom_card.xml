@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@android:color/transparent"
             android:ellipsize="end"
-            android:inputType="textCapWords"
+            android:inputType="textCapSentences"
             android:hint="@string/et_card_hint"
             android:maxLines="1"
             android:textColor="?attr/colorCardText"

@@ -93,5 +93,11 @@ class ProductsViewModel(private val productListInteractor: ProductListInteractor
         productState.postValue(state)
     }
 
+    fun updatePositionProducts(listSwapProducts: List<ProductListItem>) {
+        viewModelScope.launch {
+            productListInteractor.updateSwapProducts(listSwapProducts)
+        }
+    }
+
 
 }
