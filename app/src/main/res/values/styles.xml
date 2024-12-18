@@ -33,6 +33,16 @@
         <item name="fontWeight">400</item>
     </style>
 
+    <style name="ToolBarTitleProduct">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/one_space</item>
+        <item name="android:textColor">?attr/colorToolbarText</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textSize">@dimen/twenty_two_size_text</item>
+        <item name="fontWeight">400</item>
+    </style>
+
     <style name="DialogTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

@@ -48,6 +48,7 @@
             android:ellipsize="end"
             android:inputType="textCapSentences"
             android:hint="@string/et_card_hint"
+            android:maxLength="70"
             android:maxLines="1"
             android:textColor="?attr/colorCardText"
             app:hintTextColor="?attr/colorIconCardAdd" />

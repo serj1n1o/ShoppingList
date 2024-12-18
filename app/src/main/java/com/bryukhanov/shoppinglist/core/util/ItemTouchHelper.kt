@@ -56,7 +56,6 @@ fun setItemTouchHelper(context: Context, recyclerView: RecyclerView, adapter: Pr
             actionState: Int,
             isCurrentlyActive: Boolean,
         ) {
-
             if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
 
                 if (viewHolder.itemView.scrollX == 0) {
@@ -132,19 +131,30 @@ fun setItemTouchHelper(context: Context, recyclerView: RecyclerView, adapter: Pr
             viewHolder: RecyclerView.ViewHolder,
         ) {
             super.clearView(recyclerView, viewHolder)
-
             if (viewHolder.itemView.scrollX > limitScrollX) {
                 viewHolder.itemView.scrollTo(limitScrollX, 0)
+
             } else if (viewHolder.itemView.scrollX < 0) {
                 viewHolder.itemView.scrollTo(0, 0)
             }
+
         }
 
     }).apply {
         attachToRecyclerView(recyclerView)
     }
+
+}
+
+fun resetAllItemsScroll(recyclerView: RecyclerView) {
+    val childCount = recyclerView.childCount
+    for (i in 0 until childCount) {
+        val child = recyclerView.getChildAt(i)
+        child?.scrollTo(0, 0)
+    }
 }
 
 private fun dipToPx(context: Context): Int {
     return (100f * context.resources.displayMetrics.density).toInt()
+
 }

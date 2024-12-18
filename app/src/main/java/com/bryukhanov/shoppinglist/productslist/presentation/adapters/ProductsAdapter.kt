@@ -23,6 +23,10 @@ class ProductsAdapter(private val actionListener: ProductsActionListener) :
 
     var isUserSortingEnabled = false
 
+    fun isHaveBoughtProducts(): Boolean {
+        return productList.any { it.isBought }
+    }
+
     fun onItemMove(fromPosition: Int, toPosition: Int) {
         if (fromPosition < toPosition) {
             val movedItem = productList[fromPosition]
@@ -39,11 +43,10 @@ class ProductsAdapter(private val actionListener: ProductsActionListener) :
         }
 
         notifyItemMoved(fromPosition, toPosition)
-
     }
 
     fun updatePositions() {
-        actionListener.onUpdateItems(productList) // Отправляем обновленный список
+        actionListener.onUpdateItems(productList)
     }
 
     fun setProductList(newList: List<ProductListItem>) {

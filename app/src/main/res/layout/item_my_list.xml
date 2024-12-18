@@ -71,6 +71,8 @@
                 android:id="@+id/tvListName"
                 style="@style/NameList"
                 android:text="List Name"
+                android:maxLines="2"
+                android:ellipsize="end"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

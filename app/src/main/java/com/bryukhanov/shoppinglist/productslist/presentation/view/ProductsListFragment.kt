@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.PopupWindow
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.os.BundleCompat
@@ -26,6 +25,7 @@ import com.bryukhanov.shoppinglist.core.util.Animates
 import com.bryukhanov.shoppinglist.core.util.CustomDialog
 import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.core.util.Units
+import com.bryukhanov.shoppinglist.core.util.resetAllItemsScroll
 import com.bryukhanov.shoppinglist.core.util.setItemTouchHelper
 import com.bryukhanov.shoppinglist.core.util.setupDragAndDrop
 import com.bryukhanov.shoppinglist.databinding.FragmentProductsListBinding
@@ -57,7 +57,7 @@ class ProductsListFragment : Fragment() {
         ProductsAdapter(object : ProductsAdapter.ProductsActionListener {
             override val onProductClickListener: () -> Unit
                 get() = {
-                    Toast.makeText(requireContext(), "CLICK", Toast.LENGTH_SHORT).show()
+                    resetAllItemsScroll(binding.rvProducts)
                 }
             override val onProductBoughtChangedListener: (Int, Boolean) -> Unit
                 get() = { id, isBought ->
@@ -66,11 +66,13 @@ class ProductsListFragment : Fragment() {
             override val onDeleteClick: (ProductListItem) -> Unit
                 get() = { product ->
                     viewModel.deleteProduct(product)
+                    resetAllItemsScroll(binding.rvProducts)
                 }
             override val onEditClick: (ProductListItem) -> Unit
                 get() = { product ->
                     productItem = product
                     openAddProductBottomSheet(product)
+                    resetAllItemsScroll(binding.rvProducts)
                 }
             override val onUpdateItems: (products: List<ProductListItem>) -> Unit
                 get() = { products ->
@@ -294,7 +296,7 @@ class ProductsListFragment : Fragment() {
 
         binding.clearBoughtMenu.setOnClickListener {
             bottomSheetMenu?.state = BottomSheetBehavior.STATE_HIDDEN
-            if (productsAdapter.itemCount > 0) {
+            if (productsAdapter.isHaveBoughtProducts()) {
                 CustomDialog(requireContext()).showConfirmDialog(
                     theme = R.style.CustomDialogTheme,
                     message = getString(R.string.dialog_message_delete_bought_product),
