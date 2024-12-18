@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/two_space">
+
+    <ImageView
+        android:id="@+id/ivIconItem"
+        android:layout_width="@dimen/twelve_space"
+        android:layout_height="@dimen/twelve_space"
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/icon" />
+</FrameLayout>
