@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.core.util.CustomDialog
 import com.bryukhanov.shoppinglist.core.util.SortingVariants
+import com.bryukhanov.shoppinglist.core.util.ThemeManager
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
@@ -50,7 +51,14 @@ class MyListsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.groupEmptyState.visibility = View.VISIBLE
+        binding.ivTheme.setOnClickListener {
+            ThemeManager.toggleTheme(requireContext())
+            activity?.recreate()
+            parentFragmentManager.beginTransaction()
+                .detach(this)
+                .attach(this)
+                .commit()
+        }
 
         adapter = ShoppingListAdapter(listener = object : ShoppingListAdapter.ActionListener {
 
@@ -147,7 +155,6 @@ class MyListsFragment : Fragment() {
             ProductsListFragment.createArgs(myList)
         )
     }
-
 
     private fun observeViewModel() {
         viewModel.getListState().observe(viewLifecycleOwner) { state ->
