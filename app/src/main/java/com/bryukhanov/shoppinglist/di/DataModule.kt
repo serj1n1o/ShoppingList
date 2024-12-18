@@ -3,7 +3,6 @@ package com.bryukhanov.shoppinglist.di
 import androidx.room.Room
 import com.bryukhanov.shoppinglist.core.util.NameShoppingListGenerator
 import com.bryukhanov.shoppinglist.db.DataBase
-import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter
 import com.bryukhanov.shoppinglist.mylists.data.ShoppingListRepositoryImpl
 import com.bryukhanov.shoppinglist.mylists.domain.api.ShoppingListInteractor
 import com.bryukhanov.shoppinglist.mylists.domain.api.ShoppingListRepository
@@ -15,10 +14,6 @@ import com.bryukhanov.shoppinglist.productslist.domain.impl.ProductListInteracto
 import org.koin.dsl.module
 
 val dataModule = module {
-
-    single {
-        ShoppingListConverter
-    }
 
     single {
         NameShoppingListGenerator
@@ -35,7 +30,6 @@ val dataModule = module {
     factory<ShoppingListRepository> {
         ShoppingListRepositoryImpl(
             dataBase = get(),
-            shoppingListConverter = get(),
             nameShoppingListGenerator = get()
         )
     }
@@ -45,7 +39,7 @@ val dataModule = module {
     }
 
     factory<ProductListRepository> {
-        ProductListRepositoryImpl(dataBase = get(), shoppingListConverter = get())
+        ProductListRepositoryImpl(dataBase = get())
     }
 
     factory<ProductListInteractor> {

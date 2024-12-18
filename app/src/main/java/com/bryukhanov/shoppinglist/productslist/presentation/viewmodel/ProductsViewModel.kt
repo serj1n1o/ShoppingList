@@ -5,16 +5,33 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bryukhanov.shoppinglist.core.util.SortingVariants
+import com.bryukhanov.shoppinglist.mylists.domain.api.ShoppingListInteractor
+import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.productslist.domain.api.ProductListInteractor
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
 import kotlinx.coroutines.launch
 
-class ProductsViewModel(private val productListInteractor: ProductListInteractor) : ViewModel() {
+class ProductsViewModel(
+    private val productListInteractor: ProductListInteractor,
+    private val shoppingListInteractor: ShoppingListInteractor,
+) : ViewModel() {
 
     private val selectedSorting = MutableLiveData(SortingVariants.USER)
+    lateinit var shoppingList: ShoppingListItem
 
     fun setSorting(sort: SortingVariants) {
-        selectedSorting.postValue(sort)
+        selectedSorting.value = sort
+        updateSortTypeShoppingList(shoppingList)
+    }
+
+    private fun updateSortTypeShoppingList(shoppingList: ShoppingListItem) {
+        if (shoppingList.sortType != selectedSorting.value.toString()) {
+            viewModelScope.launch {
+                shoppingListInteractor.updateShoppingList(
+                    shoppingList.copy(sortType = selectedSorting.value.toString())
+                )
+            }
+        }
     }
 
     fun getSelectedSorting(): LiveData<SortingVariants> = selectedSorting
@@ -91,6 +108,12 @@ class ProductsViewModel(private val productListInteractor: ProductListInteractor
 
     private fun renderState(state: ProductsState) {
         productState.postValue(state)
+    }
+
+    fun updatePositionProducts(listSwapProducts: List<ProductListItem>) {
+        viewModelScope.launch {
+            productListInteractor.updateSwapProducts(listSwapProducts)
+        }
     }
 
 

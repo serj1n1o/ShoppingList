@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.PopupWindow
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.os.BundleCompat
@@ -26,7 +25,9 @@ import com.bryukhanov.shoppinglist.core.util.Animates
 import com.bryukhanov.shoppinglist.core.util.CustomDialog
 import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.core.util.Units
+import com.bryukhanov.shoppinglist.core.util.resetAllItemsScroll
 import com.bryukhanov.shoppinglist.core.util.setItemTouchHelper
+import com.bryukhanov.shoppinglist.core.util.setupDragAndDrop
 import com.bryukhanov.shoppinglist.databinding.FragmentProductsListBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
@@ -55,7 +56,9 @@ class ProductsListFragment : Fragment() {
     private val productsAdapter by lazy {
         ProductsAdapter(object : ProductsAdapter.ProductsActionListener {
             override val onProductClickListener: () -> Unit
-                get() = { Toast.makeText(requireContext(), "CLICK", Toast.LENGTH_SHORT).show() }
+                get() = {
+                    resetAllItemsScroll(binding.rvProducts)
+                }
             override val onProductBoughtChangedListener: (Int, Boolean) -> Unit
                 get() = { id, isBought ->
                     viewModel.updateProductBoughtStatus(id, isBought)
@@ -63,12 +66,19 @@ class ProductsListFragment : Fragment() {
             override val onDeleteClick: (ProductListItem) -> Unit
                 get() = { product ->
                     viewModel.deleteProduct(product)
+                    resetAllItemsScroll(binding.rvProducts)
                 }
             override val onEditClick: (ProductListItem) -> Unit
                 get() = { product ->
                     productItem = product
                     openAddProductBottomSheet(product)
+                    resetAllItemsScroll(binding.rvProducts)
                 }
+            override val onUpdateItems: (products: List<ProductListItem>) -> Unit
+                get() = { products ->
+                    viewModel.updatePositionProducts(products)
+                }
+
         })
     }
 
@@ -89,6 +99,10 @@ class ProductsListFragment : Fragment() {
             KEY_PRODUCT_LIST,
             ShoppingListItem::class.java
         ) as ShoppingListItem
+        viewModel.shoppingList = shoppingList
+        val typeSort =
+            if (shoppingList.sortType == SortingVariants.USER.toString()) SortingVariants.USER else SortingVariants.ALPHABET
+        viewModel.setSorting(typeSort)
 
         binding.txtProducts.text = shoppingList.name
 
@@ -101,6 +115,8 @@ class ProductsListFragment : Fragment() {
         binding.rvProducts.adapter = productsAdapter
 
         setItemTouchHelper(requireContext(), binding.rvProducts, productsAdapter)
+
+        setupDragAndDrop(requireContext(), binding.rvProducts, productsAdapter)
 
         viewModel.getProductState().observe(viewLifecycleOwner) { state ->
             when (state) {
@@ -121,7 +137,9 @@ class ProductsListFragment : Fragment() {
                     viewModel.sortProducts(sort)
                 }
             }
+            enableDrag(sort)
         }
+
 
         binding.fabAddProduct.setOnClickListener {
             openAddProductBottomSheet()
@@ -278,7 +296,7 @@ class ProductsListFragment : Fragment() {
 
         binding.clearBoughtMenu.setOnClickListener {
             bottomSheetMenu?.state = BottomSheetBehavior.STATE_HIDDEN
-            if (productsAdapter.itemCount > 0) {
+            if (productsAdapter.isHaveBoughtProducts()) {
                 CustomDialog(requireContext()).showConfirmDialog(
                     theme = R.style.CustomDialogTheme,
                     message = getString(R.string.dialog_message_delete_bought_product),
@@ -301,6 +319,25 @@ class ProductsListFragment : Fragment() {
             showPopupWindow(binding.sortLayout.root)
         }
 
+    }
+
+    private fun enableDrag(sortType: SortingVariants) {
+        val oldUserSorting = productsAdapter.isUserSortingEnabled
+        when (sortType) {
+            SortingVariants.ALPHABET -> {
+                productsAdapter.isUserSortingEnabled = false
+                if (oldUserSorting) {
+                    productsAdapter.notifyItemAdapter()
+                }
+            }
+
+            SortingVariants.USER -> {
+                productsAdapter.isUserSortingEnabled = true
+                if (!oldUserSorting) {
+                    productsAdapter.notifyItemAdapter()
+                }
+            }
+        }
     }
 
     private fun openAddProductBottomSheet(product: ProductListItem? = null) {

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
+        <LinearLayout
             android:id="@+id/toolbarProducts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,26 +25,27 @@
                 android:id="@+id/ivBackArrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
+                android:layout_gravity="center_vertical"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_back_arrow" />
 
             <TextView
                 android:id="@+id/txtProducts"
-                style="@style/ToolBarTitle"
-                android:layout_marginStart="@dimen/one_space"
-                android:text="@string/products_screen_text" />
+                style="@style/ToolBarTitleProduct"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                tools:text=" ПродуктыПродуктыПр ПродуктыПродукты Продукты" />
 
             <ImageView
                 android:id="@+id/ivMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
+                android:layout_gravity="center_vertical"
                 android:layout_marginEnd="@dimen/one_space"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_menu" />
 
-        </androidx.appcompat.widget.Toolbar>
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvProducts"
@@ -148,7 +149,9 @@
                 android:id="@+id/editTextNameProduct"
                 style="@style/textInputEditTextProduct"
                 android:imeOptions="actionDone"
-                android:inputType="textCapWords"
+                android:maxLines="1"
+                android:maxLength="70"
+                android:inputType="textCapSentences"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/add_new_product_text" />

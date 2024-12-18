@@ -8,4 +8,5 @@ data class ShoppingListItemDbo(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
     val cover: Int?,
+    var sortType: String,
 )

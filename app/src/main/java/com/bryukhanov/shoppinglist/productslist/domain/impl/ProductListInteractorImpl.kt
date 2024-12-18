@@ -35,4 +35,8 @@ class ProductListInteractorImpl(private val productListRepository: ProductListRe
     override suspend fun getProductById(productId: Int): ProductListItem? {
         return productListRepository.getProductById(productId)
     }
+
+    override suspend fun updateSwapProducts(swapItems: List<ProductListItem>) {
+        productListRepository.updateSwapProducts(swapItems)
+    }
 }
