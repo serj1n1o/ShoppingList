@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -125,8 +126,17 @@ class MyListsFragment : Fragment() {
 
         binding.ivDelete.setOnClickListener {
             adapter.closeSwipedItem()
-            showCustomDialogDeleteAll()
+            if (originalList.isEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.toast_list_empty),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                showCustomDialogDeleteAll()
+            }
         }
+
 
         binding.fabAdd.setOnClickListener {
             adapter.closeSwipedItem()
