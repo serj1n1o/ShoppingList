@@ -15,7 +15,8 @@ class MainActivity : AppCompatActivity() {
         ThemeManager.applyTheme(this)
 
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        //android:screenOrientation="portrait" из Manifest
+        //requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
