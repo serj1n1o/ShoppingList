@@ -35,7 +35,7 @@
 
         <Button
             android:id="@+id/btnNo"
-            style="@style/DialogNoButton"
+            style="@style/DialogButton"
             android:layout_marginEnd="@dimen/two_space"
             android:backgroundTint="?attr/colorSecondary"
             android:text="@string/dialog_no"
@@ -43,7 +43,7 @@
 
         <Button
             android:id="@+id/btnYes"
-            style="@style/DialogYesButton"
+            style="@style/DialogButton"
             android:layout_marginEnd="@dimen/six_space"
             android:backgroundTint="?attr/colorPrimaryVariant"
             android:text="@string/dialog_yes"

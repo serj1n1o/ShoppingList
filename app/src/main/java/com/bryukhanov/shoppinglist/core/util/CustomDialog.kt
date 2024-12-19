@@ -7,9 +7,11 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.core.widget.doOnTextChanged
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.databinding.LayoutCustomCardBinding
@@ -90,6 +92,9 @@ class CustomDialog(private val context: Context) {
                 val sizeTextSp = sizeTextPx / context.resources.displayMetrics.density
                 tvCardMessage.setTextSize(TypedValue.COMPLEX_UNIT_SP, sizeTextSp)
                 tvCardMessage.gravity = GravityCompat.START
+                tvCardMessage.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    topMargin = context.resources.getDimensionPixelSize(R.dimen.six_space)
+                }
             }
             btnNoCard.text = negativeButtonText
             btnYesCard.text = positiveButtonText
