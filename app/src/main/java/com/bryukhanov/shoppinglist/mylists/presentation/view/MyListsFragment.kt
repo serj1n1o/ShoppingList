@@ -16,7 +16,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
-import com.bryukhanov.shoppinglist.core.util.CustomDialog
+import com.bryukhanov.shoppinglist.core.util.CustomCardFragment
+import com.bryukhanov.shoppinglist.core.util.CustomDialogFragment
 import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.core.util.ThemeManager
 import com.bryukhanov.shoppinglist.core.util.resetAllItemsScroll
@@ -24,13 +25,14 @@ import com.bryukhanov.shoppinglist.core.util.setItemTouchHelperShoppingList
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
+import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.CustomDialogListener
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsState
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsViewModel
 import com.bryukhanov.shoppinglist.productslist.presentation.view.ProductsListFragment
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MyListsFragment : Fragment() {
+class MyListsFragment : Fragment(), CustomDialogListener {
     private var _binding: FragmentMyListsBinding? = null
     private val binding get() = _binding!!
 
@@ -40,6 +42,17 @@ class MyListsFragment : Fragment() {
     private lateinit var searchAdapter: ShoppingListAdapter
 
     private var originalList: List<ShoppingListItem> = emptyList()
+
+    override fun onPositiveClick(item: ShoppingListItem?) {
+        if (item != null) {
+            viewModel.deleteShoppingList(item)
+        } else {
+            viewModel.deleteAllShoppingLists()
+        }
+    }
+
+    override fun onNegativeClick() {
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -186,63 +199,70 @@ class MyListsFragment : Fragment() {
     }
 
     private fun showCustomDialogDeleteAll() {
-        CustomDialog(requireContext()).showConfirmDialog(
+        val dialog = CustomDialogFragment.newInstance(
             theme = R.style.CustomDialogTheme,
             message = getString(R.string.dialog_message),
             positiveButtonText = getString(R.string.dialog_positive_answer),
-            negativeButtonText = getString(R.string.dialog_cancel),
-            onPositiveClick = {
-                viewModel.deleteAllShoppingLists()
-            },
-            onNegativeClick = {}
+            negativeButtonText = getString(R.string.dialog_cancel)
         )
+
+        dialog.show(childFragmentManager, "CustomDialog")
     }
 
     private fun showCustomDialogItemDelete(myList: ShoppingListItem) {
-        CustomDialog(requireContext()).showConfirmDialog(
+        val dialog = CustomDialogFragment.newInstance(
             theme = R.style.CustomDialogTheme,
             message = getString(R.string.dialog_message_delete_item_list, myList.name),
             positiveButtonText = getString(R.string.dialog_positive_answer),
             negativeButtonText = getString(R.string.dialog_cancel),
-            onPositiveClick = {
-                viewModel.deleteShoppingList(myList)
-            },
-            onNegativeClick = {}
+            item = myList
         )
+        dialog.show(childFragmentManager, "CustomDialog")
     }
 
     private fun showCustomCardCreateList() {
-        CustomDialog(requireContext()).showCustomCard(
+        val dialog = CustomCardFragment.newInstance(
             theme = R.style.CustomDialogTheme,
             title = getString(R.string.card_message_create),
+            initialText = "",
             positiveButtonText = getString(R.string.dialog_yes_card_create),
-            negativeButtonText = getString(R.string.dialog_cancel),
-            onNegativeClick = {},
-            onPositiveClick = { name ->
-                val newShoppingList = ShoppingListItem(
-                    id = 0,
-                    name = name,
-                    cover = R.drawable.ic_list,
-                    sortType = SortingVariants.USER.toString()
-                )
-                viewModel.addShoppingList(newShoppingList)
-            }
+            negativeButtonText = getString(R.string.dialog_cancel)
         )
+
+        dialog.onPositiveClick = { name ->
+            val newShoppingList = ShoppingListItem(
+                id = 0,
+                name = name,
+                cover = R.drawable.ic_list,
+                sortType = SortingVariants.USER.toString()
+            )
+            viewModel.addShoppingList(newShoppingList)
+        }
+
+        dialog.onNegativeClick = {
+        }
+
+        dialog.show(parentFragmentManager, "CustomCardDialog")
     }
 
     private fun showCustomCardEditList(myList: ShoppingListItem) {
-        CustomDialog(requireContext()).showCustomCard(
+        val dialog = CustomCardFragment.newInstance(
             theme = R.style.CustomDialogTheme,
             title = getString(R.string.card_message_edit),
             initialText = myList.name,
             positiveButtonText = getString(R.string.dialog_yes_card_edit),
-            negativeButtonText = getString(R.string.dialog_cancel),
-            onNegativeClick = {},
-            onPositiveClick = { name ->
-                val newShoppingList = myList.copy(name = name)
-                viewModel.updateShoppingList(newShoppingList)
-            }
+            negativeButtonText = getString(R.string.dialog_cancel)
         )
+
+        dialog.onPositiveClick = { name ->
+            val newShoppingList = myList.copy(name = name)
+            viewModel.updateShoppingList(newShoppingList)
+        }
+
+        dialog.onNegativeClick = {
+        }
+
+        dialog.show(parentFragmentManager, "CustomCardDialog")
     }
 
     @SuppressLint("ClickableViewAccessibility")

@@ -22,7 +22,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.core.util.Animates
-import com.bryukhanov.shoppinglist.core.util.CustomDialog
+import com.bryukhanov.shoppinglist.core.util.CustomDialogFragment
 import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.core.util.Units
 import com.bryukhanov.shoppinglist.core.util.resetAllItemsScroll
@@ -293,32 +293,63 @@ class ProductsListFragment : Fragment() {
         binding.deleteAllProductsMenu.setOnClickListener {
             bottomSheetMenu?.state = BottomSheetBehavior.STATE_HIDDEN
             if (productsAdapter.itemCount > 0) {
-                CustomDialog(requireContext()).showConfirmDialog(
+//                CustomDialog(requireContext()).showConfirmDialog(
+//                    theme = R.style.CustomDialogTheme,
+//                    message = getString(R.string.dialog_message_delete_all_product),
+//                    positiveButtonText = getString(R.string.dialog_positive_answer),
+//                    negativeButtonText = getString(R.string.dialog_cancel),
+//                    onPositiveClick = {
+//                        viewModel.deleteAllProduct(shoppingList.id)
+//                    },
+//                    onNegativeClick = {}
+//                )
+                val dialog = CustomDialogFragment.newInstance(
                     theme = R.style.CustomDialogTheme,
                     message = getString(R.string.dialog_message_delete_all_product),
                     positiveButtonText = getString(R.string.dialog_positive_answer),
-                    negativeButtonText = getString(R.string.dialog_cancel),
-                    onPositiveClick = {
-                        viewModel.deleteAllProduct(shoppingList.id)
-                    },
-                    onNegativeClick = {}
+                    negativeButtonText = getString(R.string.dialog_cancel)
                 )
+
+//                dialog.onPositiveClick = {
+//                    viewModel.deleteAllProduct(shoppingList.id)
+//                }
+//
+//                dialog.onNegativeClick = {
+//                }
+
+                dialog.show(parentFragmentManager, "CustomDialog")
             }
         }
 
         binding.clearBoughtMenu.setOnClickListener {
             bottomSheetMenu?.state = BottomSheetBehavior.STATE_HIDDEN
             if (productsAdapter.isHaveBoughtProducts()) {
-                CustomDialog(requireContext()).showConfirmDialog(
+//                CustomDialog(requireContext()).showConfirmDialog(
+//                    theme = R.style.CustomDialogTheme,
+//                    message = getString(R.string.dialog_message_delete_bought_product),
+//                    positiveButtonText = getString(R.string.dialog_positive_answer),
+//                    negativeButtonText = getString(R.string.dialog_cancel),
+//                    onPositiveClick = {
+//                        viewModel.deleteBoughtProduct(shoppingList.id)
+//                    },
+//                    onNegativeClick = {}
+//                )
+                val dialog = CustomDialogFragment.newInstance(
                     theme = R.style.CustomDialogTheme,
                     message = getString(R.string.dialog_message_delete_bought_product),
                     positiveButtonText = getString(R.string.dialog_positive_answer),
-                    negativeButtonText = getString(R.string.dialog_cancel),
-                    onPositiveClick = {
-                        viewModel.deleteBoughtProduct(shoppingList.id)
-                    },
-                    onNegativeClick = {}
+                    negativeButtonText = getString(R.string.dialog_cancel)
                 )
+
+//                dialog.onPositiveClick = {
+//                    viewModel.deleteBoughtProduct(shoppingList.id)
+//                }
+//
+//                dialog.onNegativeClick = {
+//                }
+
+
+                dialog.show(parentFragmentManager, "CustomDialog")
             }
         }
 
