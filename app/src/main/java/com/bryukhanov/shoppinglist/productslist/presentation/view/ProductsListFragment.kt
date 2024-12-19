@@ -26,7 +26,7 @@ import com.bryukhanov.shoppinglist.core.util.CustomDialog
 import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.core.util.Units
 import com.bryukhanov.shoppinglist.core.util.resetAllItemsScroll
-import com.bryukhanov.shoppinglist.core.util.setItemTouchHelper
+import com.bryukhanov.shoppinglist.core.util.setItemTouchHelperProducts
 import com.bryukhanov.shoppinglist.core.util.setupDragAndDrop
 import com.bryukhanov.shoppinglist.databinding.FragmentProductsListBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
@@ -114,9 +114,13 @@ class ProductsListFragment : Fragment() {
 
         binding.rvProducts.adapter = productsAdapter
 
-        setItemTouchHelper(requireContext(), binding.rvProducts, productsAdapter)
+        setItemTouchHelperProducts(
+            binding.rvProducts,
+            R.id.buttonEditProductContainer,
+            productsAdapter
+        )
 
-        setupDragAndDrop(requireContext(), binding.rvProducts, productsAdapter)
+        setupDragAndDrop(binding.rvProducts, productsAdapter)
 
         viewModel.getProductState().observe(viewLifecycleOwner) { state ->
             when (state) {
@@ -143,6 +147,7 @@ class ProductsListFragment : Fragment() {
 
         binding.fabAddProduct.setOnClickListener {
             openAddProductBottomSheet()
+            resetAllItemsScroll(binding.rvProducts)
         }
 
         bottomSheetAddProduct?.addBottomSheetCallback(object :
@@ -207,6 +212,12 @@ class ProductsListFragment : Fragment() {
                 amountProduct = if (!text.isNullOrEmpty()) {
                     text.toString().toInt()
                 } else null
+
+                if (text.isNullOrEmpty()) {
+                    binding.minusUnit.setImageDrawable(requireContext().getDrawable(R.drawable.ic_minus_not_select))
+                } else {
+                    binding.minusUnit.setImageDrawable(requireContext().getDrawable(R.drawable.ic_minus_select))
+                }
             }
 
             setOnEditorActionListener { _, actionId, _ ->
@@ -225,7 +236,7 @@ class ProductsListFragment : Fragment() {
                 binding.editTextAmountProduct.setText(amountProduct.toString())
                 if (amountProduct == 0) {
                     amountProduct = null
-                    binding.editTextAmountProduct.text?.clear()
+                    binding.editTextAmountProduct.text = null
                 }
             }
         }
@@ -247,6 +258,7 @@ class ProductsListFragment : Fragment() {
 
         binding.ivMenu.setOnClickListener {
             bottomSheetMenu?.state = BottomSheetBehavior.STATE_COLLAPSED
+            resetAllItemsScroll(binding.rvProducts)
         }
 
         bottomSheetMenu?.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
