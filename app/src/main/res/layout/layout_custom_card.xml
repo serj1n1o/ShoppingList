@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/card_background"
-    android:orientation="vertical">
+    android:background="@drawable/card_background">
 
     <ImageView
         android:id="@+id/ivCardAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/six_space"
-        android:src="@drawable/ic_card_add" />
+        android:src="@drawable/ic_card_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvCardMessage"
@@ -24,6 +25,9 @@
         android:layout_marginTop="@dimen/four_space"
         android:layout_marginEnd="@dimen/six_space"
         android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivCardAdd"
         tools:text="@string/card_message_create" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -38,7 +42,10 @@
         app:boxStrokeColor="?attr/colorTextCard"
         app:boxStrokeWidth="@dimen/half_space"
         app:errorEnabled="true"
-        app:hintTextColor="?attr/colorTextCard">
+        app:hintTextColor="?attr/colorTextCard"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCardMessage">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etCreateList"
@@ -54,14 +61,17 @@
             app:hintTextColor="?attr/colorIconCardAdd" />
     </com.google.android.material.textfield.TextInputLayout>
 
-
     <LinearLayout
         android:id="@+id/llButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/six_space"
         android:gravity="end"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayout">
 
         <Button
             android:id="@+id/btnNoCard"
@@ -78,7 +88,6 @@
             android:backgroundTint="@android:color/transparent"
             android:textColor="?attr/colorTextCard"
             tools:text="@string/dialog_yes_card_create" />
-
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

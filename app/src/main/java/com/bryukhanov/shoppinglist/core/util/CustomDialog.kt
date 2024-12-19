@@ -17,6 +17,10 @@ import com.bryukhanov.shoppinglist.databinding.LayoutCustomDialogBinding
 
 class CustomDialog(private val context: Context) {
 
+    companion object {
+        private const val CARD_WIDTH_RATIO = 0.75
+    }
+
     fun showConfirmDialog(
         theme: Int,
         message: String,
@@ -60,6 +64,10 @@ class CustomDialog(private val context: Context) {
         val dialog = Dialog(context, theme)
         val dialogBinding = LayoutCustomCardBinding.inflate(LayoutInflater.from(context))
         dialog.setContentView(dialogBinding.root)
+
+        val params = dialog.window?.attributes
+        params?.width = (context.resources.displayMetrics.widthPixels * CARD_WIDTH_RATIO).toInt()
+        dialog.window?.attributes = params
 
         dialog.window?.decorView?.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
