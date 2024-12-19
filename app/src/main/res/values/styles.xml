@@ -139,22 +139,10 @@
         <item name="fontWeight">400</item>
     </style>
 
-    <style name="DialogYesButton">
+    <style name="DialogButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">@dimen/six_space</item>
         <item name="android:textColor">?attr/colorButtonText</item>
-        <item name="android:fontFamily">@font/roboto</item>
-        <item name="android:textSize">@dimen/fourteen_size_text</item>
-        <item name="android:textStyle">bold</item>
-        <item name="fontWeight">500</item>
-    </style>
-
-    <style name="DialogNoButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">@dimen/six_space</item>
-        <item name="android:textColor">?attr/colorOnBackground</item>
         <item name="android:fontFamily">@font/roboto</item>
         <item name="android:textSize">@dimen/fourteen_size_text</item>
         <item name="android:textStyle">bold</item>

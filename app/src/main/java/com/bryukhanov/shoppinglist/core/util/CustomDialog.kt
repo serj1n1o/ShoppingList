@@ -7,15 +7,21 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.core.widget.doOnTextChanged
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.databinding.LayoutCustomCardBinding
 import com.bryukhanov.shoppinglist.databinding.LayoutCustomDialogBinding
 
 class CustomDialog(private val context: Context) {
+
+    companion object {
+        private const val CARD_WIDTH_RATIO = 0.75
+    }
 
     fun showConfirmDialog(
         theme: Int,
@@ -61,6 +67,10 @@ class CustomDialog(private val context: Context) {
         val dialogBinding = LayoutCustomCardBinding.inflate(LayoutInflater.from(context))
         dialog.setContentView(dialogBinding.root)
 
+        val params = dialog.window?.attributes
+        params?.width = (context.resources.displayMetrics.widthPixels * CARD_WIDTH_RATIO).toInt()
+        dialog.window?.attributes = params
+
         dialog.window?.decorView?.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 closeKeyboard(dialogBinding.etCreateList)
@@ -82,6 +92,9 @@ class CustomDialog(private val context: Context) {
                 val sizeTextSp = sizeTextPx / context.resources.displayMetrics.density
                 tvCardMessage.setTextSize(TypedValue.COMPLEX_UNIT_SP, sizeTextSp)
                 tvCardMessage.gravity = GravityCompat.START
+                tvCardMessage.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    topMargin = context.resources.getDimensionPixelSize(R.dimen.six_space)
+                }
             }
             btnNoCard.text = negativeButtonText
             btnYesCard.text = positiveButtonText

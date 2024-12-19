@@ -15,6 +15,7 @@
     <string name="myLists_screen_not_found">Мы не смогли найти то,\n что вы искали</string>
     <string name="myLists_screen_try_again">Попробуйте изменить запрос\n или проверить написание</string>
     <string name="icon">Иконка</string>
+    <string name="toast_list_empty">Список покупок пуст</string>
 
     <!-- products_screen -->
     <string name="products_screen_text">Продукты</string>

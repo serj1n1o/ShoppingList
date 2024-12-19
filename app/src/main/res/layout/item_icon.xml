@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/ivIconItem"
-        android:layout_width="@dimen/twelve_space"
-        android:layout_height="@dimen/twelve_space"
-        android:scaleType="fitCenter"
-        android:contentDescription="@string/icon" />
+        android:layout_width="@dimen/ten_space"
+        android:layout_height="@dimen/ten_space"
+        android:contentDescription="@string/icon"
+        android:scaleType="fitCenter" />
 </FrameLayout>
