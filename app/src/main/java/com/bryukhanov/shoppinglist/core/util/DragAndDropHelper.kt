@@ -5,7 +5,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bryukhanov.shoppinglist.productslist.presentation.adapters.ProductsAdapter
 
 fun setupDragAndDrop(recyclerView: RecyclerView, adapter: ProductsAdapter) {
-    val callback =
+
+    ItemTouchHelper(
         object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -33,6 +34,7 @@ fun setupDragAndDrop(recyclerView: RecyclerView, adapter: ProductsAdapter) {
             }
 
         }
-    val itemTouchHelper = ItemTouchHelper(callback)
-    itemTouchHelper.attachToRecyclerView(recyclerView)
+    ).apply {
+        attachToRecyclerView(recyclerView)
+    }
 }

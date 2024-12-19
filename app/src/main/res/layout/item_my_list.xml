@@ -12,6 +12,8 @@
         android:layout_margin="@dimen/two_space"
         app:cardBackgroundColor="?attr/colorList"
         app:cardCornerRadius="@dimen/three_space"
+        android:clipToPadding="false"
+        android:translationZ="@dimen/one_dp"
         app:cardElevation="@dimen/one_space"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

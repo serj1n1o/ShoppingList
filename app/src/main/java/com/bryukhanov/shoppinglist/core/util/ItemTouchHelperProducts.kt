@@ -4,10 +4,16 @@ import android.animation.ValueAnimator
 import android.graphics.Canvas
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.Callback.DEFAULT_SWIPE_ANIMATION_DURATION
 import androidx.recyclerview.widget.RecyclerView
+import com.bryukhanov.shoppinglist.productslist.presentation.adapters.ProductsAdapter
 
 
-fun setItemTouchHelper(recyclerView: RecyclerView, containerId: Int) {
+fun setItemTouchHelperProducts(
+    recyclerView: RecyclerView,
+    containerId: Int,
+    adapter: ProductsAdapter,
+) {
 
     ItemTouchHelper(object : ItemTouchHelper.Callback() {
 
@@ -17,6 +23,7 @@ fun setItemTouchHelper(recyclerView: RecyclerView, containerId: Int) {
         private var initXWhenInActive = 0f
         private var firstInActive = false
         var leftSwipeChecker = false
+
 
         override fun getMovementFlags(
             recyclerView: RecyclerView,
@@ -108,13 +115,17 @@ fun setItemTouchHelper(recyclerView: RecyclerView, containerId: Int) {
             viewHolder: RecyclerView.ViewHolder,
             recyclerView: RecyclerView,
         ) {
-            val childCount = recyclerView.childCount
 
-            for (i in childCount downTo 0) {
-                val child = recyclerView.getChildAt(i)
-                val itemView = child ?: continue
-                if (itemView.scrollX > 0 && i != viewHolder.bindingAdapterPosition) {
-                    smoothScrollTo(itemView, child.scrollX, 0)
+            for (i in adapter.itemCount downTo 0) {
+                val itemView = recyclerView.findViewHolderForAdapterPosition(i)?.itemView
+
+                if (i != viewHolder.bindingAdapterPosition) {
+
+                    itemView?.let {
+                        if (it.scrollX > 0) {
+                            smoothScrollTo(itemView, it.scrollX, 0)
+                        }
+                    }
                 }
             }
         }
@@ -129,6 +140,7 @@ fun setItemTouchHelper(recyclerView: RecyclerView, containerId: Int) {
             }
         }
 
+
         override fun clearView(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
@@ -140,7 +152,6 @@ fun setItemTouchHelper(recyclerView: RecyclerView, containerId: Int) {
             } else if (viewHolder.itemView.scrollX < 0) {
                 viewHolder.itemView.scrollTo(0, 0)
             }
-
         }
 
     }).apply {
@@ -153,6 +164,12 @@ fun resetAllItemsScroll(recyclerView: RecyclerView) {
     val childCount = recyclerView.childCount
     for (i in 0 until childCount) {
         val child = recyclerView.getChildAt(i)
-        child?.scrollTo(0, 0)
+        ValueAnimator.ofInt(child.scrollX, 0).apply {
+            duration = DEFAULT_SWIPE_ANIMATION_DURATION.toLong()
+            addUpdateListener {
+                child.scrollTo(it.animatedValue as Int, 0)
+            }
+            start()
+        }
     }
 }

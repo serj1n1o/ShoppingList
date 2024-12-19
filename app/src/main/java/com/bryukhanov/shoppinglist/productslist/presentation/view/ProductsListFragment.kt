@@ -26,7 +26,7 @@ import com.bryukhanov.shoppinglist.core.util.CustomDialog
 import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.core.util.Units
 import com.bryukhanov.shoppinglist.core.util.resetAllItemsScroll
-import com.bryukhanov.shoppinglist.core.util.setItemTouchHelper
+import com.bryukhanov.shoppinglist.core.util.setItemTouchHelperProducts
 import com.bryukhanov.shoppinglist.core.util.setupDragAndDrop
 import com.bryukhanov.shoppinglist.databinding.FragmentProductsListBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
@@ -114,7 +114,11 @@ class ProductsListFragment : Fragment() {
 
         binding.rvProducts.adapter = productsAdapter
 
-        setItemTouchHelper(binding.rvProducts, R.id.buttonEditProductContainer)
+        setItemTouchHelperProducts(
+            binding.rvProducts,
+            R.id.buttonEditProductContainer,
+            productsAdapter
+        )
 
         setupDragAndDrop(binding.rvProducts, productsAdapter)
 

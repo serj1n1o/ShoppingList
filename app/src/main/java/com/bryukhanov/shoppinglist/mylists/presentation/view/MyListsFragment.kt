@@ -19,7 +19,7 @@ import com.bryukhanov.shoppinglist.core.util.CustomDialog
 import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.core.util.ThemeManager
 import com.bryukhanov.shoppinglist.core.util.resetAllItemsScroll
-import com.bryukhanov.shoppinglist.core.util.setItemTouchHelper
+import com.bryukhanov.shoppinglist.core.util.setItemTouchHelperShoppingList
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
@@ -118,7 +118,7 @@ class MyListsFragment : Fragment() {
             binding.rvSearchResults.adapter = this@MyListsFragment.searchAdapter
         }
 
-        setItemTouchHelper(binding.rvMyLists, R.id.buttonContainer)
+        setItemTouchHelperShoppingList(binding.rvMyLists, R.id.buttonContainer, adapter)
 
         observeViewModel()
 
