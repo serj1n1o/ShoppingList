@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/card_background"
     android:orientation="vertical">
 
@@ -46,8 +46,8 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@android:color/transparent"
             android:ellipsize="end"
-            android:inputType="textCapSentences"
             android:hint="@string/et_card_hint"
+            android:inputType="textCapSentences"
             android:maxLength="70"
             android:maxLines="1"
             android:textColor="?attr/colorCardText"
@@ -57,17 +57,15 @@
 
     <LinearLayout
         android:id="@+id/llButtons"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginEnd="@dimen/six_space"
         android:layout_marginBottom="@dimen/six_space"
+        android:gravity="end"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/btnNoCard"
             style="@style/DialogNoButton"
-            android:layout_weight="1"
             android:backgroundTint="@android:color/transparent"
             android:text="@string/dialog_no_card"
             android:textColor="?attr/colorTextCard" />
@@ -75,11 +73,11 @@
         <Button
             android:id="@+id/btnYesCard"
             style="@style/DialogYesButton"
-            android:layout_marginStart="@dimen/two_space"
-            android:layout_weight="1"
+            android:layout_marginStart="@dimen/minus_one_space"
+            android:layout_marginEnd="@dimen/three_space"
             android:backgroundTint="@android:color/transparent"
-            tools:text="@string/dialog_yes_card_create"
-            android:textColor="?attr/colorTextCard" />
+            android:textColor="?attr/colorTextCard"
+            tools:text="@string/dialog_yes_card_create" />
 
     </LinearLayout>
 
