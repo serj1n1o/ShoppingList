@@ -36,5 +36,4 @@
     <dimen name="twenty_four_size_text">24sp</dimen>
 
     <dimen name="one_dp">1dp</dimen>
-    <dimen name="minus_one_space">-4dp</dimen>
 </resources>
