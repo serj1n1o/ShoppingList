@@ -25,13 +25,14 @@ import com.bryukhanov.shoppinglist.core.util.setItemTouchHelperShoppingList
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
+import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.CustomDialogListener
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsState
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsViewModel
 import com.bryukhanov.shoppinglist.productslist.presentation.view.ProductsListFragment
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MyListsFragment : Fragment() {
+class MyListsFragment : Fragment(), CustomDialogListener {
     private var _binding: FragmentMyListsBinding? = null
     private val binding get() = _binding!!
 
@@ -41,6 +42,17 @@ class MyListsFragment : Fragment() {
     private lateinit var searchAdapter: ShoppingListAdapter
 
     private var originalList: List<ShoppingListItem> = emptyList()
+
+    override fun onPositiveClick(item: ShoppingListItem?) {
+        if (item != null) {
+            viewModel.deleteShoppingList(item)
+        } else {
+            viewModel.deleteAllShoppingLists()
+        }
+    }
+
+    override fun onNegativeClick() {
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -194,14 +206,7 @@ class MyListsFragment : Fragment() {
             negativeButtonText = getString(R.string.dialog_cancel)
         )
 
-        dialog.onPositiveClick = {
-            viewModel.deleteAllShoppingLists()
-        }
-
-        dialog.onNegativeClick = {
-        }
-
-        dialog.show(parentFragmentManager, "CustomDialog")
+        dialog.show(childFragmentManager, "CustomDialog")
     }
 
     private fun showCustomDialogItemDelete(myList: ShoppingListItem) {
@@ -209,17 +214,10 @@ class MyListsFragment : Fragment() {
             theme = R.style.CustomDialogTheme,
             message = getString(R.string.dialog_message_delete_item_list, myList.name),
             positiveButtonText = getString(R.string.dialog_positive_answer),
-            negativeButtonText = getString(R.string.dialog_cancel)
+            negativeButtonText = getString(R.string.dialog_cancel),
+            item = myList
         )
-
-        dialog.onPositiveClick = {
-            viewModel.deleteShoppingList(myList)
-        }
-
-        dialog.onNegativeClick = {
-        }
-
-        dialog.show(parentFragmentManager, "CustomDialog")
+        dialog.show(childFragmentManager, "CustomDialog")
     }
 
     private fun showCustomCardCreateList() {
