@@ -21,6 +21,7 @@
     <dimen name="twenty_four_space">96dp</dimen>
     <dimen name="twenty_five_space">100dp</dimen>
     <dimen name="thirty_space">120dp</dimen>
+    <dimen name="thirty_six_space">144dp</dimen>
     <dimen name="fifty_one_space">204dp</dimen>
 
     <dimen name="size_icon_app">108dp</dimen>

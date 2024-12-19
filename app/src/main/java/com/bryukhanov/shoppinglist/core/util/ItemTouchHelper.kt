@@ -1,19 +1,17 @@
 package com.bryukhanov.shoppinglist.core.util
 
 import android.animation.ValueAnimator
-import android.content.Context
 import android.graphics.Canvas
 import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.bryukhanov.shoppinglist.productslist.presentation.adapters.ProductsAdapter
 
 
-fun setItemTouchHelper(context: Context, recyclerView: RecyclerView, adapter: ProductsAdapter) {
+fun setItemTouchHelper(recyclerView: RecyclerView, containerId: Int) {
 
     ItemTouchHelper(object : ItemTouchHelper.Callback() {
 
-        private val limitScrollX = dipToPx(context)
+        private var limitScrollX = 0
         private var currentScrollX = 0
         private var currentScrollXWhenInActive = 0
         private var initXWhenInActive = 0f
@@ -57,6 +55,11 @@ fun setItemTouchHelper(context: Context, recyclerView: RecyclerView, adapter: Pr
             isCurrentlyActive: Boolean,
         ) {
             if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+
+                if (limitScrollX == 0) {
+                    val container = viewHolder.itemView.findViewById<View>(containerId)
+                    limitScrollX = container.width
+                }
 
                 if (viewHolder.itemView.scrollX == 0) {
                     leftSwipeChecker = true
@@ -152,9 +155,4 @@ fun resetAllItemsScroll(recyclerView: RecyclerView) {
         val child = recyclerView.getChildAt(i)
         child?.scrollTo(0, 0)
     }
-}
-
-private fun dipToPx(context: Context): Int {
-    return (100f * context.resources.displayMetrics.density).toInt()
-
 }

@@ -114,9 +114,9 @@ class ProductsListFragment : Fragment() {
 
         binding.rvProducts.adapter = productsAdapter
 
-        setItemTouchHelper(requireContext(), binding.rvProducts, productsAdapter)
+        setItemTouchHelper(binding.rvProducts, R.id.buttonEditProductContainer)
 
-        setupDragAndDrop(requireContext(), binding.rvProducts, productsAdapter)
+        setupDragAndDrop(binding.rvProducts, productsAdapter)
 
         viewModel.getProductState().observe(viewLifecycleOwner) { state ->
             when (state) {

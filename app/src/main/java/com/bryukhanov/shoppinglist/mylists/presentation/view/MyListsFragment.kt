@@ -13,12 +13,13 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.core.util.CustomDialog
 import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.core.util.ThemeManager
+import com.bryukhanov.shoppinglist.core.util.resetAllItemsScroll
+import com.bryukhanov.shoppinglist.core.util.setItemTouchHelper
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
@@ -36,7 +37,6 @@ class MyListsFragment : Fragment() {
 
     private lateinit var adapter: ShoppingListAdapter
     private lateinit var searchAdapter: ShoppingListAdapter
-    private lateinit var itemTouchHelper: ItemTouchHelper
 
     private var originalList: List<ShoppingListItem> = emptyList()
 
@@ -69,23 +69,23 @@ class MyListsFragment : Fragment() {
             }
 
             override fun onClickItem(myList: ShoppingListItem) {
-                adapter.closeSwipedItem()
                 navigateToProductScreen(myList)
+                resetAllItemsScroll(binding.rvMyLists)
             }
 
             override fun onEdit(myList: ShoppingListItem) {
-                adapter.closeSwipedItem()
                 showCustomCardEditList(myList)
+                resetAllItemsScroll(binding.rvMyLists)
             }
 
             override fun onCopy(listId: Int) {
                 viewModel.copyShoppingList(shoppingListId = listId)
-                adapter.closeSwipedItem()
+                resetAllItemsScroll(binding.rvMyLists)
             }
 
             override fun onDelete(myList: ShoppingListItem) {
                 showCustomDialogItemDelete(myList)
-                adapter.closeSwipedItem()
+                resetAllItemsScroll(binding.rvMyLists)
             }
         })
 
@@ -118,23 +118,22 @@ class MyListsFragment : Fragment() {
             binding.rvSearchResults.adapter = this@MyListsFragment.searchAdapter
         }
 
-        itemTouchHelper = ItemTouchHelper(SwipeCallback(adapter))
-        itemTouchHelper.attachToRecyclerView(binding.rvMyLists)
+        setItemTouchHelper(binding.rvMyLists, R.id.buttonContainer)
 
         observeViewModel()
 
         binding.ivDelete.setOnClickListener {
-            adapter.closeSwipedItem()
+            resetAllItemsScroll(binding.rvMyLists)
             showCustomDialogDeleteAll()
         }
 
         binding.fabAdd.setOnClickListener {
-            adapter.closeSwipedItem()
+            resetAllItemsScroll(binding.rvMyLists)
             showCustomCardCreateList()
         }
 
         binding.ivSearch.setOnClickListener {
-            adapter.closeSwipedItem()
+            resetAllItemsScroll(binding.rvMyLists)
             binding.etSearch.visibility = View.VISIBLE
             binding.dimOverlay.visibility = View.VISIBLE
             binding.etSearch.requestFocus()
