@@ -1,12 +1,10 @@
 package com.bryukhanov.shoppinglist.mylists.presentation.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bryukhanov.shoppinglist.R
-import com.bryukhanov.shoppinglist.core.util.Animates
 import com.bryukhanov.shoppinglist.databinding.ItemMyListBinding
 import com.bryukhanov.shoppinglist.databinding.ItemMyListSearchBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
@@ -19,7 +17,6 @@ class ShoppingListAdapter(
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val shoppingLists = mutableListOf<ShoppingListItem>()
-    private var swipedPosition: Int = -1
 
     interface ActionListener {
         fun onCoverChanged(item: ShoppingListItem)
@@ -46,10 +43,9 @@ class ShoppingListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = shoppingLists[position]
         when (holder) {
-            is ShoppingListViewHolder -> holder.bind(item, position == swipedPosition)
+            is ShoppingListViewHolder -> holder.bind(item)
 
             is SearchListViewHolder -> holder.bind(item)
-
         }
     }
 
@@ -66,65 +62,23 @@ class ShoppingListAdapter(
         notifyDataSetChanged()
     }
 
-    fun showActions(position: Int) {
-        val previousPosition = swipedPosition
-        swipedPosition = position
-
-        if (previousPosition != -1) notifyItemChanged(previousPosition)
-        notifyItemChanged(swipedPosition)
-    }
-
-    fun closeSwipedItem() {
-        val previousPosition = swipedPosition
-        swipedPosition = -1
-        if (previousPosition != -1) notifyItemChanged(previousPosition)
-    }
-
     inner class ShoppingListViewHolder(
         private val binding: ItemMyListBinding,
         private val listener: ActionListener,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ShoppingListItem, isSwiped: Boolean) {
+        fun bind(item: ShoppingListItem) {
             item.cover?.let { binding.ivIconList.setImageResource(it) }
-            binding.tvListName.text = item.name
 
+            binding.tvListName.text = item.name
             binding.ivIconList.setOnClickListener {
                 showIconPickerDialog(item)
             }
 
-            itemView.setOnClickListener {
-                if (isSwiped) {
-                    Animates.animateReset(binding.mainContainer)
-                    closeSwipedItem()
-                } else {
-                    listener.onClickItem(item)
-                    closeSwipedItem()
-                }
-            }
-
-            if (!isSwiped) {
-                binding.mainContainer.translationX = 0f
-                binding.buttonContainer.visibility = View.GONE
-            } else {
-                binding.buttonContainer.visibility = View.VISIBLE
-            }
-
-            binding.btnEdit.setOnClickListener {
-                listener.onEdit(item)
-                Animates.animateReset(binding.mainContainer)
-                closeSwipedItem()
-            }
-            binding.btnCopy.setOnClickListener {
-                listener.onCopy(item.id)
-                Animates.animateReset(binding.mainContainer)
-                closeSwipedItem()
-            }
-            binding.btnDelete.setOnClickListener {
-                listener.onDelete(item)
-                Animates.animateReset(binding.mainContainer)
-                closeSwipedItem()
-            }
+            itemView.setOnClickListener { listener.onClickItem(item) }
+            binding.btnEdit.setOnClickListener { listener.onEdit(item) }
+            binding.btnCopy.setOnClickListener { listener.onCopy(item.id) }
+            binding.btnDelete.setOnClickListener { listener.onDelete(item) }
         }
 
         private fun showIconPickerDialog(item: ShoppingListItem) {

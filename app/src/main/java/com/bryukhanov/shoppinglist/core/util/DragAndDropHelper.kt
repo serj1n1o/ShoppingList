@@ -1,12 +1,12 @@
 package com.bryukhanov.shoppinglist.core.util
 
-import android.content.Context
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bryukhanov.shoppinglist.productslist.presentation.adapters.ProductsAdapter
 
-fun setupDragAndDrop(context: Context, recyclerView: RecyclerView, adapter: ProductsAdapter) {
-    val callback =
+fun setupDragAndDrop(recyclerView: RecyclerView, adapter: ProductsAdapter) {
+
+    ItemTouchHelper(
         object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -34,6 +34,7 @@ fun setupDragAndDrop(context: Context, recyclerView: RecyclerView, adapter: Prod
             }
 
         }
-    val itemTouchHelper = ItemTouchHelper(callback)
-    itemTouchHelper.attachToRecyclerView(recyclerView)
+    ).apply {
+        attachToRecyclerView(recyclerView)
+    }
 }

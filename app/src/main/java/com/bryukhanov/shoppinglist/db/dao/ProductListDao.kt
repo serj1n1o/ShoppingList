@@ -24,14 +24,8 @@ interface ProductListDao {
     @Delete
     suspend fun deleteProduct(productListItemDbo: ProductListItemDbo)
 
-    @Query("SELECT * FROM product_list WHERE shoppingListId = :shoppingListId ORDER BY position")
-    fun getAllProductsForShoppingListByUserSort(shoppingListId: Int): Flow<List<ProductListItemDbo>>
-
     @Query("SELECT * FROM product_list WHERE shoppingListId = :shoppingListId")
     fun getAllProductsForShoppingList(shoppingListId: Int): Flow<List<ProductListItemDbo>>
-
-    @Query("SELECT * FROM product_list WHERE shoppingListId = :shoppingListId ORDER BY name")
-    fun getAllProductsForShoppingListByAlphabetSort(shoppingListId: Int): Flow<List<ProductListItemDbo>>
 
     @Query("DELETE FROM product_list WHERE shoppingListId = :shoppingListId")
     suspend fun deleteAllProductLists(shoppingListId: Int)
