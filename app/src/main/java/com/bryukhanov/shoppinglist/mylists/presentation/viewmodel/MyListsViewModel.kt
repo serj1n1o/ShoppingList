@@ -13,6 +13,12 @@ class MyListsViewModel(private val shoppingListInteractor: ShoppingListInteracto
     private val listState = MutableLiveData<MyListsState>()
     fun getListState(): LiveData<MyListsState> = listState
 
+    private val _searchResults = MutableLiveData<List<ShoppingListItem>>()
+    val searchResults: LiveData<List<ShoppingListItem>> get() = _searchResults
+
+    private val _isSearchEmpty = MutableLiveData<Boolean>()
+    val isSearchEmpty: LiveData<Boolean> get() = _isSearchEmpty
+
     fun getAllShoppingLists() {
         viewModelScope.launch {
             shoppingListInteractor.getAllShoppingLists().collect { myList ->
@@ -48,6 +54,19 @@ class MyListsViewModel(private val shoppingListInteractor: ShoppingListInteracto
     fun copyShoppingList(shoppingListId: Int) {
         viewModelScope.launch {
             shoppingListInteractor.copyShoppingList(shoppingListId)
+        }
+    }
+
+    fun searchShoppingLists(query: String, originalList: List<ShoppingListItem>) {
+        if (query.isEmpty()) {
+            _searchResults.postValue(emptyList())
+            _isSearchEmpty.postValue(true)
+        } else {
+            val filteredList = originalList.filter {
+                it.name.startsWith(query, ignoreCase = true)
+            }
+            _searchResults.postValue(filteredList)
+            _isSearchEmpty.postValue(filteredList.isEmpty())
         }
     }
 
