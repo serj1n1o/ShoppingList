@@ -1,4 +1,4 @@
-package com.bryukhanov.shoppinglist.db.dao
+package com.bryukhanov.shoppinglist.mylists.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.bryukhanov.shoppinglist.db.entity.ShoppingListItemDbo
+import com.bryukhanov.shoppinglist.mylists.data.db.entity.ShoppingListItemDbo
 import kotlinx.coroutines.flow.Flow
 
 @Dao

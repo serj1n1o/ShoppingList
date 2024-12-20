@@ -1,27 +1,30 @@
 package com.bryukhanov.shoppinglist.mylists.data
 
 import com.bryukhanov.shoppinglist.core.util.NameShoppingListGenerator
-import com.bryukhanov.shoppinglist.db.DataBase
 import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter.toDbo
 import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter.toUiShoppingList
-import com.bryukhanov.shoppinglist.db.entity.ShoppingListItemDbo
+import com.bryukhanov.shoppinglist.mylists.data.db.dao.ShoppingListDao
+import com.bryukhanov.shoppinglist.mylists.data.db.entity.ShoppingListItemDbo
 import com.bryukhanov.shoppinglist.mylists.domain.api.ShoppingListRepository
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
+import com.bryukhanov.shoppinglist.productslist.domain.api.UseCaseProductsFromShoppingList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class ShoppingListRepositoryImpl(
-    private val dataBase: DataBase,
+    private val shoppingListDao: ShoppingListDao,
     private val nameShoppingListGenerator: NameShoppingListGenerator,
-) : ShoppingListRepository {
+    private val useCaseProductsFromShoppingList: UseCaseProductsFromShoppingList,
+
+    ) : ShoppingListRepository {
 
     override fun getAllShoppingLists(): Flow<Result<List<ShoppingListItem>>> {
-        return dataBase.shoppingListDao()
-            .getAllShoppingList()
+        return shoppingListDao.getAllShoppingList()
             .map { listDbo ->
                 try {
                     Result.success(listDbo.toUiShoppingList())
@@ -35,7 +38,7 @@ class ShoppingListRepositoryImpl(
     override suspend fun addShoppingList(shoppingListItem: ShoppingListItem): Result<Unit> {
         return runCatching {
             withContext(Dispatchers.IO) {
-                dataBase.shoppingListDao().addShoppingList(shoppingListItem.toDbo())
+                shoppingListDao.addShoppingList(shoppingListItem.toDbo())
             }
         }
     }
@@ -43,7 +46,7 @@ class ShoppingListRepositoryImpl(
     override suspend fun updateShoppingList(shoppingListItem: ShoppingListItem): Result<Unit> {
         return runCatching {
             withContext(Dispatchers.IO) {
-                dataBase.shoppingListDao().updateShoppingList(shoppingListItem.toDbo())
+                shoppingListDao.updateShoppingList(shoppingListItem.toDbo())
             }
         }
     }
@@ -51,7 +54,7 @@ class ShoppingListRepositoryImpl(
     override suspend fun deleteShoppingList(shoppingListItem: ShoppingListItem): Result<Unit> {
         return runCatching {
             withContext(Dispatchers.IO) {
-                dataBase.shoppingListDao().deleteShoppingListItem(shoppingListItem.toDbo())
+                shoppingListDao.deleteShoppingListItem(shoppingListItem.toDbo())
             }
         }
     }
@@ -59,7 +62,7 @@ class ShoppingListRepositoryImpl(
     override suspend fun deleteAllLists(): Result<Unit> {
         return runCatching {
             withContext(Dispatchers.IO) {
-                dataBase.shoppingListDao().deleteAllShoppingList()
+                shoppingListDao.deleteAllShoppingList()
             }
         }
     }
@@ -67,11 +70,14 @@ class ShoppingListRepositoryImpl(
     override suspend fun copyShoppingList(shoppingListId: Int): Result<Unit> {
         return runCatching {
             withContext(Dispatchers.IO) {
-                val originalList = dataBase.shoppingListDao().getShoppingListById(shoppingListId)
-                    ?: return@withContext
+                val originalList = shoppingListDao.getShoppingListById(shoppingListId)
+                    ?: throw IllegalStateException()
                 val products =
-                    dataBase.productListDao().getAllProductsForShoppingList(shoppingListId).first()
-                val existingNames = dataBase.shoppingListDao().getAllShoppingList().map { listDbo ->
+                    useCaseProductsFromShoppingList.getProductsFromShoppingList(shoppingListId)
+                        .firstOrNull()
+                        ?.getOrElse { throw it }
+
+                val existingNames = shoppingListDao.getAllShoppingList().map { listDbo ->
                     listDbo.map { it.name }
                 }.first()
 
@@ -87,13 +93,14 @@ class ShoppingListRepositoryImpl(
                         sortType = originalList.sortType
                     )
                 val newShoppingListId =
-                    dataBase.shoppingListDao().addShoppingList(newShoppingList).toInt()
+                    shoppingListDao.addShoppingList(newShoppingList).toInt()
 
                 val newProducts =
-                    products.map { it.copy(id = 0, shoppingListId = newShoppingListId) }
-                dataBase.productListDao().addProducts(newProducts)
+                    products?.map { it.copy(id = 0, shoppingListId = newShoppingListId) }
+                if (newProducts != null) {
+                    useCaseProductsFromShoppingList.addProducts(newProducts)
+                }
             }
         }
     }
-
 }

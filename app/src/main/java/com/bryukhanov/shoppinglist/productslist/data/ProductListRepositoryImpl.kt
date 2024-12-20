@@ -1,10 +1,10 @@
 package com.bryukhanov.shoppinglist.productslist.data
 
-import com.bryukhanov.shoppinglist.db.DataBase
 import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter.toDbo
 import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter.toDboProductList
 import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter.toUi
 import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter.toUiProductList
+import com.bryukhanov.shoppinglist.productslist.data.db.dao.ProductListDao
 import com.bryukhanov.shoppinglist.productslist.domain.api.ProductListRepository
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
 import kotlinx.coroutines.Dispatchers
@@ -14,11 +14,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class ProductListRepositoryImpl(
-    private val dataBase: DataBase,
+    private val productListDao: ProductListDao,
 ) : ProductListRepository {
 
     override fun getAllProducts(shoppingListId: Int): Flow<Result<List<ProductListItem>>> {
-        return dataBase.productListDao().getAllProductsForShoppingList(shoppingListId)
+        return productListDao.getAllProductsFromShoppingList(shoppingListId)
             .map { listDbo ->
                 try {
                     Result.success(listDbo.toUiProductList())
@@ -31,7 +31,7 @@ class ProductListRepositoryImpl(
     override suspend fun deleteAllProducts(shoppingListId: Int): Result<Unit> {
         return runCatching {
             withContext(Dispatchers.IO) {
-                dataBase.productListDao().deleteAllProductLists(shoppingListId)
+                productListDao.deleteAllProductLists(shoppingListId)
             }
         }
     }
@@ -39,7 +39,7 @@ class ProductListRepositoryImpl(
     override suspend fun deleteBoughtProducts(shoppingListId: Int): Result<Unit> {
         return runCatching {
             withContext(Dispatchers.IO) {
-                dataBase.productListDao().deleteBoughtProducts(shoppingListId)
+                productListDao.deleteBoughtProducts(shoppingListId)
             }
         }
     }
@@ -47,7 +47,7 @@ class ProductListRepositoryImpl(
     override suspend fun deleteProduct(productListItem: ProductListItem): Result<Unit> {
         return runCatching {
             withContext(Dispatchers.IO) {
-                dataBase.productListDao().deleteProduct(productListItem.toDbo())
+                productListDao.deleteProduct(productListItem.toDbo())
             }
         }
     }
@@ -55,7 +55,7 @@ class ProductListRepositoryImpl(
     override suspend fun addProduct(productListItem: ProductListItem): Result<Unit> {
         return runCatching {
             withContext(Dispatchers.IO) {
-                dataBase.productListDao().addProduct(productListItem.toDbo())
+                productListDao.addProduct(productListItem.toDbo())
             }
         }
     }
@@ -63,21 +63,29 @@ class ProductListRepositoryImpl(
     override suspend fun updateProduct(productListItem: ProductListItem): Result<Unit> {
         return runCatching {
             withContext(Dispatchers.IO) {
-                dataBase.productListDao().updateProduct(productListItem.toDbo())
+                productListDao.updateProduct(productListItem.toDbo())
             }
         }
     }
 
     override suspend fun getProductById(productId: Int): ProductListItem? {
         return withContext(Dispatchers.IO) {
-            dataBase.productListDao().getProductById(productId)?.toUi()
+            productListDao.getProductById(productId)?.toUi()
         }
     }
 
     override suspend fun updateSwapProducts(swapItems: List<ProductListItem>): Result<Unit> {
         return runCatching {
             withContext(Dispatchers.IO) {
-                dataBase.productListDao().updateSwapProducts(swapItems.toDboProductList())
+                productListDao.updateSwapProducts(swapItems.toDboProductList())
+            }
+        }
+    }
+
+    override suspend fun addProducts(products: List<ProductListItem>): Result<Unit> {
+        return kotlin.runCatching {
+            withContext(Dispatchers.IO) {
+                productListDao.addProducts(products.toDboProductList())
             }
         }
     }
