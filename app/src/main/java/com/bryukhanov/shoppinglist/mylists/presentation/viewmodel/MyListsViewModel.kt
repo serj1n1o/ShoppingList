@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bryukhanov.shoppinglist.mylists.domain.api.ShoppingListInteractor
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MyListsViewModel(private val shoppingListInteractor: ShoppingListInteractor) : ViewModel() {
 
@@ -58,15 +60,21 @@ class MyListsViewModel(private val shoppingListInteractor: ShoppingListInteracto
     }
 
     fun searchShoppingLists(query: String, originalList: List<ShoppingListItem>) {
-        if (query.isEmpty()) {
-            _searchResults.postValue(emptyList())
-            _isSearchEmpty.postValue(true)
-        } else {
-            val filteredList = originalList.filter {
-                it.name.startsWith(query, ignoreCase = true)
+        viewModelScope.launch(Dispatchers.Default) {
+            if (query.isEmpty()) {
+                withContext(Dispatchers.Main) {
+                    _searchResults.postValue(emptyList())
+                    _isSearchEmpty.postValue(true)
+                }
+            } else {
+                val filteredList = originalList.filter {
+                    it.name.startsWith(query, ignoreCase = true)
+                }
+                withContext(Dispatchers.Main) {
+                    _searchResults.postValue(filteredList)
+                    _isSearchEmpty.postValue(filteredList.isEmpty())
+                }
             }
-            _searchResults.postValue(filteredList)
-            _isSearchEmpty.postValue(filteredList.isEmpty())
         }
     }
 
