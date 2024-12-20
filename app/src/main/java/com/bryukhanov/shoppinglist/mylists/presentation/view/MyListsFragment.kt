@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -67,6 +68,20 @@ class MyListsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (binding.etSearch.visibility == View.VISIBLE) {
+                        resetSearchState()
+                    } else {
+                        isEnabled = false
+                        requireActivity().onBackPressed()
+                    }
+                }
+            })
+
+
         binding.ivTheme.setOnClickListener {
             ThemeManager.toggleTheme(requireContext())
             activity?.recreate()
@@ -114,7 +129,7 @@ class MyListsFragment : Fragment() {
 
             override fun onClickItem(myList: ShoppingListItem) {
                 if (clickDebounce()) navigateToProductScreen(myList)
-                hideSearchField()
+                resetSearchState()
             }
 
             override fun onEdit(myList: ShoppingListItem) {}
@@ -209,6 +224,28 @@ class MyListsFragment : Fragment() {
                 }
             }
         }
+
+        viewModel.searchResults.observe(viewLifecycleOwner) { filteredList ->
+            searchAdapter.setShoppingLists(filteredList)
+
+            if (filteredList.isNotEmpty()) {
+                binding.rvMyLists.visibility = View.GONE
+                binding.rvSearchResults.visibility = View.VISIBLE
+                binding.layoutSearchNotFoundContainer.visibility = View.GONE
+                binding.searchDivider.visibility = View.VISIBLE
+                binding.dimOverlay.visibility = View.GONE
+            }
+        }
+
+        viewModel.isSearchEmpty.observe(viewLifecycleOwner) { isEmpty ->
+            if (isEmpty) {
+                binding.rvSearchResults.visibility = View.GONE
+                binding.layoutSearchNotFoundContainer.visibility = View.VISIBLE
+                binding.searchDivider.visibility = View.VISIBLE
+                binding.dimOverlay.visibility = View.GONE
+            }
+        }
+
     }
 
     private fun showCustomDialogDeleteAll() {
@@ -281,13 +318,8 @@ class MyListsFragment : Fragment() {
 
         etSearch.doOnTextChanged { text, _, _, _ ->
             if (!text.isNullOrEmpty()) {
-                etSearch.setCompoundDrawablesWithIntrinsicBounds(
-                    icBackArrow,
-                    null,
-                    icClear,
-                    null
-                )
-                filterLists(text.toString())
+                etSearch.setCompoundDrawablesWithIntrinsicBounds(icBackArrow, null, icClear, null)
+                viewModel.searchShoppingLists(text.toString(), originalList)
             } else {
                 etSearch.setCompoundDrawablesWithIntrinsicBounds(icBackArrow, null, null, null)
                 hideSearchResults()
@@ -323,36 +355,20 @@ class MyListsFragment : Fragment() {
         binding.etSearch.visibility = View.VISIBLE
     }
 
-    private fun filterLists(query: String) {
-        if (query.isEmpty()) {
-            searchAdapter.setShoppingLists(emptyList())
-            binding.rvSearchResults.visibility = View.GONE
-            binding.rvMyLists.visibility = View.VISIBLE
-            binding.groupEmptyState.visibility =
-                if (originalList.isEmpty()) View.VISIBLE else View.GONE
-            binding.dimOverlay.visibility = View.VISIBLE
-            binding.layoutSearchNotFoundContainer.visibility = View.VISIBLE
-        } else {
-            val filteredList = originalList.filter {
-                it.name.startsWith(query, ignoreCase = true)
-            }
+    private fun resetSearchState() {
+        binding.etSearch.text.clear()
+        binding.etSearch.visibility = View.GONE
+        binding.dimOverlay.visibility = View.GONE
+        binding.rvSearchResults.visibility = View.GONE
+        binding.layoutSearchNotFoundContainer.visibility = View.GONE
+        binding.searchDivider.visibility = View.GONE
 
-            searchAdapter.setShoppingLists(filteredList)
-
+        if (originalList.isEmpty()) {
             binding.rvMyLists.visibility = View.GONE
+            binding.groupEmptyState.visibility = View.VISIBLE
+        } else {
+            binding.rvMyLists.visibility = View.VISIBLE
             binding.groupEmptyState.visibility = View.GONE
-
-            if (filteredList.isNotEmpty()) {
-                binding.rvSearchResults.visibility = View.VISIBLE
-                binding.layoutSearchNotFoundContainer.visibility = View.GONE
-                binding.searchDivider.visibility = View.VISIBLE
-                binding.dimOverlay.visibility = View.GONE
-            } else {
-                binding.rvSearchResults.visibility = View.GONE
-                binding.layoutSearchNotFoundContainer.visibility = View.VISIBLE
-                binding.searchDivider.visibility = View.VISIBLE
-                binding.dimOverlay.visibility = View.GONE
-            }
         }
     }
 
@@ -364,19 +380,15 @@ class MyListsFragment : Fragment() {
     }
 
     private fun hideSearchField() {
-        binding.etSearch.visibility = View.GONE
-        binding.dimOverlay.visibility = View.GONE
-        binding.etSearch.text.clear()
-        binding.etSearch.clearFocus()
-        binding.rvSearchResults.visibility = View.GONE
-        binding.layoutSearchNotFoundContainer.visibility = View.GONE
-        binding.searchDivider.visibility = View.GONE
-        binding.rvMyLists.visibility = View.VISIBLE
-        binding.groupEmptyState.visibility = if (originalList.isEmpty()) View.VISIBLE else View.GONE
-
+        resetSearchState()
         val imm =
             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        resetSearchState()
     }
 
     override fun onDestroyView() {
@@ -388,8 +400,3 @@ class MyListsFragment : Fragment() {
         private const val DELAY_CLICK = 1000L
     }
 }
-
-
-
-
-

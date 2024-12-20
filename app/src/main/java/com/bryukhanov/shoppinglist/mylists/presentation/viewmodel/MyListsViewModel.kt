@@ -7,12 +7,20 @@ import androidx.lifecycle.viewModelScope
 import com.bryukhanov.shoppinglist.core.util.SingleLiveEvent
 import com.bryukhanov.shoppinglist.mylists.domain.api.ShoppingListInteractor
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MyListsViewModel(private val shoppingListInteractor: ShoppingListInteractor) : ViewModel() {
 
     private val listState = MutableLiveData<MyListsState>()
     fun getListState(): LiveData<MyListsState> = listState
+
+    private val _searchResults = MutableLiveData<List<ShoppingListItem>>()
+    val searchResults: LiveData<List<ShoppingListItem>> get() = _searchResults
+
+    private val _isSearchEmpty = MutableLiveData<Boolean>()
+    val isSearchEmpty: LiveData<Boolean> get() = _isSearchEmpty
 
     private val operationStatus = SingleLiveEvent<Result<Unit>>()
     fun getOperationStatus(): LiveData<Result<Unit>> = operationStatus
@@ -62,6 +70,25 @@ class MyListsViewModel(private val shoppingListInteractor: ShoppingListInteracto
         }
     }
 
+    fun searchShoppingLists(query: String, originalList: List<ShoppingListItem>) {
+        viewModelScope.launch(Dispatchers.Default) {
+            if (query.isEmpty()) {
+                withContext(Dispatchers.Main) {
+                    _searchResults.postValue(emptyList())
+                    _isSearchEmpty.postValue(true)
+                }
+            } else {
+                val filteredList = originalList.filter {
+                    it.name.startsWith(query, ignoreCase = true)
+                }
+                withContext(Dispatchers.Main) {
+                    _searchResults.postValue(filteredList)
+                    _isSearchEmpty.postValue(filteredList.isEmpty())
+                }
+            }
+        }
+    }
+
     private fun processResult(shoppingList: List<ShoppingListItem>) {
         if (shoppingList.isEmpty()) {
             renderState(MyListsState.Empty)
@@ -75,5 +102,3 @@ class MyListsViewModel(private val shoppingListInteractor: ShoppingListInteracto
     }
 
 }
-
-
