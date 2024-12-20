@@ -19,45 +19,62 @@ class ShoppingListRepositoryImpl(
     private val nameShoppingListGenerator: NameShoppingListGenerator,
 ) : ShoppingListRepository {
 
-    override fun getAllShoppingLists(): Flow<List<ShoppingListItem>> {
-        return dataBase.shoppingListDao().getAllShoppingList().map { listDbo ->
-            listDbo.toUiShoppingList()
-        }.flowOn(Dispatchers.IO)
+    override fun getAllShoppingLists(): Flow<Result<List<ShoppingListItem>>> {
+        return dataBase.shoppingListDao()
+            .getAllShoppingList()
+            .map { listDbo ->
+                try {
+                    Result.success(listDbo.toUiShoppingList())
+                } catch (e: Exception) {
+                    Result.failure(e)
+                }
+            }
+            .flowOn(Dispatchers.IO)
     }
 
-    override suspend fun addShoppingList(shoppingListItem: ShoppingListItem) {
-        withContext(Dispatchers.IO) {
-            dataBase.shoppingListDao().addShoppingList(shoppingListItem.toDbo())
+    override suspend fun addShoppingList(shoppingListItem: ShoppingListItem): Result<Unit> {
+        return runCatching {
+            withContext(Dispatchers.IO) {
+                dataBase.shoppingListDao().addShoppingList(shoppingListItem.toDbo())
+            }
         }
     }
 
-    override suspend fun updateShoppingList(shoppingListItem: ShoppingListItem) {
-        withContext(Dispatchers.IO) {
-            dataBase.shoppingListDao().updateShoppingList(shoppingListItem.toDbo())
+    override suspend fun updateShoppingList(shoppingListItem: ShoppingListItem): Result<Unit> {
+        return runCatching {
+            withContext(Dispatchers.IO) {
+                dataBase.shoppingListDao().updateShoppingList(shoppingListItem.toDbo())
+            }
         }
     }
 
-    override suspend fun deleteShoppingList(shoppingListItem: ShoppingListItem) {
-        withContext(Dispatchers.IO) {
-            dataBase.shoppingListDao().deleteShoppingListItem(shoppingListItem.toDbo())
+    override suspend fun deleteShoppingList(shoppingListItem: ShoppingListItem): Result<Unit> {
+        return runCatching {
+            withContext(Dispatchers.IO) {
+                dataBase.shoppingListDao().deleteShoppingListItem(shoppingListItem.toDbo())
+            }
         }
     }
 
-    override suspend fun deleteAllLists() {
-        withContext(Dispatchers.IO) {
-            dataBase.shoppingListDao().deleteAllShoppingList()
+    override suspend fun deleteAllLists(): Result<Unit> {
+        return runCatching {
+            withContext(Dispatchers.IO) {
+                dataBase.shoppingListDao().deleteAllShoppingList()
+            }
         }
     }
 
-    override suspend fun copyShoppingList(shoppingListId: Int) {
-        withContext(Dispatchers.IO) {
-            val originalList = dataBase.shoppingListDao().getShoppingListById(shoppingListId)
-            val products =
-                dataBase.productListDao().getAllProductsForShoppingList(shoppingListId).first()
-            val existingNames = dataBase.shoppingListDao().getAllShoppingList().map { listDbo ->
-                listDbo.map { it.name }
-            }.first()
-            if (originalList != null) {
+    override suspend fun copyShoppingList(shoppingListId: Int): Result<Unit> {
+        return runCatching {
+            withContext(Dispatchers.IO) {
+                val originalList = dataBase.shoppingListDao().getShoppingListById(shoppingListId)
+                    ?: return@withContext
+                val products =
+                    dataBase.productListDao().getAllProductsForShoppingList(shoppingListId).first()
+                val existingNames = dataBase.shoppingListDao().getAllShoppingList().map { listDbo ->
+                    listDbo.map { it.name }
+                }.first()
+
                 val newName = nameShoppingListGenerator.generateUniqueName(
                     baseName = originalList.name,
                     existingNames = existingNames

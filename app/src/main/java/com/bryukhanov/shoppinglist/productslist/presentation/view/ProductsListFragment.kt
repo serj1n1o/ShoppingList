@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.os.BundleCompat
@@ -147,6 +148,18 @@ class ProductsListFragment : Fragment() {
                 }
             }
             enableDrag(sort)
+        }
+
+        viewModel.getOperationStatus().observe(viewLifecycleOwner) { status ->
+            when {
+                status.isFailure -> {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.error_operation),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
 
 

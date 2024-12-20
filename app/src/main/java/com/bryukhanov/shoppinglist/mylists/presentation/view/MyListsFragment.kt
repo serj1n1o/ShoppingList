@@ -156,6 +156,17 @@ class MyListsFragment : Fragment() {
         setupSearch()
 
         viewModel.getAllShoppingLists()
+
+        viewModel.getOperationStatus().observe(viewLifecycleOwner) { status ->
+            when {
+                status.isFailure -> {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.error_operation), Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 
     private fun navigateToProductScreen(myList: ShoppingListItem) {

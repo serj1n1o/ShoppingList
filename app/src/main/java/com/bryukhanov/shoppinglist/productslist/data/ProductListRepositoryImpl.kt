@@ -17,40 +17,54 @@ class ProductListRepositoryImpl(
     private val dataBase: DataBase,
 ) : ProductListRepository {
 
-    override fun getAllProducts(shoppingListId: Int): Flow<List<ProductListItem>> {
+    override fun getAllProducts(shoppingListId: Int): Flow<Result<List<ProductListItem>>> {
         return dataBase.productListDao().getAllProductsForShoppingList(shoppingListId)
             .map { listDbo ->
-                listDbo.toUiProductList()
+                try {
+                    Result.success(listDbo.toUiProductList())
+                } catch (e: Exception) {
+                    Result.failure(e)
+                }
             }.flowOn(Dispatchers.IO)
     }
 
-    override suspend fun deleteAllProducts(shoppingListId: Int) {
-        withContext(Dispatchers.IO) {
-            dataBase.productListDao().deleteAllProductLists(shoppingListId)
+    override suspend fun deleteAllProducts(shoppingListId: Int): Result<Unit> {
+        return runCatching {
+            withContext(Dispatchers.IO) {
+                dataBase.productListDao().deleteAllProductLists(shoppingListId)
+            }
         }
     }
 
-    override suspend fun deleteBoughtProducts(shoppingListId: Int) {
-        withContext(Dispatchers.IO) {
-            dataBase.productListDao().deleteBoughtProducts(shoppingListId)
+    override suspend fun deleteBoughtProducts(shoppingListId: Int): Result<Unit> {
+        return runCatching {
+            withContext(Dispatchers.IO) {
+                dataBase.productListDao().deleteBoughtProducts(shoppingListId)
+            }
         }
     }
 
-    override suspend fun deleteProduct(productListItem: ProductListItem) {
-        withContext(Dispatchers.IO) {
-            dataBase.productListDao().deleteProduct(productListItem.toDbo())
+    override suspend fun deleteProduct(productListItem: ProductListItem): Result<Unit> {
+        return runCatching {
+            withContext(Dispatchers.IO) {
+                dataBase.productListDao().deleteProduct(productListItem.toDbo())
+            }
         }
     }
 
-    override suspend fun addProduct(productListItem: ProductListItem) {
-        withContext(Dispatchers.IO) {
-            dataBase.productListDao().addProduct(productListItem.toDbo())
+    override suspend fun addProduct(productListItem: ProductListItem): Result<Unit> {
+        return runCatching {
+            withContext(Dispatchers.IO) {
+                dataBase.productListDao().addProduct(productListItem.toDbo())
+            }
         }
     }
 
-    override suspend fun updateProduct(productListItem: ProductListItem) {
-        withContext(Dispatchers.IO) {
-            dataBase.productListDao().updateProduct(productListItem.toDbo())
+    override suspend fun updateProduct(productListItem: ProductListItem): Result<Unit> {
+        return runCatching {
+            withContext(Dispatchers.IO) {
+                dataBase.productListDao().updateProduct(productListItem.toDbo())
+            }
         }
     }
 
@@ -60,9 +74,11 @@ class ProductListRepositoryImpl(
         }
     }
 
-    override suspend fun updateSwapProducts(swapItems: List<ProductListItem>) {
-        return withContext(Dispatchers.IO) {
-            dataBase.productListDao().updateSwapProducts(swapItems.toDboProductList())
+    override suspend fun updateSwapProducts(swapItems: List<ProductListItem>): Result<Unit> {
+        return runCatching {
+            withContext(Dispatchers.IO) {
+                dataBase.productListDao().updateSwapProducts(swapItems.toDboProductList())
+            }
         }
     }
 
