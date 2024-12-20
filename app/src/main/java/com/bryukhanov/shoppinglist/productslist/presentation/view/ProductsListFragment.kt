@@ -200,10 +200,15 @@ class ProductsListFragment : Fragment() {
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     hideKeyboard(this)
+                    isFocusable = false
                     true
                 } else {
                     false
                 }
+            }
+
+            setOnFocusChangeListener { _, hasFocus ->
+                bottomSheetAddProduct?.isDraggable = !hasFocus
             }
         }
 
@@ -220,9 +225,14 @@ class ProductsListFragment : Fragment() {
                 }
             }
 
+            setOnFocusChangeListener { _, hasFocus ->
+                bottomSheetAddProduct?.isDraggable = !hasFocus
+            }
+
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     hideKeyboard(this)
+                    isFocusable = false
                     true
                 } else {
                     false
