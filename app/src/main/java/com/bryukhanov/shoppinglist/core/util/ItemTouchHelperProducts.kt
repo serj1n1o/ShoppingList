@@ -29,7 +29,7 @@ fun setItemTouchHelperProducts(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
         ): Int {
-            val dragFlags = 0
+            val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
             val swipeFlags = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
             return makeMovementFlags(dragFlags, swipeFlags)
         }
@@ -39,7 +39,14 @@ fun setItemTouchHelperProducts(
             viewHolder: RecyclerView.ViewHolder,
             target: RecyclerView.ViewHolder,
         ): Boolean {
+            val fromPosition = viewHolder.bindingAdapterPosition
+            val toPosition = target.bindingAdapterPosition
+            adapter.onItemMove(fromPosition, toPosition)
             return true
+        }
+
+        override fun isLongPressDragEnabled(): Boolean {
+            return adapter.isUserSortingEnabled
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
@@ -146,6 +153,7 @@ fun setItemTouchHelperProducts(
             viewHolder: RecyclerView.ViewHolder,
         ) {
             super.clearView(recyclerView, viewHolder)
+            adapter.updatePositions()
             if (viewHolder.itemView.scrollX > limitScrollX) {
                 viewHolder.itemView.scrollTo(limitScrollX, 0)
 

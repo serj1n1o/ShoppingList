@@ -57,5 +57,6 @@
     <string name="dialog_yes_card_create">Создать</string>
     <string name="et_card_hint">Новый список</string>
     <string name="error_hint">Название не может быть пустым</string>
+    <string name="error_operation">Ошибка при выполнении операции</string>
 
 </resources>

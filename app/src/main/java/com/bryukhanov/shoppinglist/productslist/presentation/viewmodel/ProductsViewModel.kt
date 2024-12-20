@@ -1,10 +1,11 @@
 package com.bryukhanov.shoppinglist.productslist.presentation.viewmodel
 
-import android.content.Context
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bryukhanov.shoppinglist.core.util.SingleLiveEvent
 import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.mylists.domain.api.ShoppingListInteractor
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
@@ -15,28 +16,14 @@ import kotlinx.coroutines.launch
 class ProductsViewModel(
     private val productListInteractor: ProductListInteractor,
     private val shoppingListInteractor: ShoppingListInteractor,
-    private val context: Context,
+    private val application: Application,
 ) : ViewModel() {
 
     private val selectedSorting = MutableLiveData(SortingVariants.USER)
     lateinit var shoppingList: ShoppingListItem
 
-    fun setSorting(sort: SortingVariants) {
-        selectedSorting.value = sort
-        updateSortTypeShoppingList(shoppingList)
-    }
-
-    private fun updateSortTypeShoppingList(shoppingList: ShoppingListItem) {
-        selectedSorting.value?.let {
-            if (shoppingList.sortType != selectedSorting.value!!.getDisplayName(context)) {
-                viewModelScope.launch {
-                    shoppingListInteractor.updateShoppingList(
-                        shoppingList.copy(sortType = selectedSorting.value!!.getDisplayName(context))
-                    )
-                }
-            }
-        }
-    }
+    private val operationStatus = SingleLiveEvent<Result<Unit>>()
+    fun getOperationStatus(): LiveData<Result<Unit>> = operationStatus
 
     fun getSelectedSorting(): LiveData<SortingVariants> = selectedSorting
 
@@ -46,8 +33,29 @@ class ProductsViewModel(
 
     fun getProducts(shoppingListId: Int) {
         viewModelScope.launch {
-            productListInteractor.getAllProducts(shoppingListId).collect { productList ->
-                processResult(productList)
+            productListInteractor.getAllProducts(shoppingListId).collect { result ->
+                result.onSuccess { processResult(it) }.onFailure { processResult(emptyList()) }
+            }
+        }
+    }
+
+    fun setSorting(sort: SortingVariants) {
+        selectedSorting.value = sort
+        updateSortTypeShoppingList(shoppingList)
+    }
+
+    private fun updateSortTypeShoppingList(shoppingList: ShoppingListItem) {
+        selectedSorting.value?.let {
+            if (shoppingList.sortType != selectedSorting.value!!.getDisplayName(application.applicationContext)) {
+                viewModelScope.launch {
+                    shoppingListInteractor.updateShoppingList(
+                        shoppingList.copy(
+                            sortType = selectedSorting.value!!.getDisplayName(
+                                application.applicationContext
+                            )
+                        )
+                    )
+                }
             }
         }
     }
@@ -65,31 +73,37 @@ class ProductsViewModel(
 
     fun addProduct(product: ProductListItem) {
         viewModelScope.launch {
-            productListInteractor.addProduct(product)
+            val result = productListInteractor.addProduct(product)
+            operationStatus.postValue(result)
         }
+
     }
 
     fun updateProduct(product: ProductListItem) {
         viewModelScope.launch {
-            productListInteractor.updateProduct(product)
+            val result = productListInteractor.updateProduct(product)
+            operationStatus.postValue(result)
         }
     }
 
     fun deleteProduct(product: ProductListItem) {
         viewModelScope.launch {
-            productListInteractor.deleteProduct(product)
+            val result = productListInteractor.deleteProduct(product)
+            operationStatus.postValue(result)
         }
     }
 
     fun deleteAllProduct(shoppingListId: Int) {
         viewModelScope.launch {
-            productListInteractor.deleteAllProducts(shoppingListId)
+            val result = productListInteractor.deleteAllProducts(shoppingListId)
+            operationStatus.postValue(result)
         }
     }
 
     fun deleteBoughtProduct(shoppingListId: Int) {
         viewModelScope.launch {
-            productListInteractor.deleteBoughtProducts(shoppingListId)
+            val result = productListInteractor.deleteBoughtProducts(shoppingListId)
+            operationStatus.postValue(result)
         }
     }
 
@@ -98,6 +112,8 @@ class ProductsViewModel(
             val product = productListInteractor.getProductById(productId)
             if (product != null) {
                 updateProduct(product.copy(isBought = isBought))
+            } else {
+                operationStatus.postValue(Result.failure(Throwable()))
             }
         }
     }
@@ -116,7 +132,8 @@ class ProductsViewModel(
 
     fun updatePositionProducts(listSwapProducts: List<ProductListItem>) {
         viewModelScope.launch {
-            productListInteractor.updateSwapProducts(listSwapProducts)
+            val result = productListInteractor.updateSwapProducts(listSwapProducts)
+            operationStatus.postValue(result)
         }
     }
 
