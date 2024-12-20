@@ -27,7 +27,6 @@ import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.core.util.Units
 import com.bryukhanov.shoppinglist.core.util.resetAllItemsScroll
 import com.bryukhanov.shoppinglist.core.util.setItemTouchHelperProducts
-import com.bryukhanov.shoppinglist.core.util.setupDragAndDrop
 import com.bryukhanov.shoppinglist.databinding.FragmentProductsListBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
@@ -125,8 +124,6 @@ class ProductsListFragment : Fragment() {
             R.id.buttonEditProductContainer,
             productsAdapter
         )
-
-        setupDragAndDrop(binding.rvProducts, productsAdapter)
 
         viewModel.getProductState().observe(viewLifecycleOwner) { state ->
             when (state) {
