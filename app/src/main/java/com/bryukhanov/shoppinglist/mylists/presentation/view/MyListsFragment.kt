@@ -27,6 +27,7 @@ import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAda
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsState
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsViewModel
 import com.bryukhanov.shoppinglist.productslist.presentation.view.ProductsListFragment
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -40,6 +41,20 @@ class MyListsFragment : Fragment() {
     private lateinit var searchAdapter: ShoppingListAdapter
 
     private var originalList: List<ShoppingListItem> = emptyList()
+
+    private var isClickAllowed = true
+
+    fun clickDebounce(): Boolean {
+        if (isClickAllowed) {
+            isClickAllowed = false
+            lifecycleScope.launch {
+                delay(DELAY_CLICK)
+                isClickAllowed = true
+            }
+            return true
+        }
+        return false
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,7 +85,7 @@ class MyListsFragment : Fragment() {
             }
 
             override fun onClickItem(myList: ShoppingListItem) {
-                navigateToProductScreen(myList)
+                if (clickDebounce()) navigateToProductScreen(myList)
                 resetAllItemsScroll(binding.rvMyLists)
             }
 
@@ -98,7 +113,7 @@ class MyListsFragment : Fragment() {
             }
 
             override fun onClickItem(myList: ShoppingListItem) {
-                navigateToProductScreen(myList)
+                if (clickDebounce()) navigateToProductScreen(myList)
                 hideSearchField()
             }
 
@@ -139,7 +154,7 @@ class MyListsFragment : Fragment() {
 
         binding.fabAdd.setOnClickListener {
             resetAllItemsScroll(binding.rvMyLists)
-            showCustomCardCreateList()
+            if (clickDebounce()) showCustomCardCreateList()
         }
 
         binding.ivSearch.setOnClickListener {
@@ -367,6 +382,10 @@ class MyListsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val DELAY_CLICK = 1000L
     }
 }
 

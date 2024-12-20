@@ -20,6 +20,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.core.util.Animates
@@ -35,6 +36,8 @@ import com.bryukhanov.shoppinglist.productslist.presentation.adapters.ProductsAd
 import com.bryukhanov.shoppinglist.productslist.presentation.viewmodel.ProductsState
 import com.bryukhanov.shoppinglist.productslist.presentation.viewmodel.ProductsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProductsListFragment : Fragment() {
@@ -52,6 +55,20 @@ class ProductsListFragment : Fragment() {
     private var unitProduct: String? = null
 
     private var productItem: ProductListItem? = null
+
+    private var isClickAllowed = true
+
+    fun clickDebounce(): Boolean {
+        if (isClickAllowed) {
+            isClickAllowed = false
+            lifecycleScope.launch {
+                delay(DELAY_CLICK)
+                isClickAllowed = true
+            }
+            return true
+        }
+        return false
+    }
 
     private val productsAdapter by lazy {
         ProductsAdapter(object : ProductsAdapter.ProductsActionListener {
@@ -162,9 +179,8 @@ class ProductsListFragment : Fragment() {
             }
         }
 
-
         binding.fabAddProduct.setOnClickListener {
-            openAddProductBottomSheet()
+            if (clickDebounce()) openAddProductBottomSheet()
             resetAllItemsScroll(binding.rvProducts)
         }
 
@@ -187,7 +203,7 @@ class ProductsListFragment : Fragment() {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         showOverlay(false)
                         binding.fabAddProduct.setOnClickListener {
-                            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_COLLAPSED
+                            if (clickDebounce()) openAddProductBottomSheet()
                         }
                         swapImageFab(state = BottomSheetBehavior.STATE_HIDDEN)
                     }
@@ -642,6 +658,7 @@ class ProductsListFragment : Fragment() {
     }
 
     companion object {
+        private const val DELAY_CLICK = 1000L
         private const val COEFFICIENT = 4 / 5f
         const val KEY_PRODUCT_LIST = "KEY PRODUCT"
         fun createArgs(shoppingList: ShoppingListItem): Bundle =

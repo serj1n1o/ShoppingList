@@ -74,10 +74,6 @@ class MyListsViewModel(private val shoppingListInteractor: ShoppingListInteracto
         listState.postValue(state)
     }
 
-    fun operationCallback(result: Result<Unit>) {
-
-    }
-
 }
 
 
