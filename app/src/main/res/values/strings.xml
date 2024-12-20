@@ -30,6 +30,13 @@
     <string name="sort_user_text">Пользовательская</string>
     <string name="delete_all_text">Удалить все</string>
     <string name="clear_bought_products_text">Очистить купленные</string>
+    <string name="unit_piece">шт</string>
+    <string name="unit_package">уп</string>
+    <string name="unit_kilogram">кг</string>
+    <string name="unit_gram">г</string>
+    <string name="unit_liter">л</string>
+    <string name="unit_milliliter">мл</string>
+    <string name="unit_pack">пач</string>
 
     <!-- custom_dialog -->
     <string name="dialog_message">Удалить все списки?</string>

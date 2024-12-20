@@ -1,8 +1,13 @@
 package com.bryukhanov.shoppinglist.core.util
 
-enum class SortingVariants(private val nameSort: String) {
-    ALPHABET("По алфавиту"),
-    USER("Пользовательская");
+import android.content.Context
+import com.bryukhanov.shoppinglist.R
 
-    override fun toString(): String = nameSort
+enum class SortingVariants(private val resourceId: Int) {
+    ALPHABET(R.string.sort_alphabet_text),
+    USER(R.string.sort_user_text);
+
+    fun getDisplayName(context: Context): String {
+        return context.getString(this.resourceId)
+    }
 }

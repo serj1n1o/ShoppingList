@@ -12,17 +12,18 @@ android {
 
     defaultConfig {
         applicationId = "com.bryukhanov.shoppinglist"
-        minSdk = 28
+        minSdk = 21
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -38,6 +39,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -46,7 +48,6 @@ dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.7")
 
     implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.room.runtime)
     kapt(libs.androidx.room.compiler)
 
     implementation(libs.androidx.navigation.fragment.ktx)

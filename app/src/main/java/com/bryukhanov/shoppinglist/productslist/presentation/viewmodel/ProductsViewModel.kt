@@ -1,5 +1,6 @@
 package com.bryukhanov.shoppinglist.productslist.presentation.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 class ProductsViewModel(
     private val productListInteractor: ProductListInteractor,
     private val shoppingListInteractor: ShoppingListInteractor,
+    private val context: Context,
 ) : ViewModel() {
 
     private val selectedSorting = MutableLiveData(SortingVariants.USER)
@@ -25,11 +27,13 @@ class ProductsViewModel(
     }
 
     private fun updateSortTypeShoppingList(shoppingList: ShoppingListItem) {
-        if (shoppingList.sortType != selectedSorting.value.toString()) {
-            viewModelScope.launch {
-                shoppingListInteractor.updateShoppingList(
-                    shoppingList.copy(sortType = selectedSorting.value.toString())
-                )
+        selectedSorting.value?.let {
+            if (shoppingList.sortType != selectedSorting.value!!.getDisplayName(context)) {
+                viewModelScope.launch {
+                    shoppingListInteractor.updateShoppingList(
+                        shoppingList.copy(sortType = selectedSorting.value!!.getDisplayName(context))
+                    )
+                }
             }
         }
     }

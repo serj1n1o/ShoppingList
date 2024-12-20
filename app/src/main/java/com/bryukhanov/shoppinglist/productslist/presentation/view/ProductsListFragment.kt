@@ -101,15 +101,21 @@ class ProductsListFragment : Fragment() {
         ) as ShoppingListItem
         viewModel.shoppingList = shoppingList
         val typeSort =
-            if (shoppingList.sortType == SortingVariants.USER.toString()) SortingVariants.USER else SortingVariants.ALPHABET
+            if (shoppingList.sortType == SortingVariants.USER.getDisplayName(requireContext())) {
+                SortingVariants.USER
+            } else {
+                SortingVariants.ALPHABET
+            }
         viewModel.setSorting(typeSort)
 
         binding.txtProducts.text = shoppingList.name
 
         val unitsAdapter =
-            ArrayAdapter(requireContext(), R.layout.dropdown_item_layout_unit, Units.entries)
+            ArrayAdapter(
+                requireContext(),
+                R.layout.dropdown_item_layout_unit,
+                Units.entries.map { it.getDisplayName(requireContext()) })
         binding.completeTextUnit.setAdapter(unitsAdapter)
-
         viewModel.getProducts(shoppingList.id)
 
         binding.rvProducts.adapter = productsAdapter
@@ -132,12 +138,14 @@ class ProductsListFragment : Fragment() {
         viewModel.getSelectedSorting().observe(viewLifecycleOwner) { sort ->
             when (sort!!) {
                 SortingVariants.ALPHABET -> {
-                    binding.sortLayout.typeSort.text = SortingVariants.ALPHABET.toString()
+                    binding.sortLayout.typeSort.text =
+                        SortingVariants.ALPHABET.getDisplayName(requireContext())
                     viewModel.sortProducts(sort)
                 }
 
                 SortingVariants.USER -> {
-                    binding.sortLayout.typeSort.text = SortingVariants.USER.toString()
+                    binding.sortLayout.typeSort.text =
+                        SortingVariants.USER.getDisplayName(requireContext())
                     viewModel.sortProducts(sort)
                 }
             }
@@ -185,7 +193,7 @@ class ProductsListFragment : Fragment() {
 
         with(binding) {
             completeTextUnit.setOnItemClickListener { _, _, position, _ ->
-                unitProduct = Units.entries[position].toString()
+                unitProduct = Units.entries[position].getDisplayName(requireContext())
             }
         }
 
@@ -200,10 +208,15 @@ class ProductsListFragment : Fragment() {
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     hideKeyboard(this)
+                    isFocusable = false
                     true
                 } else {
                     false
                 }
+            }
+
+            setOnFocusChangeListener { _, hasFocus ->
+                bottomSheetAddProduct?.isDraggable = !hasFocus
             }
         }
 
@@ -220,9 +233,14 @@ class ProductsListFragment : Fragment() {
                 }
             }
 
+            setOnFocusChangeListener { _, hasFocus ->
+                bottomSheetAddProduct?.isDraggable = !hasFocus
+            }
+
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     hideKeyboard(this)
+                    isFocusable = false
                     true
                 } else {
                     false
@@ -231,8 +249,8 @@ class ProductsListFragment : Fragment() {
         }
 
         binding.minusUnit.setOnClickListener {
-            if (amountProduct != null) {
-                amountProduct = amountProduct!! - 1
+            amountProduct?.let {
+                amountProduct = it - 1
                 binding.editTextAmountProduct.setText(amountProduct.toString())
                 if (amountProduct == 0) {
                     amountProduct = null
@@ -242,14 +260,13 @@ class ProductsListFragment : Fragment() {
         }
 
         binding.plusUnit.setOnClickListener {
-            if (amountProduct == null) {
+            amountProduct?.let {
+                amountProduct = it + 1
+                binding.editTextAmountProduct.setText(amountProduct.toString())
+            } ?: run {
                 amountProduct = 1
                 binding.editTextAmountProduct.setText(amountProduct.toString())
-            } else {
-                amountProduct = amountProduct!! + 1
-                binding.editTextAmountProduct.setText(amountProduct.toString())
             }
-
         }
 
         binding.ivBackArrow.setOnClickListener {
@@ -358,12 +375,12 @@ class ProductsListFragment : Fragment() {
             with(binding) {
                 editTextNameProduct.setText(product.name)
                 editTextAmountProduct.setText(product.amount?.toString())
-                val unit = Units.entries.find { it.toString() == product.unit }
+                val unit =
+                    Units.entries.find { it.getDisplayName(requireContext()) == product.unit }
                 if (unit != null) {
-                    completeTextUnit.setText(unit.toString(), false)
-                    unitProduct = unit.toString()
+                    completeTextUnit.setText(unit.getDisplayName(requireContext()), false)
+                    unitProduct = unit.getDisplayName(requireContext())
                 }
-
             }
         } else {
             bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -421,7 +438,8 @@ class ProductsListFragment : Fragment() {
         }
 
         popupView.findViewById<LinearLayout>(R.id.alphabetSorting).setOnClickListener {
-            binding.sortLayout.typeSort.text = SortingVariants.ALPHABET.toString()
+            binding.sortLayout.typeSort.text =
+                SortingVariants.ALPHABET.getDisplayName(requireContext())
             viewModel.setSorting(SortingVariants.ALPHABET)
             checkboxAlphabet.isChecked = true
             checkboxUser.isChecked = false
@@ -429,7 +447,7 @@ class ProductsListFragment : Fragment() {
         }
 
         popupView.findViewById<LinearLayout>(R.id.userSorting).setOnClickListener {
-            binding.sortLayout.typeSort.text = SortingVariants.USER.toString()
+            binding.sortLayout.typeSort.text = SortingVariants.USER.getDisplayName(requireContext())
             viewModel.setSorting(SortingVariants.USER)
             checkboxUser.isChecked = true
             checkboxAlphabet.isChecked = false
@@ -462,11 +480,14 @@ class ProductsListFragment : Fragment() {
             hideKeyboard(view)
             bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_HIDDEN
             clearFieldsProduct()
+        } else {
+            binding.inputLayoutNameProduct.error = getString(R.string.error_hint)
         }
     }
 
     private fun updateProduct(product: ProductListItem, view: View) {
         if (!nameProduct.isNullOrEmpty()) {
+            binding.inputLayoutNameProduct.error = null
             viewModel.updateProduct(
                 product.copy(name = nameProduct!!, amount = amountProduct, unit = unitProduct)
             )
