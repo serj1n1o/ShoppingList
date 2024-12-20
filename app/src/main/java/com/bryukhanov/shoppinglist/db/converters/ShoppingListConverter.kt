@@ -1,8 +1,8 @@
 package com.bryukhanov.shoppinglist.db.converters
 
-import com.bryukhanov.shoppinglist.db.entity.ProductListItemDbo
-import com.bryukhanov.shoppinglist.db.entity.ShoppingListItemDbo
+import com.bryukhanov.shoppinglist.mylists.data.db.entity.ShoppingListItemDbo
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
+import com.bryukhanov.shoppinglist.productslist.data.db.entity.ProductListItemDbo
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
 
 object ShoppingListConverter {

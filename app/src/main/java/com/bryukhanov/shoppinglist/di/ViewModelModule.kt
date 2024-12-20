@@ -11,7 +11,7 @@ val viewModelModule = module {
         ProductsViewModel(
             productListInteractor = get(),
             shoppingListInteractor = get(),
-            context = get()
+            application = get()
         )
     }
 

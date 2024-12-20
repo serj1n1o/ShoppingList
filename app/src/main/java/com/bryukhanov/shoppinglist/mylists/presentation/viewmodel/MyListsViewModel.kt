@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bryukhanov.shoppinglist.core.util.SingleLiveEvent
 import com.bryukhanov.shoppinglist.mylists.domain.api.ShoppingListInteractor
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import kotlinx.coroutines.Dispatchers
@@ -21,41 +22,51 @@ class MyListsViewModel(private val shoppingListInteractor: ShoppingListInteracto
     private val _isSearchEmpty = MutableLiveData<Boolean>()
     val isSearchEmpty: LiveData<Boolean> get() = _isSearchEmpty
 
+    private val operationStatus = SingleLiveEvent<Result<Unit>>()
+    fun getOperationStatus(): LiveData<Result<Unit>> = operationStatus
+
     fun getAllShoppingLists() {
         viewModelScope.launch {
-            shoppingListInteractor.getAllShoppingLists().collect { myList ->
-                processResult(myList)
+            shoppingListInteractor.getAllShoppingLists().collect { result ->
+                result.onSuccess { myList ->
+                    processResult(myList)
+                }.onFailure { processResult(emptyList()) }
             }
         }
     }
 
     fun addShoppingList(list: ShoppingListItem) {
         viewModelScope.launch {
-            shoppingListInteractor.addShoppingList(list)
+            val result = shoppingListInteractor.addShoppingList(list)
+            operationStatus.postValue(result)
         }
     }
 
     fun updateShoppingList(list: ShoppingListItem) {
         viewModelScope.launch {
-            shoppingListInteractor.updateShoppingList(list)
+            val result = shoppingListInteractor.updateShoppingList(list)
+            operationStatus.postValue(result)
         }
     }
 
     fun deleteShoppingList(list: ShoppingListItem) {
         viewModelScope.launch {
-            shoppingListInteractor.deleteShoppingList(list)
+            val result = shoppingListInteractor.deleteShoppingList(list)
+            operationStatus.postValue(result)
         }
     }
 
     fun deleteAllShoppingLists() {
         viewModelScope.launch {
-            shoppingListInteractor.deleteAllLists()
+            val result = shoppingListInteractor.deleteAllLists()
+            operationStatus.postValue(result)
         }
     }
 
     fun copyShoppingList(shoppingListId: Int) {
         viewModelScope.launch {
-            shoppingListInteractor.copyShoppingList(shoppingListId)
+            val result = shoppingListInteractor.copyShoppingList(shoppingListId)
+            operationStatus.postValue(result)
         }
     }
 
@@ -91,5 +102,3 @@ class MyListsViewModel(private val shoppingListInteractor: ShoppingListInteracto
     }
 
 }
-
-
