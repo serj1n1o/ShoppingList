@@ -337,9 +337,13 @@ class MyListsFragment : Fragment() {
         binding.layoutSearchNotFoundContainer.visibility = View.GONE
         binding.searchDivider.visibility = View.GONE
 
-        binding.rvMyLists.visibility = View.GONE
-        binding.groupEmptyState.visibility = View.GONE
-        binding.etSearch.visibility = View.GONE
+        if (originalList.isEmpty()) {
+            binding.rvMyLists.visibility = View.GONE
+            binding.groupEmptyState.visibility = View.VISIBLE
+        } else {
+            binding.rvMyLists.visibility = View.VISIBLE
+            binding.groupEmptyState.visibility = View.GONE
+        }
     }
 
 
