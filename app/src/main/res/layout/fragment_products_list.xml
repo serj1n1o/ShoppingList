@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".productslist.presentation.view.ProductsListFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarProducts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/sixteen_space"
+            app:contentInsetStart="@dimen/zero_space"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/ivBackArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_back_arrow" />
+
+            <TextView
+                android:id="@+id/txtProducts"
+                style="@style/ToolBarTitle"
+                android:layout_marginStart="@dimen/one_space"
+                android:text="@string/products_screen_text" />
+
+            <ImageView
+                android:id="@+id/ivMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="@dimen/one_space"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_menu" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvProducts"
+            android:layout_width="@dimen/zero_space"
+            android:layout_height="@dimen/zero_space"
+            android:visibility="visible"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbarProducts"
+            tools:listitem="@layout/item_product" />
+
+        <LinearLayout
+            android:id="@+id/placeholderProductsEmpty"
+            android:layout_width="@dimen/zero_space"
+            android:layout_height="@dimen/zero_space"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbarProducts">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/eleven_space"
+                android:layout_marginTop="@dimen/thirty_space"
+                android:src="@drawable/placeholder_products_empty_list"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+            <TextView
+                style="@style/FirstTitle"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/products_screen_no_products_text" />
+
+            <TextView
+                style="@style/RegularText"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/products_screen_create_first_product_text" />
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/overlayScreen"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomSheetAddProduct"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/one_space"
+        android:background="@drawable/bottom_sheet_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="@dimen/fifty_one_space"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:visibility="gone">
+
+        <View
+            android:id="@+id/lineBottomSheetProductAdd"
+            android:layout_width="@dimen/eight_space"
+            android:layout_height="@dimen/one_space"
+            android:layout_marginTop="@dimen/four_space"
+            android:background="@drawable/top_line_bottomsheet"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputLayoutNameProduct"
+            style="@style/TextInputLayoutAddProduct"
+            android:layout_width="@dimen/zero_space"
+            android:layout_height="@dimen/fourteen_space"
+            android:layout_margin="@dimen/four_space"
+            android:hint="@string/product_text"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lineBottomSheetProductAdd">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextNameProduct"
+                style="@style/textInputEditTextProduct"
+                android:imeOptions="actionDone"
+                android:inputType="textCapWords"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/add_new_product_text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputLayoutAmountProduct"
+            style="@style/TextInputLayoutAmountProduct"
+            android:layout_width="@dimen/zero_space"
+            android:layout_height="@dimen/fourteen_space"
+            android:layout_marginStart="@dimen/four_space"
+            android:layout_marginTop="@dimen/four_space"
+            android:hint="@string/amount_txt"
+            app:layout_constraintEnd_toStartOf="@id/inputLayoutUnitProduct"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/inputLayoutNameProduct">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextAmountProduct"
+                style="@style/textInputEditTextProduct"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:maxLength="8" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputLayoutUnitProduct"
+            style="@style/TextInputLayoutUnitProduct"
+            android:layout_width="@dimen/zero_space"
+            android:layout_height="@dimen/fourteen_space"
+            android:layout_marginHorizontal="@dimen/four_space"
+            android:hint="@string/units"
+            app:layout_constraintEnd_toStartOf="@id/minusUnit"
+            app:layout_constraintStart_toEndOf="@id/inputLayoutAmountProduct"
+            app:layout_constraintTop_toTopOf="@id/inputLayoutAmountProduct">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/completeTextUnit"
+                style="@style/textInputEditTextProduct"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:dropDownHeight="@dimen/thirty_space"
+                android:inputType="none"
+                app:dropDownBackgroundTint="?attr/colorUnitBack" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageButton
+            android:id="@+id/minusUnit"
+            android:layout_width="@dimen/twelve_space"
+            android:layout_height="@dimen/twelve_space"
+            android:layout_marginStart="@dimen/four_space"
+            android:backgroundTint="@android:color/transparent"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_minus_not_select"
+            app:layout_constraintBottom_toBottomOf="@id/inputLayoutUnitProduct"
+            app:layout_constraintEnd_toStartOf="@id/plusUnit"
+            app:layout_constraintTop_toTopOf="@id/inputLayoutUnitProduct" />
+
+        <ImageButton
+            android:id="@+id/plusUnit"
+            android:layout_width="@dimen/twelve_space"
+            android:layout_height="@dimen/twelve_space"
+            android:layout_marginEnd="@dimen/four_space"
+            android:backgroundTint="@android:color/transparent"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_plus"
+            app:layout_constraintBottom_toBottomOf="@id/minusUnit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/minusUnit" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomSheetMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bottom_sheet_background"
+        android:layout_marginHorizontal="@dimen/one_space"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/four_space"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="@dimen/fifty_one_space"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:visibility="visible">
+
+        <View
+            android:id="@+id/lineMenu"
+            android:layout_width="@dimen/eight_space"
+            android:layout_height="@dimen/one_space"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/four_space"
+            android:background="@drawable/top_line_bottomsheet"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            android:id="@+id/sortLayout"
+            layout="@layout/select_sorting_layout"
+            android:layout_width="@dimen/zero_space"
+            android:layout_height="@dimen/fourteen_space"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lineMenu" />
+
+        <TextView
+            android:id="@+id/deleteAllProductsMenu"
+            style="@style/productRegularText"
+            android:layout_width="@dimen/zero_space"
+            android:layout_height="@dimen/fourteen_space"
+            android:drawablePadding="@dimen/three_space"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center_vertical"
+            android:text="@string/delete_all_text"
+            app:drawableStartCompat="@drawable/ic_delete_prod"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sortLayout" />
+
+        <TextView
+            android:id="@+id/clearBoughtMenu"
+            style="@style/productRegularText"
+            android:layout_width="@dimen/zero_space"
+            android:layout_height="@dimen/fourteen_space"
+            android:drawablePadding="@dimen/three_space"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center_vertical"
+            android:text="@string/clear_bought_products_text"
+            app:drawableStartCompat="@drawable/ic_clear_prod"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/deleteAllProductsMenu" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddProduct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginEnd="@dimen/four_space"
+        android:layout_marginBottom="@dimen/fourteen_space"
+        app:backgroundTint="?attr/colorPrimary"
+        app:layout_anchor="@id/bottomSheetAddProduct"
+        app:layout_anchorGravity="top|end"
+        app:srcCompat="@drawable/ic_add"
+        app:useCompatPadding="true"
+        app:tint="?attr/colorPlus"
+        tools:visibility="visible" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

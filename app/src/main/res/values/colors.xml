@@ -1,5 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="lightBackground">#FFF8F4</color>
+    <color name="lightButton">#FFDCBB</color>
+    <color name="darkAccent">#845416</color>
+    <color name="lightIcon">#FEDDBD</color>
+    <color name="secondLightIcon">#EEE0D5</color>
+    <color name="lightBottomSheet">#FFF1E7</color>
+    <color name="lightText">#211A14</color>
+    <color name="lightTextOnBottomSheet">#50453A</color>
+    <color name="cancelLightTextOnButton">#281805</color>
+    <color name="positiveLightButtonText">#FFFFFF</color>
+    <color name="lightToolBar">#F4E6DA</color>
+    <color name="lightList">#FFF8F4</color>
+    <color name="accentText">#34C759</color>
+    <color name="lightTintUpText">#49454F</color>
+    <color name="lightColorPlus">#2B1700</color>
+    <color name="lightIconList">#EEE0D5</color>
+    <color name="bottomSheetTopLineLight">#827568</color>
+    <color name="textToolbarLight">#211A14</color>
+    <color name="colorTintBtnMinusLight">#1F211A14</color>
+    <color name="colorUnitBackLight">#FAEBE0</color>
+    <color name="lightTextCard">#845416</color>
+    <color name="lightIconCardAdd">#50453A</color>
+    <color name="lightBackgroundHint">#FFF8F4</color>
+    <color name="lightCardText">#211A14</color>
+
+
+    <color name="darkBackground">#130D07</color>
+    <color name="darkButton">#BE8543</color>
+    <color name="lightAccent">#FFBE77</color>
+    <color name="darkIcon">#A78C70</color>
+    <color name="secondDarkIcon">#FFBE77</color>
+    <color name="darkBottomSheet">#211A14</color>
+    <color name="darkText">#EEE0D5</color>
+    <color name="darkTextOnBottomSheet">#D9C8B9</color>
+    <color name="cancelDarkTextOnButton">#000000</color>
+    <color name="positiveDarkButtonText">#241200</color>
+    <color name="darkToolBar">#302921</color>
+    <color name="darkList">#302921</color>
+    <color name="darkTintUpText">#E5C5A7</color>
+    <color name="darkColorPlus">#000000</color>
+    <color name="darkIconList">#302921</color>
+    <color name="overlayScreen">#66000000</color>
+    <color name="bottomSheetTopLineNight">#B0A092</color>
+    <color name="textToolbarNight">#FFFAF8</color>
+    <color name="colorTintBtnMinusDark">#1FFFFAF8</color>
+    <color name="colorBackgroundEditBtn">#58432C</color>
+    <color name="colorUnitBackDark">#251E17</color>
+    <color name="darkTextCard">#E5C5A7</color>
+    <color name="darkIconCardAdd">#D4C4B5</color>
+    <color name="darkBackgroundHint">#19120C</color>
+    <color name="darkCardText">#FFFAF8</color>
+    <color name="viewBackground">#80000000</color>
 </resources>

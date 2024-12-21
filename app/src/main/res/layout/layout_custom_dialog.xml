@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_background"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/ivAttention"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/six_space"
+        android:src="@drawable/ic_attention" />
+
+    <TextView
+        android:id="@+id/tvDialogMessage"
+        style="@style/DialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/six_space"
+        android:layout_marginTop="@dimen/four_space"
+        android:layout_marginEnd="@dimen/six_space"
+        android:gravity="center"
+        android:text="@string/dialog_message" />
+
+    <LinearLayout
+        android:id="@+id/llTwoButtonsBlock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/six_space"
+        android:layout_marginBottom="@dimen/six_space"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnNo"
+            style="@style/DialogNoButton"
+            android:layout_weight="1"
+            android:backgroundTint="?attr/colorSecondary"
+            android:text="@string/dialog_no"
+            android:textColor="?attr/colorOnBackground" />
+
+        <Button
+            android:id="@+id/btnYes"
+            style="@style/DialogYesButton"
+            android:layout_marginStart="@dimen/two_space"
+            android:layout_weight="1"
+            android:backgroundTint="?attr/colorPrimaryVariant"
+            android:text="@string/dialog_yes"
+            android:textColor="?attr/colorButtonText" />
+
+    </LinearLayout>
+
+</LinearLayout>
