@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">ShoppingList</string>
     <!-- splash_screen -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="splash_screen_text_welcome">Добро пожаловать в Список покупок!</string>
     <string name="splash_screen_text_tasks">Создавайте списки, добавляйте товары,\nотмечайте, что уже куплено</string>
 
@@ -15,6 +14,8 @@
     <string name="enter_request">Поиск списков</string>
     <string name="myLists_screen_not_found">Мы не смогли найти то,\n что вы искали</string>
     <string name="myLists_screen_try_again">Попробуйте изменить запрос\n или проверить написание</string>
+    <string name="icon">Иконка</string>
+    <string name="toast_list_empty">Список покупок пуст</string>
 
     <!-- products_screen -->
     <string name="products_screen_text">Продукты</string>
@@ -29,9 +30,17 @@
     <string name="sort_user_text">Пользовательская</string>
     <string name="delete_all_text">Удалить все</string>
     <string name="clear_bought_products_text">Очистить купленные</string>
+    <string name="unit_piece">шт</string>
+    <string name="unit_package">уп</string>
+    <string name="unit_kilogram">кг</string>
+    <string name="unit_gram">г</string>
+    <string name="unit_liter">л</string>
+    <string name="unit_milliliter">мл</string>
+    <string name="unit_pack">пач</string>
 
     <!-- custom_dialog -->
     <string name="dialog_message">Удалить все списки?</string>
+    <string name="dialog_message_delete_item_list">Удалить список\n\u00AB%1$s\u00BB?</string>
     <string name="dialog_message_delete_all_product">Удалить все товары?</string>
     <string name="dialog_message_delete_bought_product">Удалить\nвсе купленные\nтовары?</string>
     <string name="dialog_no">Нет</string>
@@ -40,12 +49,14 @@
     <string name="dialog_positive_answer">Удалить</string>
 
     <!-- custom_card-->
-    <string name="card_message">Добавление списка</string>
+    <string name="card_message_create">Добавление списка</string>
+    <string name="card_message_edit">Переименование списка</string>
+    <string name="dialog_yes_card_edit">Переименовать</string>
     <string name="card_hint">Название списка</string>
     <string name="dialog_no_card">Отмена</string>
-    <string name="dialog_yes_card">Создать</string>
+    <string name="dialog_yes_card_create">Создать</string>
     <string name="et_card_hint">Новый список</string>
     <string name="error_hint">Название не может быть пустым</string>
-    <string name="icon">Иконка</string>
+    <string name="error_operation">Ошибка при выполнении операции</string>
 
 </resources>
