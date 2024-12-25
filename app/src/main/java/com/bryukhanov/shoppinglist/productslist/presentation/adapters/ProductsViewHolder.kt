@@ -14,8 +14,7 @@ class ProductsViewHolder(
     private val actionListener: ProductsActionListener,
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: ProductListItem) {
-
+    fun bind(item: ProductListItem, isUserSort: Boolean) {
         binding.checkBoxProduct.setOnCheckedChangeListener { buttonView, isChecked ->
             actionListener.onProductBoughtChangedListener(item.id, isChecked)
             if (isChecked) {
@@ -48,8 +47,11 @@ class ProductsViewHolder(
                 checkBoxProduct.isChecked = false
             }
 
+            ivDragHandle.isVisible = isUserSort
         }
         itemView.setOnClickListener { actionListener.onProductClickListener.invoke() }
+        binding.btnDeleteProduct.setOnClickListener { actionListener.onDeleteClick.invoke(item) }
+        binding.btnEditProduct.setOnClickListener { actionListener.onEditClick.invoke(item) }
     }
 
 }

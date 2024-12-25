@@ -18,7 +18,6 @@
         <item name="colorPlus">@color/lightColorPlus</item>
         <item name="colorIconList">@color/lightIconList</item>
         <item name="android:statusBarColor">@color/lightBackground</item>
-
         <item name="colorTopLineBottomSheet">@color/bottomSheetTopLineLight</item>
         <item name="colorToolbarText">@color/textToolbarLight</item>
         <item name="colorBoxStrokeEditTextNameProduct">@color/darkAccent</item>
@@ -31,7 +30,8 @@
         <item name="colorBackgroundHint">@color/lightBackgroundHint</item>
         <item name="colorCardText">@color/lightCardText</item>
         <item name="colorViewBackground">@color/viewBackground</item>
-
+        <item name="colorSortActiveBackground">@color/lightIcon</item>
+        <item name="colorSortTextActive">@color/sortTextActiveLight</item>
 
     </style>
 

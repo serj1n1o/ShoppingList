@@ -15,8 +15,10 @@
         tools:targetApi="31">
         <activity
             android:name=".core.ui.MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan|stateHidden">
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

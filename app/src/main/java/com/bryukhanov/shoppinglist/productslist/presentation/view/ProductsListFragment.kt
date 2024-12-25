@@ -2,6 +2,7 @@ package com.bryukhanov.shoppinglist.productslist.presentation.view
 
 import android.content.Context
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,12 +20,15 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.core.util.Animates
 import com.bryukhanov.shoppinglist.core.util.CustomDialog
 import com.bryukhanov.shoppinglist.core.util.SortingVariants
 import com.bryukhanov.shoppinglist.core.util.Units
+import com.bryukhanov.shoppinglist.core.util.resetAllItemsScroll
+import com.bryukhanov.shoppinglist.core.util.setItemTouchHelperProducts
 import com.bryukhanov.shoppinglist.databinding.FragmentProductsListBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
@@ -32,6 +36,8 @@ import com.bryukhanov.shoppinglist.productslist.presentation.adapters.ProductsAd
 import com.bryukhanov.shoppinglist.productslist.presentation.viewmodel.ProductsState
 import com.bryukhanov.shoppinglist.productslist.presentation.viewmodel.ProductsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProductsListFragment : Fragment() {
@@ -48,14 +54,48 @@ class ProductsListFragment : Fragment() {
     private var amountProduct: Int? = null
     private var unitProduct: String? = null
 
+    private var productItem: ProductListItem? = null
+
+    private var isClickAllowed = true
+
+    fun clickDebounce(): Boolean {
+        if (isClickAllowed) {
+            isClickAllowed = false
+            lifecycleScope.launch {
+                delay(DELAY_CLICK)
+                isClickAllowed = true
+            }
+            return true
+        }
+        return false
+    }
+
     private val productsAdapter by lazy {
         ProductsAdapter(object : ProductsAdapter.ProductsActionListener {
             override val onProductClickListener: () -> Unit
-                get() = { Toast.makeText(requireContext(), "CLICK", Toast.LENGTH_SHORT).show() }
+                get() = {
+                    resetAllItemsScroll(binding.rvProducts)
+                }
             override val onProductBoughtChangedListener: (Int, Boolean) -> Unit
                 get() = { id, isBought ->
                     viewModel.updateProductBoughtStatus(id, isBought)
                 }
+            override val onDeleteClick: (ProductListItem) -> Unit
+                get() = { product ->
+                    viewModel.deleteProduct(product)
+                    resetAllItemsScroll(binding.rvProducts)
+                }
+            override val onEditClick: (ProductListItem) -> Unit
+                get() = { product ->
+                    productItem = product
+                    openAddProductBottomSheet(product)
+                    resetAllItemsScroll(binding.rvProducts)
+                }
+            override val onUpdateItems: (products: List<ProductListItem>) -> Unit
+                get() = { products ->
+                    viewModel.updatePositionProducts(products)
+                }
+
         })
     }
 
@@ -76,16 +116,32 @@ class ProductsListFragment : Fragment() {
             KEY_PRODUCT_LIST,
             ShoppingListItem::class.java
         ) as ShoppingListItem
+        viewModel.shoppingList = shoppingList
+        val typeSort =
+            if (shoppingList.sortType == SortingVariants.USER.getDisplayName(requireContext())) {
+                SortingVariants.USER
+            } else {
+                SortingVariants.ALPHABET
+            }
+        viewModel.setSorting(typeSort)
 
         binding.txtProducts.text = shoppingList.name
 
         val unitsAdapter =
-            ArrayAdapter(requireContext(), R.layout.dropdown_item_layout_unit, Units.entries)
+            ArrayAdapter(
+                requireContext(),
+                R.layout.dropdown_item_layout_unit,
+                Units.entries.map { it.getDisplayName(requireContext()) })
         binding.completeTextUnit.setAdapter(unitsAdapter)
-
         viewModel.getProducts(shoppingList.id)
 
         binding.rvProducts.adapter = productsAdapter
+
+        setItemTouchHelperProducts(
+            binding.rvProducts,
+            R.id.buttonEditProductContainer,
+            productsAdapter
+        )
 
         viewModel.getProductState().observe(viewLifecycleOwner) { state ->
             when (state) {
@@ -97,19 +153,35 @@ class ProductsListFragment : Fragment() {
         viewModel.getSelectedSorting().observe(viewLifecycleOwner) { sort ->
             when (sort!!) {
                 SortingVariants.ALPHABET -> {
-                    binding.sortLayout.typeSort.text = SortingVariants.ALPHABET.toString()
+                    binding.sortLayout.typeSort.text =
+                        SortingVariants.ALPHABET.getDisplayName(requireContext())
                     viewModel.sortProducts(sort)
                 }
 
                 SortingVariants.USER -> {
-                    binding.sortLayout.typeSort.text = SortingVariants.USER.toString()
+                    binding.sortLayout.typeSort.text =
+                        SortingVariants.USER.getDisplayName(requireContext())
                     viewModel.sortProducts(sort)
+                }
+            }
+            enableDrag(sort)
+        }
+
+        viewModel.getOperationStatus().observe(viewLifecycleOwner) { status ->
+            when {
+                status.isFailure -> {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.error_operation),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
 
         binding.fabAddProduct.setOnClickListener {
-            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_COLLAPSED
+            if (clickDebounce()) openAddProductBottomSheet()
+            resetAllItemsScroll(binding.rvProducts)
         }
 
         bottomSheetAddProduct?.addBottomSheetCallback(object :
@@ -120,14 +192,18 @@ class ProductsListFragment : Fragment() {
                         swapImageFab(state = BottomSheetBehavior.STATE_COLLAPSED)
                         showOverlay(true)
                         binding.fabAddProduct.setOnClickListener {
-                            createProduct(shoppingListId = shoppingList.id, view = it)
+                            if (productItem != null) {
+                                updateProduct(productItem!!, it)
+                            } else {
+                                createProduct(shoppingListId = shoppingList.id, view = it)
+                            }
                         }
                     }
 
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         showOverlay(false)
                         binding.fabAddProduct.setOnClickListener {
-                            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_COLLAPSED
+                            if (clickDebounce()) openAddProductBottomSheet()
                         }
                         swapImageFab(state = BottomSheetBehavior.STATE_HIDDEN)
                     }
@@ -142,26 +218,31 @@ class ProductsListFragment : Fragment() {
         })
 
         with(binding) {
-
             completeTextUnit.setOnItemClickListener { _, _, position, _ ->
-                unitProduct = Units.entries[position].toString()
+                unitProduct = Units.entries[position].getDisplayName(requireContext())
             }
         }
 
         with(binding.editTextNameProduct) {
             doOnTextChanged { text, _, _, _ ->
-                if (!text.isNullOrEmpty()) {
-                    nameProduct = text.toString()
+                if (binding.inputLayoutNameProduct.error != null && !text.isNullOrEmpty()) {
+                    binding.inputLayoutNameProduct.error = null
                 }
+                nameProduct = text?.toString()
             }
 
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     hideKeyboard(this)
+                    isFocusable = false
                     true
                 } else {
                     false
                 }
+            }
+
+            setOnFocusChangeListener { _, hasFocus ->
+                bottomSheetAddProduct?.isDraggable = !hasFocus
             }
         }
 
@@ -170,11 +251,22 @@ class ProductsListFragment : Fragment() {
                 amountProduct = if (!text.isNullOrEmpty()) {
                     text.toString().toInt()
                 } else null
+
+                if (text.isNullOrEmpty()) {
+                    binding.minusUnit.setImageDrawable(requireContext().getDrawable(R.drawable.ic_minus_not_select))
+                } else {
+                    binding.minusUnit.setImageDrawable(requireContext().getDrawable(R.drawable.ic_minus_select))
+                }
+            }
+
+            setOnFocusChangeListener { _, hasFocus ->
+                bottomSheetAddProduct?.isDraggable = !hasFocus
             }
 
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     hideKeyboard(this)
+                    isFocusable = false
                     true
                 } else {
                     false
@@ -183,25 +275,24 @@ class ProductsListFragment : Fragment() {
         }
 
         binding.minusUnit.setOnClickListener {
-            if (amountProduct != null) {
-                amountProduct = amountProduct!! - 1
+            amountProduct?.let {
+                amountProduct = it - 1
                 binding.editTextAmountProduct.setText(amountProduct.toString())
                 if (amountProduct == 0) {
                     amountProduct = null
-                    binding.editTextAmountProduct.text?.clear()
+                    binding.editTextAmountProduct.text = null
                 }
             }
         }
 
         binding.plusUnit.setOnClickListener {
-            if (amountProduct == null) {
+            amountProduct?.let {
+                amountProduct = it + 1
+                binding.editTextAmountProduct.setText(amountProduct.toString())
+            } ?: run {
                 amountProduct = 1
                 binding.editTextAmountProduct.setText(amountProduct.toString())
-            } else {
-                amountProduct = amountProduct!! + 1
-                binding.editTextAmountProduct.setText(amountProduct.toString())
             }
-
         }
 
         binding.ivBackArrow.setOnClickListener {
@@ -210,6 +301,7 @@ class ProductsListFragment : Fragment() {
 
         binding.ivMenu.setOnClickListener {
             bottomSheetMenu?.state = BottomSheetBehavior.STATE_COLLAPSED
+            resetAllItemsScroll(binding.rvProducts)
         }
 
         bottomSheetMenu?.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -259,7 +351,7 @@ class ProductsListFragment : Fragment() {
 
         binding.clearBoughtMenu.setOnClickListener {
             bottomSheetMenu?.state = BottomSheetBehavior.STATE_HIDDEN
-            if (productsAdapter.itemCount > 0) {
+            if (productsAdapter.isHaveBoughtProducts()) {
                 CustomDialog(requireContext()).showConfirmDialog(
                     theme = R.style.CustomDialogTheme,
                     message = getString(R.string.dialog_message_delete_bought_product),
@@ -284,6 +376,43 @@ class ProductsListFragment : Fragment() {
 
     }
 
+    private fun enableDrag(sortType: SortingVariants) {
+        val oldUserSorting = productsAdapter.isUserSortingEnabled
+        when (sortType) {
+            SortingVariants.ALPHABET -> {
+                productsAdapter.isUserSortingEnabled = false
+                if (oldUserSorting) {
+                    productsAdapter.notifyItemAdapter()
+                }
+            }
+
+            SortingVariants.USER -> {
+                productsAdapter.isUserSortingEnabled = true
+                if (!oldUserSorting) {
+                    productsAdapter.notifyItemAdapter()
+                }
+            }
+        }
+    }
+
+    private fun openAddProductBottomSheet(product: ProductListItem? = null) {
+        if (product != null) {
+            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_COLLAPSED
+            with(binding) {
+                editTextNameProduct.setText(product.name)
+                editTextAmountProduct.setText(product.amount?.toString())
+                val unit =
+                    Units.entries.find { it.getDisplayName(requireContext()) == product.unit }
+                if (unit != null) {
+                    completeTextUnit.setText(unit.getDisplayName(requireContext()), false)
+                    unitProduct = unit.getDisplayName(requireContext())
+                }
+            }
+        } else {
+            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
+
     private fun showPopupWindow(anchor: View) {
         val popupView = layoutInflater.inflate(R.layout.dropdown_sorting_select_layout, null)
 
@@ -293,14 +422,14 @@ class ProductsListFragment : Fragment() {
             LinearLayout.LayoutParams.WRAP_CONTENT,
             true
         )
-
+        setBackgroundSortLayout()
         val checkboxAlphabet = popupView.findViewById<CheckBox>(R.id.checkBoxAlphabetSort)
         val checkboxUser = popupView.findViewById<CheckBox>(R.id.checkBoxUserSort)
 
         checkboxAlphabet.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 buttonView.background =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_checked)
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_sort_checked)
                 checkboxUser.background =
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_unchecked)
             } else {
@@ -312,7 +441,7 @@ class ProductsListFragment : Fragment() {
         checkboxUser.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 buttonView.background =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_checked)
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_sort_checked)
                 checkboxAlphabet.background =
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_checkbox_unchecked)
             } else {
@@ -335,7 +464,8 @@ class ProductsListFragment : Fragment() {
         }
 
         popupView.findViewById<LinearLayout>(R.id.alphabetSorting).setOnClickListener {
-            binding.sortLayout.typeSort.text = SortingVariants.ALPHABET.toString()
+            binding.sortLayout.typeSort.text =
+                SortingVariants.ALPHABET.getDisplayName(requireContext())
             viewModel.setSorting(SortingVariants.ALPHABET)
             checkboxAlphabet.isChecked = true
             checkboxUser.isChecked = false
@@ -343,7 +473,7 @@ class ProductsListFragment : Fragment() {
         }
 
         popupView.findViewById<LinearLayout>(R.id.userSorting).setOnClickListener {
-            binding.sortLayout.typeSort.text = SortingVariants.USER.toString()
+            binding.sortLayout.typeSort.text = SortingVariants.USER.getDisplayName(requireContext())
             viewModel.setSorting(SortingVariants.USER)
             checkboxUser.isChecked = true
             checkboxAlphabet.isChecked = false
@@ -355,10 +485,15 @@ class ProductsListFragment : Fragment() {
         val x = (anchor.width - popupWidth) * COEFFICIENT
         val y = -anchor.height
         popupWindow.showAsDropDown(anchor, x.toInt(), y)
+
+        popupWindow.setOnDismissListener {
+            setBackgroundSortLayoutReset()
+        }
     }
 
     private fun createProduct(shoppingListId: Int, view: View) {
         if (!nameProduct.isNullOrEmpty()) {
+            binding.inputLayoutNameProduct.error = null
             viewModel.addProduct(
                 ProductListItem(
                     shoppingListId = shoppingListId,
@@ -372,12 +507,21 @@ class ProductsListFragment : Fragment() {
             bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_HIDDEN
             clearFieldsProduct()
         } else {
-            // думаю что тут можно сделать для валидации ввода, пока так
-            Toast.makeText(
-                requireContext(),
-                "НЕОБХОДИМО ВВЕСТИ НАЗВАНИЕ",
-                Toast.LENGTH_SHORT
-            ).show()
+            binding.inputLayoutNameProduct.error = getString(R.string.error_hint)
+        }
+    }
+
+    private fun updateProduct(product: ProductListItem, view: View) {
+        if (!nameProduct.isNullOrEmpty()) {
+            binding.inputLayoutNameProduct.error = null
+            viewModel.updateProduct(
+                product.copy(name = nameProduct!!, amount = amountProduct, unit = unitProduct)
+            )
+            hideKeyboard(view)
+            bottomSheetAddProduct?.state = BottomSheetBehavior.STATE_HIDDEN
+            clearFieldsProduct()
+        } else {
+            binding.inputLayoutNameProduct.error = getString(R.string.error_hint)
         }
     }
 
@@ -436,6 +580,7 @@ class ProductsListFragment : Fragment() {
         with(binding) {
             placeholderProductsEmpty.isVisible = true
             rvProducts.isVisible = false
+            productsAdapter.clearProductList()
         }
     }
 
@@ -456,7 +601,64 @@ class ProductsListFragment : Fragment() {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    private fun setBackgroundSortLayout() {
+        with(binding) {
+            sortLayout.root.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.sort_checked_background)
+            sortLayout.typeSort.setTextColor(
+                getColorFromAttr(
+                    requireContext(),
+                    R.attr.colorSortTextActive
+                )
+            )
+            sortLayout.titleSort.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.darkColorPlus
+                )
+            )
+            sortLayout.imgSort.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_swap_prod_active_layout
+                )
+            )
+        }
+    }
+
+    private fun setBackgroundSortLayoutReset() {
+        with(binding) {
+            sortLayout.root.background = null
+            sortLayout.typeSort.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.accentText
+                )
+            )
+            sortLayout.titleSort.setTextColor(
+                getColorFromAttr(
+                    requireContext(),
+                    R.attr.colorToolbarText
+                )
+            )
+            sortLayout.imgSort.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_swap_prod
+                )
+            )
+        }
+    }
+
+    private fun getColorFromAttr(context: Context, attr: Int): Int {
+        val typedValue = TypedValue()
+        val theme = context.theme
+        theme.resolveAttribute(attr, typedValue, true)
+        return typedValue.data
+    }
+
     companion object {
+        private const val DELAY_CLICK = 1000L
         private const val COEFFICIENT = 4 / 5f
         const val KEY_PRODUCT_LIST = "KEY PRODUCT"
         fun createArgs(shoppingList: ShoppingListItem): Bundle =

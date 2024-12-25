@@ -5,15 +5,15 @@ import kotlinx.coroutines.flow.Flow
 
 interface ShoppingListInteractor {
 
-    fun getAllShoppingLists(): Flow<List<ShoppingListItem>>
+    fun getAllShoppingLists(): Flow<Result<List<ShoppingListItem>>>
 
-    suspend fun addShoppingList(shoppingListItem: ShoppingListItem)
+    suspend fun addShoppingList(shoppingListItem: ShoppingListItem): Result<Unit>
 
-    suspend fun updateShoppingList(shoppingListItem: ShoppingListItem)
+    suspend fun updateShoppingList(shoppingListItem: ShoppingListItem): Result<Unit>
 
-    suspend fun deleteShoppingList(shoppingListItem: ShoppingListItem)
+    suspend fun deleteShoppingList(shoppingListItem: ShoppingListItem): Result<Unit>
 
-    suspend fun deleteAllLists()
+    suspend fun deleteAllLists(): Result<Unit>
 
-    suspend fun copyShoppingList(shoppingListId: Int)
+    suspend fun copyShoppingList(shoppingListId: Int): Result<Unit>
 }

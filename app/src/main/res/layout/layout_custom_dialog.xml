@@ -28,25 +28,23 @@
         android:id="@+id/llTwoButtonsBlock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="end"
         android:layout_marginTop="@dimen/six_space"
         android:layout_marginBottom="@dimen/six_space"
-        android:gravity="center"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/btnNo"
-            style="@style/DialogNoButton"
-            android:layout_weight="1"
+            style="@style/DialogButton"
+            android:layout_marginEnd="@dimen/two_space"
             android:backgroundTint="?attr/colorSecondary"
             android:text="@string/dialog_no"
             android:textColor="?attr/colorOnBackground" />
 
         <Button
             android:id="@+id/btnYes"
-            style="@style/DialogYesButton"
-            android:layout_marginStart="@dimen/two_space"
-            android:layout_weight="1"
+            style="@style/DialogButton"
+            android:layout_marginEnd="@dimen/six_space"
             android:backgroundTint="?attr/colorPrimaryVariant"
             android:text="@string/dialog_yes"
             android:textColor="?attr/colorButtonText" />
