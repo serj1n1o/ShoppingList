@@ -1,4 +1,4 @@
-package com.bryukhanov.shoppinglist.db.dao
+package com.bryukhanov.shoppinglist.productslist.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.bryukhanov.shoppinglist.db.entity.ProductListItemDbo
+import com.bryukhanov.shoppinglist.productslist.data.db.entity.ProductListItemDbo
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -24,14 +24,8 @@ interface ProductListDao {
     @Delete
     suspend fun deleteProduct(productListItemDbo: ProductListItemDbo)
 
-    @Query("SELECT * FROM product_list WHERE shoppingListId = :shoppingListId ORDER BY position")
-    fun getAllProductsForShoppingListByUserSort(shoppingListId: Int): Flow<List<ProductListItemDbo>>
-
     @Query("SELECT * FROM product_list WHERE shoppingListId = :shoppingListId")
-    fun getAllProductsForShoppingList(shoppingListId: Int): Flow<List<ProductListItemDbo>>
-
-    @Query("SELECT * FROM product_list WHERE shoppingListId = :shoppingListId ORDER BY name")
-    fun getAllProductsForShoppingListByAlphabetSort(shoppingListId: Int): Flow<List<ProductListItemDbo>>
+    fun getAllProductsFromShoppingList(shoppingListId: Int): Flow<List<ProductListItemDbo>>
 
     @Query("DELETE FROM product_list WHERE shoppingListId = :shoppingListId")
     suspend fun deleteAllProductLists(shoppingListId: Int)
@@ -41,4 +35,7 @@ interface ProductListDao {
 
     @Query("SELECT * FROM product_list WHERE id = :productId")
     suspend fun getProductById(productId: Int): ProductListItemDbo?
+
+    @Update
+    suspend fun updateSwapProducts(products: List<ProductListItemDbo>)
 }

@@ -11,6 +11,7 @@
         android:id="@+id/imgSort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/four_space"
         android:src="@drawable/ic_swap_prod"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

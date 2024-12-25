@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/card_background"
-    android:orientation="vertical">
+    android:background="@drawable/card_background">
 
     <ImageView
         android:id="@+id/ivCardAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/six_space"
-        android:src="@drawable/ic_card_add" />
+        android:src="@drawable/ic_card_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvCardMessage"
@@ -23,7 +25,10 @@
         android:layout_marginTop="@dimen/four_space"
         android:layout_marginEnd="@dimen/six_space"
         android:gravity="center"
-        android:text="@string/card_message" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivCardAdd"
+        tools:text="@string/card_message_create" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
@@ -37,7 +42,10 @@
         app:boxStrokeColor="?attr/colorTextCard"
         app:boxStrokeWidth="@dimen/half_space"
         app:errorEnabled="true"
-        app:hintTextColor="?attr/colorTextCard">
+        app:hintTextColor="?attr/colorTextCard"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvCardMessage">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etCreateList"
@@ -45,40 +53,41 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@android:color/transparent"
             android:ellipsize="end"
-            android:inputType="textCapWords"
             android:hint="@string/et_card_hint"
+            android:inputType="textCapSentences"
+            android:maxLength="70"
             android:maxLines="1"
             android:textColor="?attr/colorCardText"
             app:hintTextColor="?attr/colorIconCardAdd" />
     </com.google.android.material.textfield.TextInputLayout>
 
-
     <LinearLayout
         android:id="@+id/llButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginEnd="@dimen/six_space"
+        android:layout_marginHorizontal="@dimen/six_space"
         android:layout_marginBottom="@dimen/six_space"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayout">
 
-        <Button
+        <TextView
             android:id="@+id/btnNoCard"
-            style="@style/DialogNoButton"
-            android:layout_weight="1"
+            style="@style/DialogButton"
             android:backgroundTint="@android:color/transparent"
+            android:padding="@dimen/two_and_half_space"
             android:text="@string/dialog_no_card"
             android:textColor="?attr/colorTextCard" />
 
-        <Button
+        <TextView
             android:id="@+id/btnYesCard"
-            style="@style/DialogYesButton"
-            android:layout_marginStart="@dimen/two_space"
-            android:layout_weight="1"
+            style="@style/DialogButton"
+            android:layout_marginStart="@dimen/four_space"
             android:backgroundTint="@android:color/transparent"
-            android:text="@string/dialog_yes_card"
-            android:textColor="?attr/colorTextCard" />
-
+            android:padding="@dimen/two_and_half_space"
+            android:textColor="?attr/colorTextCard"
+            tools:text="@string/dialog_yes_card_create" />
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

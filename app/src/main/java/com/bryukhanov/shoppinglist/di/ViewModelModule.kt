@@ -8,7 +8,11 @@ import org.koin.dsl.module
 val viewModelModule = module {
 
     viewModel<ProductsViewModel> {
-        ProductsViewModel(productListInteractor = get())
+        ProductsViewModel(
+            productListInteractor = get(),
+            shoppingListInteractor = get(),
+            application = get()
+        )
     }
 
     viewModel<MyListsViewModel> {
