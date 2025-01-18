@@ -1,7 +1,6 @@
 package com.bryukhanov.shoppinglist.mylists.presentation.view
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,22 +9,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bryukhanov.shoppinglist.R
 import com.bryukhanov.shoppinglist.core.util.CustomDialog
+import com.bryukhanov.shoppinglist.core.util.SortingVariants
+import com.bryukhanov.shoppinglist.core.util.ThemeManager
+import com.bryukhanov.shoppinglist.core.util.resetAllItemsScroll
+import com.bryukhanov.shoppinglist.core.util.setItemTouchHelperShoppingList
 import com.bryukhanov.shoppinglist.databinding.FragmentMyListsBinding
-import com.bryukhanov.shoppinglist.databinding.LayoutCustomCardBinding
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
 import com.bryukhanov.shoppinglist.mylists.presentation.adapters.ShoppingListAdapter
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsState
 import com.bryukhanov.shoppinglist.mylists.presentation.viewmodel.MyListsViewModel
 import com.bryukhanov.shoppinglist.productslist.presentation.view.ProductsListFragment
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -37,9 +40,22 @@ class MyListsFragment : Fragment() {
 
     private lateinit var adapter: ShoppingListAdapter
     private lateinit var searchAdapter: ShoppingListAdapter
-    private lateinit var itemTouchHelper: ItemTouchHelper
 
     private var originalList: List<ShoppingListItem> = emptyList()
+
+    private var isClickAllowed = true
+
+    fun clickDebounce(): Boolean {
+        if (isClickAllowed) {
+            isClickAllowed = false
+            lifecycleScope.launch {
+                delay(DELAY_CLICK)
+                isClickAllowed = true
+            }
+            return true
+        }
+        return false
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +68,28 @@ class MyListsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.groupEmptyState.visibility = View.VISIBLE
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (binding.etSearch.visibility == View.VISIBLE) {
+                        resetSearchState()
+                    } else {
+                        isEnabled = false
+                        requireActivity().onBackPressed()
+                    }
+                }
+            })
+
+
+        binding.ivTheme.setOnClickListener {
+            ThemeManager.toggleTheme(requireContext())
+            activity?.recreate()
+            parentFragmentManager.beginTransaction()
+                .detach(this)
+                .attach(this)
+                .commit()
+        }
 
         adapter = ShoppingListAdapter(listener = object : ShoppingListAdapter.ActionListener {
 
@@ -63,23 +100,23 @@ class MyListsFragment : Fragment() {
             }
 
             override fun onClickItem(myList: ShoppingListItem) {
-                adapter.closeSwipedItem()
-                navigateToProductScreen(myList)
+                if (clickDebounce()) navigateToProductScreen(myList)
+                resetAllItemsScroll(binding.rvMyLists)
             }
 
-            override fun onEdit(id: Int) {
-                adapter.closeSwipedItem()
-                Toast.makeText(context, "Редактирование", Toast.LENGTH_SHORT).show()
+            override fun onEdit(myList: ShoppingListItem) {
+                showCustomCardEditList(myList)
+                resetAllItemsScroll(binding.rvMyLists)
             }
 
-            override fun onCopy(id: Int) {
-                adapter.closeSwipedItem()
-                Toast.makeText(requireContext(), "Копирование", Toast.LENGTH_SHORT).show()
+            override fun onCopy(listId: Int) {
+                viewModel.copyShoppingList(shoppingListId = listId)
+                resetAllItemsScroll(binding.rvMyLists)
             }
 
-            override fun onDelete(id: Int) {
-                adapter.closeSwipedItem()
-                Toast.makeText(requireContext(), "Удаление", Toast.LENGTH_SHORT).show()
+            override fun onDelete(myList: ShoppingListItem) {
+                showCustomDialogItemDelete(myList)
+                resetAllItemsScroll(binding.rvMyLists)
             }
         })
 
@@ -91,13 +128,13 @@ class MyListsFragment : Fragment() {
             }
 
             override fun onClickItem(myList: ShoppingListItem) {
-                navigateToProductScreen(myList)
-                hideSearchField()
+                if (clickDebounce()) navigateToProductScreen(myList)
+                resetSearchState()
             }
 
-            override fun onEdit(id: Int) {}
-            override fun onCopy(id: Int) {}
-            override fun onDelete(id: Int) {}
+            override fun onEdit(myList: ShoppingListItem) {}
+            override fun onCopy(listId: Int) {}
+            override fun onDelete(myList: ShoppingListItem) {}
         }, isSearchMode = true)
 
         binding.rvMyLists.apply {
@@ -112,23 +149,31 @@ class MyListsFragment : Fragment() {
             binding.rvSearchResults.adapter = this@MyListsFragment.searchAdapter
         }
 
-        itemTouchHelper = ItemTouchHelper(SwipeCallback(adapter))
-        itemTouchHelper.attachToRecyclerView(binding.rvMyLists)
+        setItemTouchHelperShoppingList(binding.rvMyLists, R.id.buttonContainer, adapter)
 
         observeViewModel()
 
         binding.ivDelete.setOnClickListener {
-            adapter.closeSwipedItem()
-            showCustomDialog()
+            resetAllItemsScroll(binding.rvMyLists)
+            if (originalList.isEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.toast_list_empty),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                showCustomDialogDeleteAll()
+            }
         }
 
+
         binding.fabAdd.setOnClickListener {
-            adapter.closeSwipedItem()
-            showCustomCard()
+            resetAllItemsScroll(binding.rvMyLists)
+            if (clickDebounce()) showCustomCardCreateList()
         }
 
         binding.ivSearch.setOnClickListener {
-            adapter.closeSwipedItem()
+            resetAllItemsScroll(binding.rvMyLists)
             binding.etSearch.visibility = View.VISIBLE
             binding.dimOverlay.visibility = View.VISIBLE
             binding.etSearch.requestFocus()
@@ -141,6 +186,17 @@ class MyListsFragment : Fragment() {
         setupSearch()
 
         viewModel.getAllShoppingLists()
+
+        viewModel.getOperationStatus().observe(viewLifecycleOwner) { status ->
+            when {
+                status.isFailure -> {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.error_operation), Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 
     private fun navigateToProductScreen(myList: ShoppingListItem) {
@@ -149,7 +205,6 @@ class MyListsFragment : Fragment() {
             ProductsListFragment.createArgs(myList)
         )
     }
-
 
     private fun observeViewModel() {
         viewModel.getListState().observe(viewLifecycleOwner) { state ->
@@ -169,9 +224,31 @@ class MyListsFragment : Fragment() {
                 }
             }
         }
+
+        viewModel.searchResults.observe(viewLifecycleOwner) { filteredList ->
+            searchAdapter.setShoppingLists(filteredList)
+
+            if (filteredList.isNotEmpty()) {
+                binding.rvMyLists.visibility = View.GONE
+                binding.rvSearchResults.visibility = View.VISIBLE
+                binding.layoutSearchNotFoundContainer.visibility = View.GONE
+                binding.searchDivider.visibility = View.VISIBLE
+                binding.dimOverlay.visibility = View.GONE
+            }
+        }
+
+        viewModel.isSearchEmpty.observe(viewLifecycleOwner) { isEmpty ->
+            if (isEmpty) {
+                binding.rvSearchResults.visibility = View.GONE
+                binding.layoutSearchNotFoundContainer.visibility = View.VISIBLE
+                binding.searchDivider.visibility = View.VISIBLE
+                binding.dimOverlay.visibility = View.GONE
+            }
+        }
+
     }
 
-    private fun showCustomDialog() {
+    private fun showCustomDialogDeleteAll() {
         CustomDialog(requireContext()).showConfirmDialog(
             theme = R.style.CustomDialogTheme,
             message = getString(R.string.dialog_message),
@@ -184,46 +261,51 @@ class MyListsFragment : Fragment() {
         )
     }
 
-    private fun showCustomCard() {
-        val dialog = Dialog(requireContext(), R.style.CustomDialogTheme)
-        val dialogBinding = LayoutCustomCardBinding.inflate(layoutInflater)
+    private fun showCustomDialogItemDelete(myList: ShoppingListItem) {
+        CustomDialog(requireContext()).showConfirmDialog(
+            theme = R.style.CustomDialogTheme,
+            message = getString(R.string.dialog_message_delete_item_list, myList.name),
+            positiveButtonText = getString(R.string.dialog_positive_answer),
+            negativeButtonText = getString(R.string.dialog_cancel),
+            onPositiveClick = {
+                viewModel.deleteShoppingList(myList)
+            },
+            onNegativeClick = {}
+        )
+    }
 
-        dialog.setContentView(dialogBinding.root)
-
-        dialogBinding.etCreateList.requestFocus()
-
-        dialogBinding.btnNoCard.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        dialogBinding.btnYesCard.setOnClickListener {
-            val listName = dialogBinding.etCreateList.text.toString().trim()
-
-            if (listName.isEmpty()) {
-                dialogBinding.textInputLayout.error = getString(R.string.error_hint)
-            } else {
-                dialogBinding.textInputLayout.error = null
-
+    private fun showCustomCardCreateList() {
+        CustomDialog(requireContext()).showCustomCard(
+            theme = R.style.CustomDialogTheme,
+            title = getString(R.string.card_message_create),
+            positiveButtonText = getString(R.string.dialog_yes_card_create),
+            negativeButtonText = getString(R.string.dialog_cancel),
+            onNegativeClick = {},
+            onPositiveClick = { name ->
                 val newShoppingList = ShoppingListItem(
                     id = 0,
-                    name = listName,
-                    cover = R.drawable.ic_list
+                    name = name,
+                    cover = R.drawable.ic_list,
+                    sortType = SortingVariants.USER.toString()
                 )
-
                 viewModel.addShoppingList(newShoppingList)
-
-                val inputMethodManager =
-                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(
-                    dialogBinding.etCreateList.windowToken,
-                    0
-                )
-
-                dialog.dismiss()
             }
-        }
+        )
+    }
 
-        dialog.show()
+    private fun showCustomCardEditList(myList: ShoppingListItem) {
+        CustomDialog(requireContext()).showCustomCard(
+            theme = R.style.CustomDialogTheme,
+            title = getString(R.string.card_message_edit),
+            initialText = myList.name,
+            positiveButtonText = getString(R.string.dialog_yes_card_edit),
+            negativeButtonText = getString(R.string.dialog_cancel),
+            onNegativeClick = {},
+            onPositiveClick = { name ->
+                val newShoppingList = myList.copy(name = name)
+                viewModel.updateShoppingList(newShoppingList)
+            }
+        )
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -236,13 +318,8 @@ class MyListsFragment : Fragment() {
 
         etSearch.doOnTextChanged { text, _, _, _ ->
             if (!text.isNullOrEmpty()) {
-                etSearch.setCompoundDrawablesWithIntrinsicBounds(
-                    icBackArrow,
-                    null,
-                    icClear,
-                    null
-                )
-                filterLists(text.toString())
+                etSearch.setCompoundDrawablesWithIntrinsicBounds(icBackArrow, null, icClear, null)
+                viewModel.searchShoppingLists(text.toString(), originalList)
             } else {
                 etSearch.setCompoundDrawablesWithIntrinsicBounds(icBackArrow, null, null, null)
                 hideSearchResults()
@@ -278,36 +355,20 @@ class MyListsFragment : Fragment() {
         binding.etSearch.visibility = View.VISIBLE
     }
 
-    private fun filterLists(query: String) {
-        if (query.isEmpty()) {
-            searchAdapter.setShoppingLists(emptyList())
-            binding.rvSearchResults.visibility = View.GONE
-            binding.rvMyLists.visibility = View.VISIBLE
-            binding.groupEmptyState.visibility =
-                if (originalList.isEmpty()) View.VISIBLE else View.GONE
-            binding.dimOverlay.visibility = View.VISIBLE
-            binding.layoutSearchNotFoundContainer.visibility = View.VISIBLE
-        } else {
-            val filteredList = originalList.filter {
-                it.name.startsWith(query, ignoreCase = true)
-            }
+    private fun resetSearchState() {
+        binding.etSearch.text.clear()
+        binding.etSearch.visibility = View.GONE
+        binding.dimOverlay.visibility = View.GONE
+        binding.rvSearchResults.visibility = View.GONE
+        binding.layoutSearchNotFoundContainer.visibility = View.GONE
+        binding.searchDivider.visibility = View.GONE
 
-            searchAdapter.setShoppingLists(filteredList)
-
+        if (originalList.isEmpty()) {
             binding.rvMyLists.visibility = View.GONE
+            binding.groupEmptyState.visibility = View.VISIBLE
+        } else {
+            binding.rvMyLists.visibility = View.VISIBLE
             binding.groupEmptyState.visibility = View.GONE
-
-            if (filteredList.isNotEmpty()) {
-                binding.rvSearchResults.visibility = View.VISIBLE
-                binding.layoutSearchNotFoundContainer.visibility = View.GONE
-                binding.searchDivider.visibility = View.VISIBLE
-                binding.dimOverlay.visibility = View.GONE
-            } else {
-                binding.rvSearchResults.visibility = View.GONE
-                binding.layoutSearchNotFoundContainer.visibility = View.VISIBLE
-                binding.searchDivider.visibility = View.VISIBLE
-                binding.dimOverlay.visibility = View.GONE
-            }
         }
     }
 
@@ -319,28 +380,23 @@ class MyListsFragment : Fragment() {
     }
 
     private fun hideSearchField() {
-        binding.etSearch.visibility = View.GONE
-        binding.dimOverlay.visibility = View.GONE
-        binding.etSearch.text.clear()
-        binding.etSearch.clearFocus()
-        binding.rvSearchResults.visibility = View.GONE
-        binding.layoutSearchNotFoundContainer.visibility = View.GONE
-        binding.searchDivider.visibility = View.GONE
-        binding.rvMyLists.visibility = View.VISIBLE
-        binding.groupEmptyState.visibility = if (originalList.isEmpty()) View.VISIBLE else View.GONE
-
+        resetSearchState()
         val imm =
             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        resetSearchState()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    companion object {
+        private const val DELAY_CLICK = 1000L
+    }
 }
-
-
-
-
-

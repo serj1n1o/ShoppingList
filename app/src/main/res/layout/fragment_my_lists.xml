@@ -24,7 +24,7 @@
             android:text="@string/myLists_screen_text" />
 
         <ImageView
-            android:id="@+id/ivMenu"
+            android:id="@+id/ivTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -39,7 +39,7 @@
             android:layout_gravity="end"
             android:layout_marginEnd="@dimen/zero_space"
             android:src="@drawable/ic_icon_delete"
-            app:layout_constraintStart_toEndOf="@id/ivMenu" />
+            app:layout_constraintStart_toEndOf="@id/ivTheme" />
 
         <ImageView
             android:id="@+id/ivSearch"
@@ -69,8 +69,8 @@
         android:layout_width="@dimen/zero_space"
         android:layout_height="@dimen/zero_space"
         android:clipToPadding="false"
-        android:paddingHorizontal="@dimen/four_space"
-        android:visibility="gone"
+        android:paddingHorizontal="@dimen/two_space"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

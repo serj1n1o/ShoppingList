@@ -1,8 +1,8 @@
 package com.bryukhanov.shoppinglist.db.converters
 
-import com.bryukhanov.shoppinglist.db.entity.ProductListItemDbo
-import com.bryukhanov.shoppinglist.db.entity.ShoppingListItemDbo
+import com.bryukhanov.shoppinglist.mylists.data.db.entity.ShoppingListItemDbo
 import com.bryukhanov.shoppinglist.mylists.domain.models.ShoppingListItem
+import com.bryukhanov.shoppinglist.productslist.data.db.entity.ProductListItemDbo
 import com.bryukhanov.shoppinglist.productslist.domain.models.ProductListItem
 
 object ShoppingListConverter {
@@ -12,6 +12,7 @@ object ShoppingListConverter {
             id = id,
             name = name,
             cover = cover,
+            sortType = sortType,
         )
     }
 
@@ -20,6 +21,7 @@ object ShoppingListConverter {
             id = id,
             name = name,
             cover = cover,
+            sortType = sortType,
         )
     }
 
@@ -47,15 +49,15 @@ object ShoppingListConverter {
         )
     }
 
-    fun shoppingListDboToShoppingList(list: List<ShoppingListItemDbo>): List<ShoppingListItem> {
-        return list.map { listDbo ->
-            listDbo.toUi()
-        }
+    fun List<ProductListItemDbo>.toUiProductList(): List<ProductListItem> {
+        return this.map { it.toUi() }
     }
 
-    fun productListDboToProductList(list: List<ProductListItemDbo>): List<ProductListItem> {
-        return list.map { listDbo ->
-            listDbo.toUi()
-        }
+    fun List<ShoppingListItemDbo>.toUiShoppingList(): List<ShoppingListItem> {
+        return this.map { it.toUi() }
+    }
+
+    fun List<ProductListItem>.toDboProductList(): List<ProductListItemDbo> {
+        return this.map { it.toDbo() }
     }
 }

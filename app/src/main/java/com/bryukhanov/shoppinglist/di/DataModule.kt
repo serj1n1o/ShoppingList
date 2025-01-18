@@ -3,22 +3,21 @@ package com.bryukhanov.shoppinglist.di
 import androidx.room.Room
 import com.bryukhanov.shoppinglist.core.util.NameShoppingListGenerator
 import com.bryukhanov.shoppinglist.db.DataBase
-import com.bryukhanov.shoppinglist.db.converters.ShoppingListConverter
 import com.bryukhanov.shoppinglist.mylists.data.ShoppingListRepositoryImpl
+import com.bryukhanov.shoppinglist.mylists.data.db.dao.ShoppingListDao
 import com.bryukhanov.shoppinglist.mylists.domain.api.ShoppingListInteractor
 import com.bryukhanov.shoppinglist.mylists.domain.api.ShoppingListRepository
 import com.bryukhanov.shoppinglist.mylists.domain.impl.ShoppingListInteractorImpl
 import com.bryukhanov.shoppinglist.productslist.data.ProductListRepositoryImpl
+import com.bryukhanov.shoppinglist.productslist.data.db.dao.ProductListDao
 import com.bryukhanov.shoppinglist.productslist.domain.api.ProductListInteractor
 import com.bryukhanov.shoppinglist.productslist.domain.api.ProductListRepository
+import com.bryukhanov.shoppinglist.productslist.domain.api.UseCaseProductsFromShoppingList
 import com.bryukhanov.shoppinglist.productslist.domain.impl.ProductListInteractorImpl
+import com.bryukhanov.shoppinglist.productslist.domain.impl.UseCaseProductsFromShoppingListImpl
 import org.koin.dsl.module
 
 val dataModule = module {
-
-    single {
-        ShoppingListConverter
-    }
 
     single {
         NameShoppingListGenerator
@@ -32,12 +31,26 @@ val dataModule = module {
         ).build()
     }
 
+    single<ShoppingListDao> {
+        val dataBase: DataBase = get()
+        dataBase.shoppingListDao()
+    }
+
+    single<ProductListDao> {
+        val dataBase: DataBase = get()
+        dataBase.productListDao()
+    }
+
     factory<ShoppingListRepository> {
         ShoppingListRepositoryImpl(
-            dataBase = get(),
-            shoppingListConverter = get(),
-            nameShoppingListGenerator = get()
+            shoppingListDao = get(),
+            nameShoppingListGenerator = get(),
+            useCaseProductsFromShoppingList = get()
         )
+    }
+
+    factory<UseCaseProductsFromShoppingList> {
+        UseCaseProductsFromShoppingListImpl(productListRepository = get())
     }
 
     factory<ShoppingListInteractor> {
@@ -45,7 +58,7 @@ val dataModule = module {
     }
 
     factory<ProductListRepository> {
-        ProductListRepositoryImpl(dataBase = get(), shoppingListConverter = get())
+        ProductListRepositoryImpl(productListDao = get())
     }
 
     factory<ProductListInteractor> {

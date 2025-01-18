@@ -20,6 +20,7 @@ out/
 # Local configuration file (sdk path, etc)
 local.properties
 develop.properties
+keystore.properties
 
 # Gradle-profiler data
 profile-out*/
@@ -37,6 +38,7 @@ output.json
 *.aar
 *.ap_
 *.aab
+*.md
 
 # Keystore files
 *.jks
