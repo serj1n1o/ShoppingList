@@ -5,6 +5,15 @@
 Приложение позволяет пользователям создавать и редактировать списки, добавлять товары с различными параметрами, а также отмечать выполненные покупки.
 ---
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/23f7b1fb-b357-4fd3-8844-f39dcc257120" alt="Экран списков" width="200">
+  <img src="https://github.com/user-attachments/assets/5c6c384d-15f0-49a3-b08b-ba7cf2c4c52a" alt="Список продуктов" width="200">
+  <img src="https://github.com/user-attachments/assets/487b2de4-ab79-4ec8-b6e5-9492be29a111" alt="меню списка" width="200">
+  <img src="https://github.com/user-attachments/assets/709a0e57-79f1-49b8-a29d-6b69dd237c0a" alt="свайпы" width="200">
+  <img src="https://github.com/user-attachments/assets/fc26b7ee-dc03-462c-b640-9137213114af" alt="создание редактирование продукта" width="200">
+  <img src="https://github.com/user-attachments/assets/59a1b741-bc6d-4eeb-ba0b-e0921df6eaa4" alt="создание редактирование списка" width="200">
+</p>
+
 ## Основные функции
 
 ### 1. Управление списками покупок
